@@ -1,0 +1,262 @@
+#
+# ==== General info ====
+# 
+# * If a field have default value then the definition may be skipped.
+#
+# * You can add your own explosives in this file but don't forget to
+# add they into 'enabled-explosives' list
+#
+# * After editing of this file you need to check server logs to be
+# sure that no errors was appeared
+#
+# * Default TNT parameters:
+#   Delay: 80
+#   Radius: 4,00
+# 
+# * Explosions with radius greater than 16 destroy blocks extremally
+# uneffectively. There are definitely no way to destroy big amount of
+# blocks by single explosion.
+# Afterwards you can use 'effect' or 'seismic' features.
+#
+
+#
+# Default material of service block.
+# There are some conditions for material:
+# - Material should not has gravity
+# - Material should be solid
+# - Material should not be transparent
+# Default value: SPONGE
+#
+service-material: SPONGE
+
+# List of keys of enabled explosives
+# <explosive-key1>
+# ...
+# <explosive-keyN>
+enabled-explosives:
+  - Toy
+  - Normal
+  - Flash
+  - Nuclear
+
+#
+# ==== Explosives definition ====
+# Example:
+#
+# <explosive-key>:
+#   service-material: ### material of this block (default = SPONGE)
+#   name: <String>
+#   description: (default = empty)
+#     - <String1>
+#     ...
+#     - <StringN>
+#   recipe: (see http://jd.bukkit.org/rb/apidocs/org/bukkit/Material.html)
+#     - <BlockId11> <BlockId12> <BlockId13>
+#     - <BlockId21> <BlockId22> <BlockId23>
+#     - <BlockId31> <BlockId32> <BlockId33>
+#   amount: <1..64> ### amount of items in recipe result (default = 1)
+#   scenario: ### scenario that will be executed when explosive was
+#             ### activated you can use one action several times 
+#     - <action-key1>
+#     ...
+#     - <action-keyN>
+#   <action-key>:
+#     type: explosion | effect | seismic | repeater
+#     parameters: <effect-parameters> (* see description below)
+#
+# <effect-parameters> type = explosion
+#   min-delay: <2..100> ### min delay before the action in server ticks
+#                       ### (default = 2)
+#   max-delay: <2..100> ### max delay before the action in server ticks
+#                       ### (default = 8)
+#   radius: <0..32:float>
+#   destroy-blocks: true | false (default = true)
+#
+# <effect-parameters> type = effect
+#   min-delay: <2..200> ### min delay before the action in server ticks
+#                       ### (default = 2)
+#   max-delay: <2..200> ### max delay before the action in server ticks
+#                       ### (default = 10)
+#   radius: <1..500:float>
+#   players-only: true | false ### apply to players only or to all
+#                              ### living entities (default = true)
+#   effects:
+# http://jd.bukkit.org/rb/apidocs/org/bukkit/potion/PotionEffectType.html
+#     <PotionEffectType1>
+#     ...
+#     <PotionEffectTypeN> 
+#   strength: <1..10> (default = 1)
+#   duration: <1..600> ### in avg-seconds
+#
+# <effect-parameters> type = repeater
+#   min-delay: <2..1000> ### min delay before the repeater will be
+#                        ### created in server ticks (default = 2)
+#   max-delay: <2..1000> ### max delay before the repeater will be
+#                        ### created in server ticks (default = 60)
+#   duration: <1..86400> ### in avg-seconds
+#   interval: <20..600> ### how often try to apply <scenario>, in server
+#                       ### ticks (default = 40)
+#   scenario: ### scenario like in 'explosive' definition. but 'repeater'
+#             ### as 'action-key' is forbidden.  
+# 
+# <effect-parameters> type = seismic
+#   min-delay: <2..100> ### min delay before the seismic-push will be
+#                       ### created in server ticks (default = 2)
+#   max-delay: <2..100> ### max delay before the seismic-push will be
+#                       ### created in server ticks (default = 8)
+#   min-radius: <0..500:float>
+#   max-radius: <1..500:float>
+#   epicenter-explosion-power: <1..32:float>
+#   players-only: true | false (default = true)   
+#   attenuation: no | line | exp ### algorithm of attenuation in
+#                                ### dependency of distance to epicenter
+#                                ### (default = exp / exponential)
+#
+# ==== Help ====
+# * 'avg-second' - is an average 1 second evaluated to 20 server ticks.
+#
+# * All delays are consecutive. If two actions have following parameters:
+#   Action#1:
+#     min-delay: 2
+#     max-delay: 20
+#   Action#2:
+#     min-delay: 10
+#     max-delay: 30
+# Then possible scenario will be:
+# - Wait for random number of ticks between 2 and 20
+# - do Action#1
+# - Wait for random number of ticks between 10 and 30
+# - do Action#2
+# It means that Actions#2 will be executed between 10+2=12
+# and 20+30=50 ticks.
+# 
+ 
+Toy:
+  name: "Toy Bomb"
+  description:
+    - "Damage radius: 1"
+  recipe:
+    - SAND SAND SAND
+    - SAND TNT SAND
+    - SAND SAND SAND
+  amount: 8
+  scenario:
+    - explosion1
+  explosion1:
+    type: explosion
+    parameters:
+      radius: 1
+
+Normal:
+  name: "Bomb"
+  description:
+    - "Damage radius: 8"
+  recipe:
+    - OBSIDIAN TNT OBSIDIAN
+    - TNT DIAMOND_BLOCK TNT
+    - OBSIDIAN TNT OBSIDIAN
+  amount: 2
+  scenario:
+    - explosion1
+    - effect1
+    - explosion1
+  explosion1:
+    type: explosion
+    parameters:
+      radius: 8
+  effect1:
+    type: effect
+    parameters:
+      radius: 8
+      effects:
+       - CONFUSION
+       - SLOW
+      duration: 30   
+
+Flash:
+  name: "Flash Bomb"
+  description:
+    - "Flash radius: 32"
+  recipe:
+    - GLOWSTONE_DUST TNT GLOWSTONE_DUST
+    - TNT EYE_OF_ENDER TNT
+    - GLOWSTONE_DUST TNT GLOWSTONE_DUST
+  amount: 4
+  scenario:
+    - effect1
+    - effect2
+  effect1:
+    type: effect
+    parameters:
+      radius: 32
+      effects:
+       - BLINDNESS
+      duration: 30   
+  effect2:
+    type: effect
+    parameters:
+      radius: 32
+      effects:
+       - CONFUSION
+      duration: 60   
+    
+Nuclear:
+  name: "Nuclear Bomb"
+  description:
+    - "Damage radius: 120"
+    - "This can change the world."
+    - "Be careful!"
+  recipe:
+    - GOLD_BLOCK TNT GOLD_BLOCK
+    - TNT NETHER_STAR TNT
+    - GOLD_BLOCK TNT GOLD_BLOCK
+  scenario:
+    - explosion1
+    - effect1
+    - seismic1
+    - repeater1
+  explosion1:
+    type: explosion
+    parameters:
+      radius: 16
+  effect1:
+    type: effect
+    parameters:
+      radius: 120
+      effects:
+       - CONFUSION
+       - SLOW
+       - BLINDNESS
+       - POISON
+      duration: 60
+  seismic1:
+    type: seismic
+    parameters:
+      min-radius: 16
+      max-radius: 120
+      epicenter-explosion-power: 16
+      players-only: false
+      attenuation: line
+  repeater1:
+    type: repeater
+    parameters:
+      duration: 86400
+      scenario:
+        - effect1
+        - effect2
+      effect1:
+        type: effect
+        parameters:
+          radius: 90
+          players-only: false
+          effects:
+           - WITHER
+          duration: 10
+      effect2:
+        type: effect
+        parameters:
+          radius: 120
+          players-only: false
+          effects:
+           - POISON
+          duration: 10          

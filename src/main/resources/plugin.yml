@@ -1,0 +1,16 @@
+name: CustomNukes
+main: com.gmail.uprial.customnukes.CustomNukes
+version: 0.1.1
+commands:
+   customnukes:
+      description: Reload CustomNukes config
+      usage: /customnukes help
+      permission: 
+      permission-message: 
+permissions:
+    customnukes.reload:
+        description: Gives access to CustomNukes 'reload' command
+        default: op
+    customnukes.give:
+        description: Gives access to CustomNukes 'give' command
+        default: op        
