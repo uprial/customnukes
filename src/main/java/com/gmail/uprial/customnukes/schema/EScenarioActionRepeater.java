@@ -34,7 +34,7 @@ public class EScenarioActionRepeater extends AbstractEScenarioActionDelayed {
 	}
 	
 	public void explode(CustomNukes plugin, Location location) {
-		explodeEx(plugin, location, Math.floorDiv(EUtils.seconds2ticks(duration), interval));
+		explodeEx(plugin, location, EUtils.seconds2ticks(duration) / interval);
 	}
 
 	public void explodeEx(CustomNukes plugin, Location location, int runsCount) {
