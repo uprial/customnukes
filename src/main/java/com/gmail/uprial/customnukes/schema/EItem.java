@@ -6,6 +6,7 @@ import org.apache.commons.lang.StringUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -20,6 +21,7 @@ public class EItem {
 	private static int minAmount = 1;
 	private static int maxAmount = 64;
 
+	private String key;
 	private Material material;
 	private String name;
 	private List<String> description;
@@ -27,9 +29,10 @@ public class EItem {
 	private int amount;
 	private EScenario scenario;
 	
-	public EItem() {
+	public EItem(String key) {
+		this.key = key;
 	}
-
+	
 	public void setMaterial(Material material) {
 		this.material = material;
 	}
@@ -94,12 +97,16 @@ public class EItem {
 		scenario.execute(plugin, location);
 	}
 	
+	public boolean hasPermission(Player player) {
+		return (null != player) && (player.hasPermission("customnukes.explosive." + key.toLowerCase()));
+	}
+	
 	public static EItem getFromConfig(Material defaultMaterial, FileConfiguration config, CustomLogger customLogger, String key) {
 		String name = getNameFromConfig(config, customLogger, key);
 		if(null == name)
 			return null;
 		
-		EItem explosive = new EItem();
+		EItem explosive = new EItem(key);
 		explosive.setMaterial(ConfigReader.getMaterial(config, customLogger, key + ".service-material", String.format("Material of '%s'", name), defaultMaterial));
 		explosive.setName(name);
 		List<String> description = getDescriptionFromConfig(config, customLogger, key, name);

@@ -10,10 +10,21 @@ Existing blocks physics will be not changed.
 * Action scenario (explosion, potion effect applier, static repeater, seismic push)
 * All other valuable parameters.
 
+==== Default set of explosives: ====
+
+{{http://dev.bukkit.org/media/images/73/938/Toy_Bomb.png|Toy Bomb}}
+{{http://dev.bukkit.org/media/images/73/939/Bomb.png|Bomb}}
+{{http://dev.bukkit.org/media/images/74/96/Flash_Bomb.png|Flash Bomb}}
+{{http://dev.bukkit.org/media/images/73/940/Nuclear_Bomb.png|Nuclear Bomb}}
+
 ==== Custom Nuke may be activated by several conditions: ====
 
 * Red stone right above this block:
+
+{{http://dev.bukkit.org/media/images/73/937/Activate.png|Activate Custom Nuke by Red stone}}
+
 * With "flint and steel"
+
 * By other explosion, if this block will be destroyed.
 
 The main idea to activate explosives is: make red stone schemas
@@ -39,12 +50,20 @@ and error messages with explanation what exactly is wrong in your config (in con
 
 == Commands ==
 
-customnukes reload - reload config from disk
-customnukes give <player> <explosive-key> <amount>
+* customnukes reload - reload config from disk
+* customnukes give <player> <explosive-key> <amount>
 
 == Permissions ==
 
+* Access to 'reload' command:
 customnukes.reload (default: op)
+* Access to 'give' command:
 customnukes.give (default: op)
+* Access to place or break blocks or craft items of specific explosive type: 
+customnukes.explosive.<explosive-key> (default: op)
 
+== Author ==
 I will be happy to add some features or fix bugs. My mail: uprial@gmail.com.
+
+=== GitHub ===
+https://github.com/uprial/customnukes

@@ -8,6 +8,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -39,9 +40,14 @@ public class ExplosivesBlocksListener implements Listener {
 	public void onBlockPlace(BlockPlaceEvent event) {
 		if(!event.isCancelled()) {
 			EItem explosive = plugin.getExplosivesConfig().searchExplosiveByItemStack(event.getItemInHand());
-			if(null != explosive)
-				setExplosive(event.getBlock(), explosive);
-			else
+			if(null != explosive) {
+				Player player = event.getPlayer();
+				if (!explosive.hasPermission(player)) {
+					event.setCancelled(true);
+					customLogger.sendError(player, "you don't have permissions to place this type of block.");
+				} else
+					setExplosive(event.getBlock(), explosive);
+			} else
 				deleteExplosive(event.getBlock());
 		}
 	}
@@ -52,12 +58,18 @@ public class ExplosivesBlocksListener implements Listener {
 			Block block = event.getBlock();
 			EItem explosive = searchExplosiveByBlock(block);
 			if(null != explosive) {
-				deleteExplosive(block);
-
-				event.setCancelled(true);
-				block.setType(Material.AIR);
-				if(event.getPlayer().getGameMode() != GameMode.CREATIVE)
-					block.getWorld().dropItemNaturally(block.getLocation(), explosive.getDroppedItemStack());
+				Player player = event.getPlayer();
+				if (!explosive.hasPermission(player)) {
+					event.setCancelled(true);
+					customLogger.sendError(player, "you don't have permissions to break this type of block.");
+				} else {
+					deleteExplosive(block);
+	
+					event.setCancelled(true);
+					block.setType(Material.AIR);
+					if(event.getPlayer().getGameMode() != GameMode.CREATIVE)
+						block.getWorld().dropItemNaturally(block.getLocation(), explosive.getDroppedItemStack());
+				}
 			}
 		}
 	}

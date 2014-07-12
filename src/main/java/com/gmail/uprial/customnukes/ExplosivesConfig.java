@@ -38,8 +38,8 @@ public class ExplosivesConfig {
 			return null;
     }
     
-	public EItem searchExplosiveByName(String name) {
-		Integer idx = names.get(name);
+    public EItem searchExplosiveByName(String name) {
+		Integer idx = names.get(name.toLowerCase());
 		if (null != idx)
 			return explosives.get(idx);
 		else
@@ -47,7 +47,7 @@ public class ExplosivesConfig {
     }
 	
 	public EItem searchExplosiveByKey(String key) {
-		Integer idx = keys.get(key);
+		Integer idx = keys.get(key.toLowerCase());
 		if (null != idx)
 			return explosives.get(idx);
 		else
@@ -92,7 +92,7 @@ public class ExplosivesConfig {
 			if(null == explosive)
 				continue;
 			
-			if(names.containsKey(explosive.getName())) {
+			if(names.containsKey(explosive.getName().toLowerCase())) {
 				customLogger.error(String.format("Name '%s' of explosive-key '%s' is not unique", explosive.getName(), key));
 				continue;
 			}
@@ -101,8 +101,8 @@ public class ExplosivesConfig {
 			materials.add(explosive.getMaterial());
 			int idx = explosives.size() - 1;
 			
-			names.put(explosive.getName(), idx);
-			keys.put(key, idx);
+			names.put(explosive.getName().toLowerCase(), idx);
+			keys.put(key.toLowerCase(), idx);
 		}
 		
 		if(explosives.size() < 1)

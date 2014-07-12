@@ -24,12 +24,14 @@ public class ExplosivesActivateListener implements Listener {
 
 	@EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerInteract(PlayerInteractEvent event) {
-	    if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-	    	if (event.getMaterial() == Material.FLINT_AND_STEEL) {
-    			if(activate(event.getClickedBlock()))
-    				event.setCancelled(true);
-	    	}
-	    }
+		if(!event.isCancelled()) {
+		    if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+		    	if (event.getMaterial() == Material.FLINT_AND_STEEL) {
+	    			if(activate(event.getClickedBlock()))
+	    				event.setCancelled(true);
+		    	}
+		    }
+		}
     }
 	
 	@EventHandler(priority = EventPriority.NORMAL)
@@ -43,9 +45,11 @@ public class ExplosivesActivateListener implements Listener {
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onEntityExplode(EntityExplodeEvent event) {
-		List<Block> blocks = event.blockList();
-		for(int i = 0; i < blocks.size(); i++)
-			activate(blocks.get(i));
+		if(!event.isCancelled()) {
+			List<Block> blocks = event.blockList();
+			for(int i = 0; i < blocks.size(); i++)
+				activate(blocks.get(i));
+		}
 	}
 	
 	private boolean activate(Block block) {

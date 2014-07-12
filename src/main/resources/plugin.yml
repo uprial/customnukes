@@ -11,6 +11,9 @@ permissions:
     customnukes.reload:
         description: Gives access to CustomNukes 'reload' command
         default: op
-    customnukes.give:
+    customnukes.give: 
         description: Gives access to CustomNukes 'give' command
-        default: op        
+        default: op
+    customnukes.explosive.*:  
+        description: Gives access to craft or use CustomNukes explosives
+        default: op

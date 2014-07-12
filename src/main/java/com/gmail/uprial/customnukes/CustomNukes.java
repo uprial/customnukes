@@ -41,6 +41,7 @@ public final class CustomNukes extends JavaPlugin {
     	//getServer().getPluginManager().registerEvents(new ExplosionPrimeListener(this), this);
     	getServer().getPluginManager().registerEvents(new ExplosivesBlocksListener(this, customLogger), this);
     	getServer().getPluginManager().registerEvents(new ExplosivesActivateListener(this), this);
+    	getServer().getPluginManager().registerEvents(new ExplosivesCraftListener(this, customLogger), this);
     	getCommand("customnukes").setExecutor(new CustomNukesCommandExecutor(this, customLogger));
 
     	customLogger.info("Plugin enabled");
@@ -92,6 +93,15 @@ public final class CustomNukes extends JavaPlugin {
 		unloadExplosives();
     	explosivesConfig = new ExplosivesConfig(getConfig(), customLogger);
 		loadExplosives();
+    }
+    
+    public Player getPlayerByName(String playerName) {
+		Player[] players = getServer().getOnlinePlayers();
+		for(int i = 0; i < players.length; i++)
+			if(players[i].getName().equalsIgnoreCase(playerName))
+				return players[i];
+		
+		return null;
     }
     
     private void loadExplosives() {
