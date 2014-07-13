@@ -72,6 +72,8 @@ public class ExplosivesConfig {
 			return;
 		}
 		
+		boolean checkPermissions = ConfigReader.getBoolean(config, customLogger, "check-permissions", "value flag", "check-permissions", false);
+		
 		for(int i = 0; i < explosivesConfig.size(); i++) {
 			Object item = explosivesConfig.get(i);
 			if(null == item) {
@@ -83,12 +85,17 @@ public class ExplosivesConfig {
 				customLogger.error(String.format("Empty key in 'enabled-explosives' at pos %d", i));
 				continue;
 			}
+			if(keys.containsKey(key.toLowerCase())) {
+				customLogger.error(String.format("key '%s' in 'enabled-explosives' is not unique", key));
+				continue;
+			}
+
 			if(null == config.getConfigurationSection(key)) {
 				customLogger.error(String.format("Null definition of explosive-key '%s' from pos %d", key, i));
 				continue;
 			}
 			
-			EItem explosive = EItem.getFromConfig(material, config, customLogger, key);
+			EItem explosive = EItem.getFromConfig(material, config, customLogger, key, checkPermissions);
 			if(null == explosive)
 				continue;
 			

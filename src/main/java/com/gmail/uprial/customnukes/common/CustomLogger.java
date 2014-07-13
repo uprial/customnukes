@@ -22,17 +22,16 @@ public class CustomLogger {
 	}
 
 	public void info(String message) {
-		logger.info(message);
+		logger.log(Level.INFO, message);
 	}
 	
-	public void sendError(CommandSender sender, String message) {
-    	message = "Error: " + message;
-    	sender.sendMessage(ChatColor.RED + message);
-    	info(message);
+	public void userError(CommandSender sender, String message) {
+    	sender.sendMessage(ChatColor.RED + "ERROR: " + message);
+    	logger.log(Level.INFO, "[user-error] <" + sender.getName() + ">: " + message);
     }
 
-	public void sendMessage(CommandSender sender, String message) {
+	public void userInfo(CommandSender sender, String message) {
     	sender.sendMessage(message);
-    	info(message);
+    	logger.log(Level.INFO, "[user-info] <" + sender.getName() + ">: " + message);
     }
 }

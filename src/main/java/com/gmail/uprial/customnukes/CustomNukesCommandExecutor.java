@@ -23,7 +23,7 @@ public class CustomNukesCommandExecutor implements CommandExecutor {
 			if((args.length >= 1) && (args[0].equalsIgnoreCase("reload"))) {
 	    		if (sender.hasPermission("customnukes.reload")) {
 	    			plugin.reloadExplosivesConfig();
-	    			customLogger.sendMessage(sender, "CustomNukes config reloaded.");
+	    			customLogger.userInfo(sender, "CustomNukes config reloaded.");
 	    			return true;
 	    		}
 			}
@@ -36,14 +36,14 @@ public class CustomNukesCommandExecutor implements CommandExecutor {
 	    			int amount = 0;
 	    			
 	    			if(args.length < 3) {
-	    				customLogger.sendMessage(sender, "customnukes give <player> <explosive-key> <amount>");
+	    				customLogger.userInfo(sender, "customnukes give <player> <explosive-key> <amount>");
 	    				error = true;
 	    			}
 
     				if(!error) {
 		    			player = plugin.getPlayerByName(args[1]);
 		    			if(null == player) {
-		    				customLogger.sendError(sender, String.format("player '%s' is not exists.", args[1]));
+		    				customLogger.userError(sender, String.format("Player '%s' is not exists.", args[1]));
 		    				error = true;
 		    			}
 	    			}
@@ -53,7 +53,7 @@ public class CustomNukesCommandExecutor implements CommandExecutor {
 		    				explosive = plugin.getExplosivesConfig().searchExplosiveByName(args[2]);
 		    			
 		    			if(null == explosive) {
-		    				customLogger.sendError(sender, String.format("explosive '%s' is not exists.", args[2]));
+		    				customLogger.userError(sender, String.format("Explosive '%s' is not exists.", args[2]));
 		    				error = true;
 		    			}
 	    			}
@@ -64,15 +64,15 @@ public class CustomNukesCommandExecutor implements CommandExecutor {
 		    				try {
 		    					amount = Integer.valueOf(args[3]);
 		    				} catch (NumberFormatException e) {
-		    					customLogger.sendError(sender, "amount should be an integer between 1 and 64.");
+		    					customLogger.userError(sender, "Amount should be an integer between 1 and 64.");
 			    				error = true;
 		    				}
 		    				if(!error) {
 				    			if(amount < 1) {
-				    				customLogger.sendError(sender, "amount should be at least 1.");
+				    				customLogger.userError(sender, "Amount should be at least 1.");
 				    				error = true;
 				    			} else if(amount > 64) {
-				    				customLogger.sendError(sender, "amount should be at most 64.");
+				    				customLogger.userError(sender, "Amount should be at most 64.");
 				    				error = true;
 				    			}
 		    				}
@@ -80,7 +80,7 @@ public class CustomNukesCommandExecutor implements CommandExecutor {
 	    			}
 	    			if(!error) {
 	    				player.getInventory().addItem(explosive.getCustomItemStack(amount));
-	    				customLogger.sendMessage(sender, String.format("Player '%s' got %d * '%s'", player.getName(), amount, explosive.getName()));
+	    				customLogger.userInfo(sender, String.format("Player '%s' got %d * '%s'", player.getName(), amount, explosive.getName()));
 	    			}
 		    			
 	    			return true;
@@ -93,7 +93,7 @@ public class CustomNukesCommandExecutor implements CommandExecutor {
 				if (sender.hasPermission("customnukes.give"))
 					Help += "\n/customnukes give <player> <explosive-key> <amount>";
 				Help += "\n";
-				customLogger.sendMessage(sender, Help);
+				customLogger.userInfo(sender, Help);
     			return true;
 			}
     	} 

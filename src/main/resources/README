@@ -56,11 +56,18 @@ and error messages with explanation what exactly is wrong in your config (in con
 == Permissions ==
 
 * Access to 'reload' command:
+
 customnukes.reload (default: op)
+
 * Access to 'give' command:
+
 customnukes.give (default: op)
-* Access to place or break blocks or craft items of specific explosive type: 
+
+* Access to place, break, craft items of specific explosive type: 
+
 customnukes.explosive.<explosive-key> (default: op)
+
+This works only if 'check-permissions' is set to 'true' in config.yml.
 
 == Author ==
 I will be happy to add some features or fix bugs. My mail: uprial@gmail.com.

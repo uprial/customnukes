@@ -22,6 +22,7 @@ public class EItem {
 	private static int maxAmount = 64;
 
 	private String key;
+	private boolean checkPermissions;
 	private Material material;
 	private String name;
 	private List<String> description;
@@ -29,8 +30,9 @@ public class EItem {
 	private int amount;
 	private EScenario scenario;
 	
-	public EItem(String key) {
+	public EItem(String key, boolean checkPermissions) {
 		this.key = key;
+		this.checkPermissions = checkPermissions;
 	}
 	
 	public void setMaterial(Material material) {
@@ -98,15 +100,15 @@ public class EItem {
 	}
 	
 	public boolean hasPermission(Player player) {
-		return (null != player) && (player.hasPermission("customnukes.explosive." + key.toLowerCase()));
+		return (!checkPermissions) || (null != player) && (player.hasPermission("customnukes.explosive." + key.toLowerCase()));
 	}
 	
-	public static EItem getFromConfig(Material defaultMaterial, FileConfiguration config, CustomLogger customLogger, String key) {
+	public static EItem getFromConfig(Material defaultMaterial, FileConfiguration config, CustomLogger customLogger, String key, boolean checkPermissions) {
 		String name = getNameFromConfig(config, customLogger, key);
 		if(null == name)
 			return null;
 		
-		EItem explosive = new EItem(key);
+		EItem explosive = new EItem(key, checkPermissions);
 		explosive.setMaterial(ConfigReader.getMaterial(config, customLogger, key + ".service-material", String.format("Material of '%s'", name), defaultMaterial));
 		explosive.setName(name);
 		List<String> description = getDescriptionFromConfig(config, customLogger, key, name);

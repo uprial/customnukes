@@ -44,7 +44,7 @@ public class ExplosivesBlocksListener implements Listener {
 				Player player = event.getPlayer();
 				if (!explosive.hasPermission(player)) {
 					event.setCancelled(true);
-					customLogger.sendError(player, "you don't have permissions to place this type of block.");
+					customLogger.userError(player, "You don't have permissions to place this type of block.");
 				} else
 					setExplosive(event.getBlock(), explosive);
 			} else
@@ -61,7 +61,7 @@ public class ExplosivesBlocksListener implements Listener {
 				Player player = event.getPlayer();
 				if (!explosive.hasPermission(player)) {
 					event.setCancelled(true);
-					customLogger.sendError(player, "you don't have permissions to break this type of block.");
+					customLogger.userError(player, "You don't have permissions to break this type of block.");
 				} else {
 					deleteExplosive(block);
 	

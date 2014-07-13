@@ -29,6 +29,16 @@
 #
 service-material: SPONGE
 
+#
+# Use permissions to allow placing, breaking, crafting this type
+# of explosive by <explosive-key>
+# Permissions example:
+# customnukes.explosive.toy (lower case only)
+# 
+# Possible values: true | false (default = false)
+#
+check-permissions: false
+
 # List of keys of enabled explosives
 # <explosive-key1>
 # ...

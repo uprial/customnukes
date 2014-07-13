@@ -30,7 +30,7 @@ public class ExplosivesCraftListener implements Listener {
 				event.getInventory().setResult(null);
 			else if (!explosive.hasPermission(player)) {
 				event.getInventory().setResult(null);
-				customLogger.sendError(player, "you don't have permissions to craft this type of item.");
+				customLogger.userError(player, "you don't have permissions to craft this type of item.");
 			}
 		}
 	}	
