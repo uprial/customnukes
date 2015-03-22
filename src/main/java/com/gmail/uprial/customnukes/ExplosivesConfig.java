@@ -32,9 +32,13 @@ public class ExplosivesConfig {
     }
     
     public EItem searchExplosiveByItemStack(ItemStack itemStack) {
-		if(isRegisteredMaterial(itemStack.getType()))
-			return searchExplosiveByName(itemStack.getItemMeta().getDisplayName());
-		else
+		if(isRegisteredMaterial(itemStack.getType())) {
+			String displayName = itemStack.getItemMeta().getDisplayName();
+			if (null != displayName)
+				return searchExplosiveByName(itemStack.getItemMeta().getDisplayName());
+			else
+				return null;
+		} else
 			return null;
     }
     
