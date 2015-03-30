@@ -20,17 +20,17 @@ public class EScenarioActionEffect extends AbstractEScenarioActionExplosion {
 	protected int defaultMinDelay() { return 2; }
 	protected int defaultMaxDelay() { return 10; }
 	protected int minDelayValue() { return 2; } 
-	protected int maxDelayValue() { return 200; } 
+	protected int maxDelayValue() { return 2000; } 
 
 	protected float minRadius() { return 1; }
-	protected float maxRadius() { return 500; }
+	protected float maxRadius() { return 5000; }
 
 	protected int minStrength() { return 1; }
-	protected int maxStrength() { return 10; }
+	protected int maxStrength() { return 100; }
 	protected int defaultStrength() { return 1; }
 	
 	protected int minDuration() { return 1; }
-	protected int maxDuration() { return 600; }
+	protected int maxDuration() { return 6000; }
 	
 	protected boolean defaultPlayersOnly() { return true; }
 

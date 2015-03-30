@@ -114,8 +114,10 @@ public class ExplosivesBlocksListener implements Listener {
 	private EItem searchExplosiveByBlock(Block block) {
 		if(plugin.getExplosivesConfig().isRegisteredMaterial(block.getType())) {
 			String name = plugin.getBlockMetaStorage().get(block, blockMetaKey);
-		
-			return plugin.getExplosivesConfig().searchExplosiveByName(name);
+			if (null != name)
+				return plugin.getExplosivesConfig().searchExplosiveByName(name);
+			else
+				return null;
 		}
 		else
 			return null;

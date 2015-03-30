@@ -35,7 +35,7 @@ public class ExplosivesConfig {
 		if(isRegisteredMaterial(itemStack.getType())) {
 			String displayName = itemStack.getItemMeta().getDisplayName();
 			if (null != displayName)
-				return searchExplosiveByName(itemStack.getItemMeta().getDisplayName());
+				return searchExplosiveByName(displayName);
 			else
 				return null;
 		} else
@@ -64,11 +64,14 @@ public class ExplosivesConfig {
 
 	private void readConfig(FileConfiguration config, CustomLogger customLogger) {
 		this.material = ConfigReader.getMaterial(config, customLogger, "service-material", "Default service material", defaultMaterial); 
-		
+
 		explosives = new ArrayList<EItem>();
 		materials = new HashSet<Material>();
 		names = new HashMap<String,Integer>();
 		keys = new HashMap<String,Integer>();
+		
+		boolean debug = ConfigReader.getBoolean(config, customLogger, "debug", "value flag", "debug", false);
+		customLogger.setDebug(debug);
 		
 		List<?> explosivesConfig = config.getList("enabled-explosives");
 		if((null == explosivesConfig) || (explosivesConfig.size() < 0)) {

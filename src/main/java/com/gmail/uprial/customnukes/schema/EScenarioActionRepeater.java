@@ -15,13 +15,13 @@ public class EScenarioActionRepeater extends AbstractEScenarioActionDelayed {
 	protected int defaultMinDelay() { return 2; }
 	protected int defaultMaxDelay() { return 60; }
 	protected int minDelayValue() { return 2; } 
-	protected int maxDelayValue() { return 1000; } 
+	protected int maxDelayValue() { return 10000; } 
 
 	protected int minDuration() { return 1; }
-	protected int maxDuration() { return 86400; }
+	protected int maxDuration() { return 864000; }
 
 	protected int minInterval() { return 20; }
-	protected int maxInterval() { return 600; }
+	protected int maxInterval() { return 6000; }
 	protected int defaultInterval() { return 40; }
 	
 	private int duration;

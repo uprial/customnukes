@@ -7,10 +7,16 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 public class CustomLogger {
+	private boolean debug = true;
+			
 	private final Logger logger;
 	
 	public CustomLogger(Logger logger) {
 		this.logger = logger;
+	}
+	
+	public void setDebug(boolean value) {
+		this.debug = value;
 	}
 	
 	public void error(String message) {
@@ -19,6 +25,12 @@ public class CustomLogger {
 
 	public void warning(String message) {
 		logger.log(Level.WARNING, "[WARNING] " + message);
+	}
+
+	public void debug(String message) {
+		if (debug) {
+			logger.log(Level.INFO, "[DEBUG] " + message);
+		}
 	}
 
 	public void info(String message) {

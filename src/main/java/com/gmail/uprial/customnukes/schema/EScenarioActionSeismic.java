@@ -20,15 +20,15 @@ public class EScenarioActionSeismic extends AbstractEScenarioActionDelayed {
 	protected int defaultMinDelay() { return 2; }
 	protected int defaultMaxDelay() { return 8; }
 	protected int minDelayValue() { return 2; } 
-	protected int maxDelayValue() { return 100; } 
+	protected int maxDelayValue() { return 1000; } 
 
 	protected float minMinRadius() { return 0; }
-	protected float maxMinRadius() { return 500; }
+	protected float maxMinRadius() { return 5000; }
 	protected float minMaxRadius() { return 1; }
-	protected float maxMaxRadius() { return 500; }
+	protected float maxMaxRadius() { return 5000; }
 
 	protected float minEpicenterExplosionPower() { return 1; }
-	protected float maxEpicenterExplosionPower() { return 32; }
+	protected float maxEpicenterExplosionPower() { return 320; }
 	
 	protected boolean defaultPlayersOnly() { return true; }
 

@@ -14,7 +14,7 @@ public class ConfigReader {
 		int value = defaultValue;
 		
 		if(null == config.getString(key)) {
-			customLogger.warning(String.format("Empty %s '%s'. Use default value %d", EUtils.lcFirst(title), name, defaultValue));
+			customLogger.debug(String.format("Empty %s '%s'. Use default value %d", EUtils.lcFirst(title), name, defaultValue));
 		} else {
 			int intValue = config.getInt(key);
 			if(min > intValue)
@@ -57,7 +57,7 @@ public class ConfigReader {
 		boolean value = defaultValue;
 		
 		if(null == config.getString(key)) {
-			customLogger.warning(String.format("Empty %s '%s'. Use default value %b", title, name, defaultValue));
+			customLogger.debug(String.format("Empty %s '%s'. Use default value %b", title, name, defaultValue));
 		} else {
 			String strValue = config.getString(key);
 			if(strValue.equalsIgnoreCase("true"))
@@ -114,7 +114,7 @@ public class ConfigReader {
 		
 		String strMaterial = config.getString(key);
 		if(null == strMaterial)
-			customLogger.warning(String.format("Empty %s, use default '%s'", EUtils.lcFirst(title), defaultMaterial));
+			customLogger.debug(String.format("Empty %s, use default '%s'", EUtils.lcFirst(title), defaultMaterial));
 		else {
 			Material tmpMaterial = Material.getMaterial(strMaterial);
 			if(null == tmpMaterial)

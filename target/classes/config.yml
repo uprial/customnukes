@@ -20,6 +20,11 @@
 #
 
 #
+# Show debug info
+#
+debug: false
+
+#
 # Default material of service block.
 # There are some conditions for material:
 # - Material should not has gravity
@@ -75,19 +80,19 @@ enabled-explosives:
 #     parameters: <effect-parameters> (* see description below)
 #
 # <effect-parameters> type = explosion
-#   min-delay: <2..100> ### min delay before the action in server ticks
-#                       ### (default = 2)
-#   max-delay: <2..100> ### max delay before the action in server ticks
-#                       ### (default = 8)
-#   radius: <0..32:float>
+#   min-delay: <2..1000> ### min delay before the action in server ticks
+#                        ### (default = 2)
+#   max-delay: <2..1000> ### max delay before the action in server ticks
+#                        ### (default = 8)
+#   radius: <0..320:float>
 #   destroy-blocks: true | false (default = true)
 #
 # <effect-parameters> type = effect
-#   min-delay: <2..200> ### min delay before the action in server ticks
-#                       ### (default = 2)
-#   max-delay: <2..200> ### max delay before the action in server ticks
-#                       ### (default = 10)
-#   radius: <1..500:float>
+#   min-delay: <2..2000> ### min delay before the action in server ticks
+#                        ### (default = 2)
+#   max-delay: <2..2000> ### max delay before the action in server ticks
+#                        ### (default = 10)
+#   radius: <1..5000:float>
 #   players-only: true | false ### apply to players only or to all
 #                              ### living entities (default = true)
 #   effects:
@@ -95,28 +100,28 @@ enabled-explosives:
 #     <PotionEffectType1>
 #     ...
 #     <PotionEffectTypeN> 
-#   strength: <1..10> (default = 1)
-#   duration: <1..600> ### in avg-seconds
+#   strength: <1..100> (default = 1)
+#   duration: <1..6000> ### in avg-seconds
 #
 # <effect-parameters> type = repeater
-#   min-delay: <2..1000> ### min delay before the repeater will be
-#                        ### created in server ticks (default = 2)
-#   max-delay: <2..1000> ### max delay before the repeater will be
-#                        ### created in server ticks (default = 60)
-#   duration: <1..86400> ### in avg-seconds
-#   interval: <20..600> ### how often try to apply <scenario>, in server
+#   min-delay: <2..10000> ### min delay before the repeater will be
+#                         ### created in server ticks (default = 2)
+#   max-delay: <2..10000> ### max delay before the repeater will be
+#                         ### created in server ticks (default = 60)
+#   duration: <1..864000> ### in avg-seconds
+#   interval: <20..6000> ### how often try to apply <scenario>, in server
 #                       ### ticks (default = 40)
 #   scenario: ### scenario like in 'explosive' definition. but 'repeater'
 #             ### as 'action-key' is forbidden.  
 # 
 # <effect-parameters> type = seismic
-#   min-delay: <2..100> ### min delay before the seismic-push will be
+#   min-delay: <2..1000> ### min delay before the seismic-push will be
 #                       ### created in server ticks (default = 2)
-#   max-delay: <2..100> ### max delay before the seismic-push will be
+#   max-delay: <2..1000> ### max delay before the seismic-push will be
 #                       ### created in server ticks (default = 8)
-#   min-radius: <0..500:float>
-#   max-radius: <1..500:float>
-#   epicenter-explosion-power: <1..32:float>
+#   min-radius: <0..5000:float>
+#   max-radius: <1..5000:float>
+#   epicenter-explosion-power: <1..320:float>
 #   players-only: true | false (default = true)   
 #   attenuation: no | line | exp ### algorithm of attenuation in
 #                                ### dependency of distance to epicenter

@@ -59,6 +59,8 @@ public class ExplosivesActivateListener implements Listener {
 			return false;
 		
 		String name = plugin.getBlockMetaStorage().get(block, ExplosivesBlocksListener.blockMetaKey);
+		if(null == name)
+			return false;
 		EItem explosive = plugin.getExplosivesConfig().searchExplosiveByName(name);
 		if(null == explosive)
 			return false;

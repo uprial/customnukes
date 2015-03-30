@@ -11,10 +11,10 @@ public class EScenarioActionExplosion extends AbstractEScenarioActionExplosion {
 	protected int defaultMinDelay() { return 2; }
 	protected int defaultMaxDelay() { return 8; }
 	protected int minDelayValue() { return 2; } 
-	protected int maxDelayValue() { return 100; } 
+	protected int maxDelayValue() { return 1000; } 
 
 	protected float minRadius() { return 0; }
-	protected float maxRadius() { return 32; }
+	protected float maxRadius() { return 320; }
 	
 	protected boolean defaultDestroyBlocks() { return true; }
 	
