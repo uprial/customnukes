@@ -1,5 +1,6 @@
 package com.gmail.uprial.customnukes;
 
+import java.util.Collection;
 import java.util.Iterator;
 
 import org.bukkit.World;
@@ -96,10 +97,13 @@ public final class CustomNukes extends JavaPlugin {
     }
     
     public Player getPlayerByName(String playerName) {
-		Player[] players = getServer().getOnlinePlayers();
-		for(int i = 0; i < players.length; i++)
-			if(players[i].getName().equalsIgnoreCase(playerName))
-				return players[i];
+    	Collection<? extends Player> players = getServer().getOnlinePlayers();
+    	Iterator<? extends Player> iterator = players.iterator();
+    	while (iterator.hasNext()) {
+    		Player player = iterator.next();    	
+			if(player.getName().equalsIgnoreCase(playerName))
+				return player;
+    	}
 		
 		return null;
     }

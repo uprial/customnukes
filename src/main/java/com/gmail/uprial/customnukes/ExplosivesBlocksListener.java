@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Random;
 
 import org.bukkit.GameMode;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -77,16 +76,21 @@ public class ExplosivesBlocksListener implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onBlockPistonExtend(BlockPistonExtendEvent event) {
 		if(!event.isCancelled()) {
-			for(int i = 0; i < event.getBlocks().size(); i++)
-				maybeMoveBlock(event.getBlocks().get(i), event.getDirection(), true);
+			List<Block> blocks = event.getBlocks();
+			for(int i = 0; i < blocks.size(); i++) {
+				Block block = blocks.get(i);
+				maybeMoveBlock(block, event.getDirection());
+			}
 		}
 	}
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onBlockPistonRetract(BlockPistonRetractEvent event) {
 		if(!event.isCancelled() && event.isSticky()) {
-			Location location = event.getRetractLocation();
-			Block block = event.getBlock().getWorld().getBlockAt(location.getBlockX(), location.getBlockY(), location.getBlockZ());
-			maybeMoveBlock(block, event.getDirection(), false);
+			List<Block> blocks = event.getBlocks();
+			for(int i = 0; i < blocks.size(); i++) {
+				Block block = blocks.get(i);
+				maybeMoveBlock(block, event.getDirection());
+			}
 		}
 	}
 	
@@ -123,30 +127,25 @@ public class ExplosivesBlocksListener implements Listener {
 			return null;
 	}
 	
-	private void maybeMoveBlock(Block block, BlockFace direction, boolean forward) {
+	private void maybeMoveBlock(Block block, BlockFace direction) {
 		EItem explosive = searchExplosiveByBlock(block);
 		if(null != explosive) {
 			deleteExplosive(block);
-			setExplosive(getBlockInDirection(block, direction, forward), explosive);
+			setExplosive(getBlockInDirection(block, direction), explosive);
 		}
-		else
-			deleteExplosive(getBlockInDirection(block, direction, forward));
+		else {
+			deleteExplosive(getBlockInDirection(block, direction));
+		}
 	}
 
-	private Block getBlockInDirection(Block block, BlockFace direction, boolean forward) {
-		int sign;
-		if(forward)
-			sign = +1;
-		else
-			sign = -1;
-
-		return block.getWorld().getBlockAt(block.getX() + sign * direction.getModX(),
-											block.getY() + sign * direction.getModY(),
-											block.getZ() + sign * direction.getModZ());
+	private Block getBlockInDirection(Block block, BlockFace direction) {
+		return block.getWorld().getBlockAt(block.getX() + direction.getModX(),
+											block.getY() + direction.getModY(),
+											block.getZ() + direction.getModZ());
 	}
 	
 	private void maybeScheduleCleaning() {
-		if(0 == random.nextInt(1))
+		if(0 == random.nextInt(10))
 			scheduleCleaning();
 	}
 	
@@ -156,6 +155,6 @@ public class ExplosivesBlocksListener implements Listener {
 			public void run() {
 				onTaskMetaClean();
 			}
-		}, 2);
+		}, 100);
 	}
 }
