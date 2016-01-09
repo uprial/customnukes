@@ -39,9 +39,8 @@ public final class CustomNukes extends JavaPlugin {
     	
 		saveTask = new TaskPeriodicSave(this).runTaskTimer(this, saveInterval, saveInterval);
 
-    	//getServer().getPluginManager().registerEvents(new ExplosionPrimeListener(this), this);
     	getServer().getPluginManager().registerEvents(new ExplosivesBlocksListener(this, customLogger), this);
-    	getServer().getPluginManager().registerEvents(new ExplosivesActivateListener(this), this);
+    	getServer().getPluginManager().registerEvents(new ExplosivesActivateListener(this, customLogger), this);
     	getServer().getPluginManager().registerEvents(new ExplosivesCraftListener(this, customLogger), this);
     	getCommand("customnukes").setExecutor(new CustomNukesCommandExecutor(this, customLogger));
 
@@ -106,6 +105,11 @@ public final class CustomNukes extends JavaPlugin {
     	}
 		
 		return null;
+    }
+    
+    public void clear() {
+    	blockMetaStorage.clear();
+    	repeaterTaskStorage.clear();
     }
     
     private void loadExplosives() {

@@ -2,12 +2,14 @@ package com.gmail.uprial.customnukes.schema;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.scheduler.BukkitTask;
 
 import com.gmail.uprial.customnukes.CustomNukes;
 import com.gmail.uprial.customnukes.common.CustomLogger;
@@ -21,25 +23,45 @@ public class RepeaterTaskStorage {
 	private final CustomStorage storage;
 	private final CustomLogger customLogger;
 	
+	private Map<Integer,BukkitTask> tasks;
+	
 	public RepeaterTaskStorage(CustomNukes plugin, File dataFolder, CustomLogger customLogger) {
 		this.plugin = plugin;
 		this.storage = new CustomStorage(dataFolder, "repeater-task.txt", customLogger);
 		this.customLogger = customLogger;
-		
+
 		storage.load();
+		initData();
 	}
 	
 	public void save() {
 		storage.save();
 	}
 	
-	public void set(Location location, String actionId,int taskId,  int runsCount) {
-		if(runsCount >= 0)
-			storage.set(getMapKey(location, actionId, taskId), String.valueOf(runsCount));
-		else
-			storage.delete(getMapKey(location, actionId, taskId));
+	public void clear() {
+		for (Map.Entry<Integer,BukkitTask> entry : tasks.entrySet()) {
+			entry.getValue().cancel();
+		}
+		storage.clear();
+		initData();
+		
+		save();
 	}
 	
+	public void insert(Location location, String actionId, BukkitTask task, int runsCount) {
+		tasks.put(task.getTaskId(), task);
+		set(location, actionId, task.getTaskId(), runsCount);
+	}
+
+	public void update(Location location, String actionId, int taskId, int runsCount) {
+		set(location, actionId, taskId, runsCount);
+	}
+	
+	public void delete(Location location, String actionId, int taskId) {
+		tasks.remove(taskId);
+		set(location, actionId, taskId, -1);
+	}
+
 	public void restore() {
 		List<EScenarioActionRepeater> actions = new ArrayList<EScenarioActionRepeater>();
 		List<Location> locations = new ArrayList<Location>();
@@ -103,7 +125,20 @@ public class RepeaterTaskStorage {
 			actions.get(i).explodeEx(plugin, locations.get(i), runsCounts.get(i));
 		
 	}
+
+	private void initData() {
+		tasks = new HashMap<Integer,BukkitTask>();
+	}
 	
+	private void set(Location location, String actionId, int taskId, int runsCount) {
+		String mapKey = getMapKey(location, actionId, taskId);
+		
+		if(runsCount >= 0)
+			storage.set(mapKey, String.valueOf(runsCount));
+		else
+			storage.delete(mapKey);
+	}
+
 	private String getMapKey(Location location, String actionId, int taskId) {
 		String[] items = new String[6];
 		items[0] = location.getWorld().getName();

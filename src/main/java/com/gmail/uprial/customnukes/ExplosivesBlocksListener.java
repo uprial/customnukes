@@ -44,8 +44,12 @@ public class ExplosivesBlocksListener implements Listener {
 				if (!explosive.hasPermission(player)) {
 					event.setCancelled(true);
 					customLogger.userError(player, "You don't have permissions to place this type of block.");
-				} else
-					setExplosive(event.getBlock(), explosive);
+				} else {
+					Block block = event.getBlock();
+					customLogger.debug(String.format("Place '%s' at %s:%d:%d:%d",
+	                                                 explosive.getName(), block.getWorld().getName(), block.getX(), block.getY(), block.getZ()));
+					setExplosive(block, explosive);
+				}
 			} else
 				deleteExplosive(event.getBlock());
 		}
@@ -62,6 +66,8 @@ public class ExplosivesBlocksListener implements Listener {
 					event.setCancelled(true);
 					customLogger.userError(player, "You don't have permissions to break this type of block.");
 				} else {
+					customLogger.debug(String.format("Break '%s' at %s:%d:%d:%d",
+	                                                 explosive.getName(), block.getWorld().getName(), block.getX(), block.getY(), block.getZ()));
 					deleteExplosive(block);
 	
 					event.setCancelled(true);
@@ -130,8 +136,14 @@ public class ExplosivesBlocksListener implements Listener {
 	private void maybeMoveBlock(Block block, BlockFace direction) {
 		EItem explosive = searchExplosiveByBlock(block);
 		if(null != explosive) {
+			Block blockInDirection = getBlockInDirection(block, direction);
+			customLogger.debug(String.format("Move '%s' from %s:%d:%d:%d to %s:%d:%d:%d",
+                    explosive.getName(),
+                    block.getWorld().getName(), block.getX(), block.getY(), block.getZ(),
+                    blockInDirection.getWorld().getName(), blockInDirection.getX(), blockInDirection.getY(), blockInDirection.getZ()));
+
 			deleteExplosive(block);
-			setExplosive(getBlockInDirection(block, direction), explosive);
+			setExplosive(blockInDirection, explosive);
 		}
 		else {
 			deleteExplosive(getBlockInDirection(block, direction));

@@ -1,3 +1,7 @@
+== Compatibility ==
+
+Tested on Spigot-1.8.8
+
 == Introduction ==
 
 This is fully customizable plugin that allows You to make your own explosives.
@@ -52,6 +56,7 @@ and error messages with explanation what exactly is wrong in your config (in con
 
 * customnukes reload - reload config from disk
 * customnukes give <player> <explosive-key> <amount>
+* customnukes clear - remove all explosive blocks and active repeaters
 
 == Permissions ==
 
@@ -68,6 +73,10 @@ customnukes.give (default: op)
 customnukes.explosive.<explosive-key> (default: op)
 
 This works only if 'check-permissions' is set to 'true' in config.yml.
+
+* Access to 'clear' command:
+
+customnukes.clear (default: op)
 
 == Author ==
 I will be happy to add some features or fix bugs. My mail: uprial@gmail.com.

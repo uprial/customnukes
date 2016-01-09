@@ -65,7 +65,7 @@ enabled-explosives:
 #     - <String1>
 #     ...
 #     - <StringN>
-#   recipe: (see http://jd.bukkit.org/rb/apidocs/org/bukkit/Material.html)
+#   recipe: (see https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html)
 #     - <BlockId11> <BlockId12> <BlockId13>
 #     - <BlockId21> <BlockId22> <BlockId23>
 #     - <BlockId31> <BlockId32> <BlockId33>
@@ -96,7 +96,7 @@ enabled-explosives:
 #   players-only: true | false ### apply to players only or to all
 #                              ### living entities (default = true)
 #   effects:
-# http://jd.bukkit.org/rb/apidocs/org/bukkit/potion/PotionEffectType.html
+# https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/potion/PotionEffectType.html
 #     <PotionEffectType1>
 #     ...
 #     <PotionEffectTypeN> 
@@ -110,15 +110,15 @@ enabled-explosives:
 #                         ### created in server ticks (default = 60)
 #   duration: <1..864000> ### in avg-seconds
 #   interval: <20..6000> ### how often try to apply <scenario>, in server
-#                       ### ticks (default = 40)
+#                        ### ticks (default = 40)
 #   scenario: ### scenario like in 'explosive' definition. but 'repeater'
 #             ### as 'action-key' is forbidden.  
 # 
 # <effect-parameters> type = seismic
 #   min-delay: <2..1000> ### min delay before the seismic-push will be
-#                       ### created in server ticks (default = 2)
+#                        ### created in server ticks (default = 2)
 #   max-delay: <2..1000> ### max delay before the seismic-push will be
-#                       ### created in server ticks (default = 8)
+#                        ### created in server ticks (default = 8)
 #   min-radius: <0..5000:float>
 #   max-radius: <1..5000:float>
 #   epicenter-explosion-power: <1..320:float>

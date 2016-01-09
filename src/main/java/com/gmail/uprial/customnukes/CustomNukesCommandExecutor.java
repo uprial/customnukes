@@ -27,7 +27,14 @@ public class CustomNukesCommandExecutor implements CommandExecutor {
 	    			return true;
 	    		}
 			}
-			if((args.length >= 1) && (args[0].equalsIgnoreCase("give"))) {
+			else if((args.length >= 1) && (args[0].equalsIgnoreCase("clear"))) {
+	    		if (sender.hasPermission("customnukes.clear")) {
+	    			plugin.clear();
+	    			customLogger.userInfo(sender, "CustomNukes explosive blocks and active repeaters were removed.");
+	    			return true;
+	    		}
+			}
+			else if((args.length >= 1) && (args[0].equalsIgnoreCase("give"))) {
 	    		if (sender.hasPermission("customnukes.give")) {
 	    			boolean error = false;
 		    			
@@ -92,6 +99,8 @@ public class CustomNukesCommandExecutor implements CommandExecutor {
 					Help += "\n/customnukes reload - reload config from disk";
 				if (sender.hasPermission("customnukes.give"))
 					Help += "\n/customnukes give <player> <explosive-key> <amount>";
+				if (sender.hasPermission("customnukes.clear"))
+					Help += "\n/customnukes clear - remove all explosive blocks and active repeaters";
 				Help += "\n";
 				customLogger.userInfo(sender, Help);
     			return true;

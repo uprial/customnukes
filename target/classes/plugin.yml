@@ -1,19 +1,22 @@
 name: CustomNukes
 main: com.gmail.uprial.customnukes.CustomNukes
-version: 0.2.4
+version: 0.2.5
 commands:
    customnukes:
       description: Reload CustomNukes config
       usage: /customnukes help
-      permission: 
-      permission-message: 
+      permission:
+      permission-message:
 permissions:
     customnukes.reload:
         description: Gives access to CustomNukes 'reload' command
         default: op
-    customnukes.give: 
+    customnukes.give:
         description: Gives access to CustomNukes 'give' command
         default: op
-    customnukes.explosive.*:  
+    customnukes.explosive.*:
         description: Gives access to craft or use CustomNukes explosives
+        default: op
+    customnukes.clear:
+        description: Gives access to remove all explosive blocks and active repeaters
         default: op

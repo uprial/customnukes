@@ -13,13 +13,16 @@ import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+import com.gmail.uprial.customnukes.common.CustomLogger;
 import com.gmail.uprial.customnukes.schema.EItem;
 
 public class ExplosivesActivateListener implements Listener {
 	private final CustomNukes plugin;
+	private final CustomLogger customLogger;
 	
-	public ExplosivesActivateListener(CustomNukes plugin) {
+	public ExplosivesActivateListener(CustomNukes plugin, CustomLogger customLogger) {
 		this.plugin = plugin;
+		this.customLogger = customLogger;
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
@@ -27,7 +30,7 @@ public class ExplosivesActivateListener implements Listener {
 		if(!event.isCancelled()) {
 		    if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 		    	if (event.getMaterial() == Material.FLINT_AND_STEEL) {
-	    			if(activate(event.getClickedBlock()))
+	    			if(try_activate(event.getClickedBlock()))
 	    				event.setCancelled(true);
 		    	}
 		    }
@@ -39,7 +42,7 @@ public class ExplosivesActivateListener implements Listener {
 		Block block = event.getBlock();
 		if(null != block) {
 			if(block.getType() == Material.REDSTONE_WIRE)
-				activate(block.getRelative(0, -1, 0));
+				try_activate(block.getRelative(0, -1, 0));
 		}
 	}
 
@@ -48,11 +51,11 @@ public class ExplosivesActivateListener implements Listener {
 		if(!event.isCancelled()) {
 			List<Block> blocks = event.blockList();
 			for(int i = 0; i < blocks.size(); i++)
-				activate(blocks.get(i));
+				try_activate(blocks.get(i));
 		}
 	}
 	
-	private boolean activate(Block block) {
+	private boolean try_activate(Block block) {
 		if(null == block)
 			return false;
 		if(!plugin.getExplosivesConfig().isRegisteredMaterial(block.getType()))
@@ -68,6 +71,8 @@ public class ExplosivesActivateListener implements Listener {
 		block.setType(Material.AIR);
 		plugin.getBlockMetaStorage().delete(block, ExplosivesBlocksListener.blockMetaKey);
 		Location location = new Location(block.getWorld(), block.getX() + 0.5, block.getY() + 0.5, block.getZ() + 0.5);
+		customLogger.debug(String.format("Explode '%s' at %s:%d:%d:%d",
+				                         explosive.getName(), block.getWorld().getName(), block.getX(), block.getY(), block.getZ()));
 		explosive.explode(plugin, location);
 		return true;
 	}

@@ -39,16 +39,16 @@ public class EScenarioActionRepeater extends AbstractEScenarioActionDelayed {
 
 	public void explodeEx(CustomNukes plugin, Location location, int runsCount) {
 		BukkitTask task = new TaskEScenarioActionRepeaterAction(this, plugin, location, runsCount).runTaskTimer(plugin, 0, interval);
-		setRunsCount(plugin, location, task.getTaskId(), runsCount);
+		plugin.getRepeaterTaskStorage().insert(location, getActionId(), task, runsCount);
 	}
 
 	public void executeAction(CustomNukes plugin, Location location, int taskId, int runsCount) {
 		scenario.execute(plugin, location);
-		setRunsCount(plugin, location, taskId, runsCount);
+		plugin.getRepeaterTaskStorage().update(location, getActionId(), taskId, runsCount);
 	}
-	
-	private void setRunsCount(CustomNukes plugin, Location location, int taskId, int runsCount) {
-		plugin.getRepeaterTaskStorage().set(location, getActionId(), taskId, runsCount);
+
+	public void finishAction(CustomNukes plugin, Location location, int taskId) {
+		plugin.getRepeaterTaskStorage().delete(location, getActionId(), taskId);
 	}
 	
 	public void setDuration(int duration) {

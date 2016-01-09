@@ -71,10 +71,10 @@ public class ExplosivesConfig {
 		keys = new HashMap<String,Integer>();
 		
 		boolean debug = ConfigReader.getBoolean(config, customLogger, "debug", "value flag", "debug", false);
-		customLogger.setDebug(debug);
+		customLogger.setDebugMode(debug);
 		
 		List<?> explosivesConfig = config.getList("enabled-explosives");
-		if((null == explosivesConfig) || (explosivesConfig.size() < 0)) {
+		if((null == explosivesConfig) || (explosivesConfig.size() <= 0)) {
 			customLogger.error("Empty 'enabled-explosives' list");
 			return;
 		}

@@ -15,8 +15,12 @@ public class CustomLogger {
 		this.logger = logger;
 	}
 	
-	public void setDebug(boolean value) {
+	public void setDebugMode(boolean value) {
 		this.debug = value;
+	}
+	
+	public boolean isDebugMode() {
+		return this.debug;
 	}
 	
 	public void error(String message) {
