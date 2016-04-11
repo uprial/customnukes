@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.gmail.uprial</groupId>
 	<artifactId>CustomNukes</artifactId>
-	<version>0.2.5</version>
+	<version>0.2.6</version>
 	<build>
 		<plugins>
 			<plugin>
@@ -26,7 +26,7 @@
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot-api</artifactId>
-			<version>1.8.3-R0.1-SNAPSHOT</version>
+			<version>1.9.2-R0.1-SNAPSHOT</version>
 			<type>jar</type>
 			<scope>provided</scope>
 		</dependency>

@@ -78,6 +78,11 @@ This works only if 'check-permissions' is set to 'true' in config.yml.
 
 customnukes.clear (default: op)
 
+== TODO ==
+* Integration with WorldGuard
+* A new explosion type that replaces a set of blocks in sphere to another set with defined probability
+* An ability to throw explosives
+
 == Author ==
 I will be happy to add some features or fix bugs. My mail: uprial@gmail.com.
 
