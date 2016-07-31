@@ -1,0 +1,96 @@
+## Compatibility
+
+Tested on Spigot-1.8.8 and Spigot-1.10.2
+
+## Introduction
+
+This is fully customizable plugin that allows you to make your own explosives.
+Existing blocks' physics will be not changed.
+
+## Screencasts
+
+[![CustomNukes ✩ Bomben mit Einstellungsmöglichkeiten](http://img.youtube.com/vi/6CafoRSWlzA/0.jpg)](http://www.youtube.com/watch?v=6CafoRSWlzA)
+
+[![How to craft bombs in Minecraft with CustomNukes Plugin](http://img.youtube.com/vi/NkgRSTF6yCQ/0.jpg)](http://www.youtube.com/watch?v=NkgRSTF6yCQ)
+
+#### You can configure:
+* All the existing recipes or new, your own
+* A delay before action, an explosion radius, etc.
+* Explosives' base material (sponge by default)
+* Action scenario (explosion, potion effect, static repeater, seismic push)
+* All other valuable parameters
+
+#### Default set of explosives:
+
+![Toy Bomb](http://dev.bukkit.org/media/images/73/938/Toy_Bomb.png)
+
+![Bomb](http://dev.bukkit.org/media/images/73/939/Bomb.png)
+
+![Flash Bomb](http://dev.bukkit.org/media/images/74/96/Flash_Bomb.png)
+
+![Nuclear Bomb](http://dev.bukkit.org/media/images/73/940/Nuclear_Bomb.png)
+
+#### A custom nuke may be activated by:
+
+* Red stone right above this block:
+![Activate Custom Nuke by Red stone](http://dev.bukkit.org/media/images/73/937/Activate.png)
+
+* A click via "flint and steel"
+
+* Other explosion, if this block will be destroyed
+
+The main idea to activate explosives is: make a schema of red stones
+or a chain of "Toy Bomb" close to main explosive (like "Nuclear Bomb") .
+
+## Features
+* You can assign infinite number of different actions to one explosive.
+For example, your "Bomb" can be exploded twice with small interval between
+two explosions and glass-blocks will not protect enemy from this type of explosive.
+
+* You can add several potion effects with different strength,
+depending on distance between epicenter and target.
+
+* You can add "static" repeaters to run a scenario every some seconds.
+For example, add "radiation effect": area with radius 200 where every
+2 seconds  all living entities will take a potion effect "poison".
+
+* All special blocks and repeaters will be saved after server reload.
+
+* Additionally there are good help in configuration file (config.yml)
+and error messages with explanation what exactly is wrong in your config (in console logs).
+
+## Commands
+
+* `customnukes reload` - reload config from disk
+* `customnukes give <player\> <explosive-key\> <amount\>`
+* `customnukes clear` - remove all explosive blocks and active repeaters
+
+## Permissions
+
+* Access to 'reload' command:
+`customnukes.reload` (default: op)
+
+* Access to 'give' command:
+`customnukes.give` (default: op)
+
+* Access to place, break, craft items of specific explosive type: 
+`customnukes.explosive.<explosive-key\>` (default: op)
+This works only if 'check-permissions' is set to 'true' in config.yml.
+
+* Access to 'clear' command:
+`customnukes.clear` (default: op)
+
+## Configuration
+[Default configuration file](src/main/resources/config.yml)
+
+## Author
+I will be happy to add some features or fix bugs. My mail: uprial@gmail.com.
+
+## Useful links
+* [Project on GitHub](https://github.com/uprial/customnukes/)
+* [Project on Bukkit Dev](http://dev.bukkit.org/bukkit-plugins/customnukes/)
+* [TODO list](TODO.md)
+
+## Related projects
+* CustomCreatures: [Bukkit Dev](http://dev.bukkit.org/bukkit-plugins/customcreatures/), [GitHub](https://github.com/uprial/customcreatures)
+* CustomDamage: [Bukkit Dev](http://dev.bukkit.org/bukkit-plugins/customdamage/), [GitHub](https://github.com/uprial/customdamage)
