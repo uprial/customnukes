@@ -1,10 +1,5 @@
 package com.gmail.uprial.customnukes.common;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -13,8 +8,13 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map.Entry;
+
 public class BlockMetaStorage {
-    private static Character keyDelimiter = ':';
+    private static final Character KEY_DELIMITER = ':';
 
     private final JavaPlugin plugin;
     private final CustomStorage storage;
@@ -22,7 +22,7 @@ public class BlockMetaStorage {
 
     public BlockMetaStorage(JavaPlugin plugin, File dataFolder, CustomLogger customLogger) {
         this.plugin = plugin;
-        this.storage = new CustomStorage(dataFolder, "block-meta.txt", customLogger);
+        storage = new CustomStorage(dataFolder, "block-meta.txt", customLogger);
         this.customLogger = customLogger;
 
         storage.load();
@@ -33,10 +33,10 @@ public class BlockMetaStorage {
     }
 
     public void clear() {
-        for (Map.Entry<String,String> entry : storage.entrySet()) {
-            String key = entry.getKey().toString();
+        for (Entry<String,String> entry : storage.entrySet()) {
+            String key = entry.getKey();
             Block block = getBlockByKey(key);
-            if(null != block) {
+            if(block != null) {
                 customLogger.debug(String.format("Removed block at %s:%d:%d:%d",
                                                  block.getWorld().getName(), block.getX(), block.getY(), block.getZ()));
                 deleteFromBlock(block, getMetadataKeyByKey(key));
@@ -47,61 +47,72 @@ public class BlockMetaStorage {
         save();
     }
 
+    @SuppressWarnings("SameParameterValue")
     public void set(Block block, String metadataKey, String value) {
         setToBlock(block, metadataKey, value);
         storage.set(getMapKey(block.getLocation(), metadataKey), value);
     }
 
+    @SuppressWarnings("SameParameterValue")
     public void delete(Block block, String metadataKey) {
         deleteFromBlock(block, metadataKey);
         storage.delete(getMapKey(block.getLocation(), metadataKey));
     }
 
+    @SuppressWarnings("SameParameterValue")
     public String get(Block block, String metadataKey) {
         String value = getFromBlock(block, metadataKey);
-        if(null == value) {
+        if(value == null) {
             value = storage.get(getMapKey(block.getLocation(), metadataKey));
-            if(null != value)
+            if(value != null) {
                 setToBlock(block, metadataKey, value);
+            }
         }
 
         return value;
     }
 
     public List<Block> getAllBlocks() {
-        List<Block> blocks = new ArrayList<Block>();
-        List<String> errorKeys = new ArrayList<String>();
+        List<Block> blocks = new ArrayList<>();
+        List<String> errorKeys = new ArrayList<>();
 
-        for (Map.Entry<String,String> entry : storage.entrySet()) {
-            String key = entry.getKey().toString();
+        for (Entry<String,String> entry : storage.entrySet()) {
+            String key = entry.getKey();
             Block block = getBlockByKey(key);
-            if (null == block) {
+            if (block == null) {
                 customLogger.info(String.format("Key '%s' does not links to proper block and will be removed", key));
                 errorKeys.add(key);
             }
-            else
+            else {
                 blocks.add(block);
+            }
         }
-        for(int i = 0; i < errorKeys.size(); i++)
+
+        int errorKeysSize = errorKeys.size();
+        //noinspection ForLoopReplaceableByForEach
+        for(int i = 0; i < errorKeysSize; i++) {
             storage.delete(errorKeys.get(i));
+        }
 
         return blocks;
     }
 
        private Block getBlockByKey(String key) {
-        String[] items = EUtils.split(key, keyDelimiter);
-        if(items.length != 5)
+        String[] items = EUtils.split(key, KEY_DELIMITER);
+        if(items.length != 5) {
             return null;
+        }
 
         World world = plugin.getServer().getWorld(items[0]);
-        if(null == world)
+        if(world == null) {
             return null;
+        }
 
         return world.getBlockAt(Integer.valueOf(items[1]), Integer.valueOf(items[2]), Integer.valueOf(items[3]));
        }
 
-       private String getMetadataKeyByKey(String key) {
-        String[] items = EUtils.split(key, keyDelimiter);
+       private static String getMetadataKeyByKey(String key) {
+        String[] items = EUtils.split(key, KEY_DELIMITER);
         return items[4];
        }
 
@@ -109,19 +120,16 @@ public class BlockMetaStorage {
         block.setMetadata(metadataKey, new FixedMetadataValue(plugin, value));
     }
 
-    private String getFromBlock(Block block, String metadataKey) {
+    private static String getFromBlock(Block block, String metadataKey) {
         List<MetadataValue> metadataValue = block.getMetadata(metadataKey);
-        if(metadataValue.size() > 0)
-            return metadataValue.get(0).asString();
-        else
-            return null;
+        return !metadataValue.isEmpty() ? metadataValue.get(0).asString() : null;
     }
 
     private void deleteFromBlock(Block block, String metadataKey) {
         block.removeMetadata(metadataKey, plugin);
     }
 
-    private String getMapKey(Location location, String metadataKey) {
+    private static String getMapKey(Location location, String metadataKey) {
         String[] items = new String[5];
         items[0] = location.getWorld().getName();
         items[1] = String.valueOf(location.getBlockX());
@@ -129,7 +137,7 @@ public class BlockMetaStorage {
         items[3] = String.valueOf(location.getBlockZ());
         items[4] = metadataKey;
 
-        return EUtils.join(items, keyDelimiter);
+        return EUtils.join(items, KEY_DELIMITER);
     }
 
 }

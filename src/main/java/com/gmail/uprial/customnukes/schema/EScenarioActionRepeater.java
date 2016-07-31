@@ -12,27 +12,37 @@ import com.gmail.uprial.customnukes.common.EUtils;
 
 public class EScenarioActionRepeater extends AbstractEScenarioActionDelayed {
 
+    @Override
     protected int defaultMinDelay() { return 2; }
+    @Override
     protected int defaultMaxDelay() { return 60; }
+    @Override
     protected int minDelayValue() { return 2; }
+    @Override
     protected int maxDelayValue() { return 10000; }
 
-    protected int minDuration() { return 1; }
-    protected int maxDuration() { return 864000; }
+    @SuppressWarnings("SameReturnValue")
+    private static int minDuration() { return 1; }
+    @SuppressWarnings("SameReturnValue")
+    private static int maxDuration() { return 864000; }
 
-    protected int minInterval() { return 20; }
-    protected int maxInterval() { return 6000; }
-    protected int defaultInterval() { return 40; }
+    @SuppressWarnings("SameReturnValue")
+    private static int minInterval() { return 20; }
+    @SuppressWarnings("SameReturnValue")
+    private static int maxInterval() { return 6000; }
+    @SuppressWarnings("SameReturnValue")
+    private static int defaultInterval() { return 40; }
 
-    private int duration;
-    private int interval;
-    private EScenario scenario;
+    private int duration = 0;
+    private int interval = 0;
+    private EScenario scenario = null;
 
     public EScenarioActionRepeater(String actionId) {
         super(actionId);
         EScenarioActionRepeaterMap.INSTANCE.set(actionId, this);
     }
 
+    @Override
     public void explode(CustomNukes plugin, Location location) {
         explodeEx(plugin, location, EUtils.seconds2ticks(duration) / interval);
     }
@@ -51,41 +61,33 @@ public class EScenarioActionRepeater extends AbstractEScenarioActionDelayed {
         plugin.getRepeaterTaskStorage().delete(location, getActionId(), taskId);
     }
 
-    public void setDuration(int duration) {
-        this.duration = duration;
-    }
-
-    public void setInterval(int interval) {
-        this.interval = interval;
-    }
-
-    public void setScenario(EScenario scenario) {
-        this.scenario = scenario;
-    }
-
+    @Override
     public boolean isLoadedFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String name) {
-        if(!super.isLoadedFromConfig(config, customLogger, key, name))
+        if(!super.isLoadedFromConfig(config, customLogger, key, name)) {
             return false;
+        }
 
-        if(!isLoadedDurationFromConfig(config, customLogger, key, name))
+        if(!isLoadedDurationFromConfig(config, customLogger, key, name)) {
             return false;
+        }
 
-        setInterval(ConfigReader.getInt(config, customLogger, key + ".interval", "Interval of action", name, minInterval(), maxInterval(), defaultInterval()));
+        interval = ConfigReader.getInt(config, customLogger, key + ".interval", "Interval of action", name, minInterval(), maxInterval(), defaultInterval());
 
         EScenario scenario = EScenario.getFromConfig(config, customLogger, key, name, false);
-        if(null == scenario)
+        if(scenario == null) {
             return false;
-        setScenario(scenario);
+        }
+        this.scenario = scenario;
 
         return true;
     }
 
     private boolean isLoadedDurationFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String name) {
         ConfigReaderResult result = ConfigReader.getIntComplex(config, customLogger, key + ".duration", "Duration of action", name, minDuration(), maxDuration());
-        if(result.isError())
+        if(result.isError()) {
             return false;
-        else {
-            setDuration(result.getInt());
+        } else {
+            duration = result.getIntValue();
             return true;
         }
     }

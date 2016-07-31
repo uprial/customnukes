@@ -1,36 +1,38 @@
 package com.gmail.uprial.customnukes.schema;
 
-import java.util.Random;
-
-import org.bukkit.Location;
-import org.bukkit.configuration.file.FileConfiguration;
-
 import com.gmail.uprial.customnukes.ConfigReader;
 import com.gmail.uprial.customnukes.CustomNukes;
 import com.gmail.uprial.customnukes.common.CustomLogger;
+import org.bukkit.Location;
+import org.bukkit.configuration.file.FileConfiguration;
 
-abstract public class AbstractEScenarioActionDelayed implements I_EScenarioActionSubAction {
+import java.util.Random;
+
+public abstract class AbstractEScenarioActionDelayed implements I_EScenarioActionSubAction {
+    @SuppressWarnings("SameReturnValue")
     abstract int defaultMinDelay();
     abstract int defaultMaxDelay();
+    @SuppressWarnings("SameReturnValue")
     abstract int minDelayValue();
     abstract int maxDelayValue();
 
-    abstract public void explode(CustomNukes plugin, Location location);
+    public abstract void explode(CustomNukes plugin, Location location);
 
-    private String actionId;
+    private final String actionId;
 
     private final Random random;
 
-    private int minDelay;
-    private int maxDelay;
+    private int minDelay = 0;
+    private int maxDelay = 0;
 
-    public AbstractEScenarioActionDelayed(String actionId) {
+    AbstractEScenarioActionDelayed(String actionId) {
         this.actionId = actionId;
         random = new Random();
     }
 
+    @Override
     public int execute(CustomNukes plugin, Location location, int delay) {
-        int currentDelay = minDelay + random.nextInt(maxDelay - minDelay + 1);
+        int currentDelay = minDelay + random.nextInt((maxDelay - minDelay) + 1);
         int globalDelay = delay + currentDelay;
 
         plugin.scheduleDelayed(new TaskEScenarioActionDelayedExplode(this, plugin, location), globalDelay);
@@ -39,14 +41,7 @@ abstract public class AbstractEScenarioActionDelayed implements I_EScenarioActio
     }
 
 
-    public void setMinDelay(int minDelay) {
-        this.minDelay = minDelay;
-    }
-
-    public void setMaxDelay(int maxDelay) {
-        this.maxDelay = maxDelay;
-    }
-
+    @Override
     public boolean isLoadedFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String name) {
         int minDelay = getDelayFromConfig(config, customLogger, key + ".min-delay", name, "minimum delay", defaultMinDelay());
         int maxDelay = getDelayFromConfig(config, customLogger, key + ".max-delay", name, "maximum delay", defaultMaxDelay());
@@ -56,13 +51,13 @@ abstract public class AbstractEScenarioActionDelayed implements I_EScenarioActio
             minDelay = minDelayValue();
             maxDelay = maxDelayValue();
         }
-        setMinDelay(minDelay);
-        setMaxDelay(maxDelay);
+        this.minDelay = minDelay;
+        this.maxDelay = maxDelay;
 
         return true;
     }
 
-    protected String getActionId() {
+    String getActionId() {
         return actionId;
     }
 

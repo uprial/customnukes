@@ -1,23 +1,19 @@
 package com.gmail.uprial.customnukes.schema;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.scheduler.BukkitTask;
-
 import com.gmail.uprial.customnukes.CustomNukes;
 import com.gmail.uprial.customnukes.common.CustomLogger;
 import com.gmail.uprial.customnukes.common.CustomStorage;
 import com.gmail.uprial.customnukes.common.EUtils;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.scheduler.BukkitTask;
+
+import java.io.File;
+import java.util.*;
+import java.util.Map.Entry;
 
 public class RepeaterTaskStorage {
-    private static Character keyDelimiter = ':';
+    private static final Character KEY_DELIMITER = ':';
 
     private final CustomNukes plugin;
     private final CustomStorage storage;
@@ -27,7 +23,7 @@ public class RepeaterTaskStorage {
 
     public RepeaterTaskStorage(CustomNukes plugin, File dataFolder, CustomLogger customLogger) {
         this.plugin = plugin;
-        this.storage = new CustomStorage(dataFolder, "repeater-task.txt", customLogger);
+        storage = new CustomStorage(dataFolder, "repeater-task.txt", customLogger);
         this.customLogger = customLogger;
 
         storage.load();
@@ -39,7 +35,7 @@ public class RepeaterTaskStorage {
     }
 
     public void clear() {
-        for (Map.Entry<Integer,BukkitTask> entry : tasks.entrySet()) {
+        for (Entry<Integer,BukkitTask> entry : tasks.entrySet()) {
             entry.getValue().cancel();
         }
         storage.clear();
@@ -63,13 +59,13 @@ public class RepeaterTaskStorage {
     }
 
     public void restore() {
-        List<EScenarioActionRepeater> actions = new ArrayList<EScenarioActionRepeater>();
-        List<Location> locations = new ArrayList<Location>();
-        List<Integer> runsCounts = new ArrayList<Integer>();
+        List<EScenarioActionRepeater> actions = new ArrayList<>();
+        List<Location> locations = new ArrayList<>();
+        List<Integer> runsCounts = new ArrayList<>();
 
-        for (Map.Entry<String,String> entry : storage.entrySet()) {
-            String key = entry.getKey().toString();
-            boolean error = false;
+        for (Entry<String,String> entry : storage.entrySet()) {
+            String key = entry.getKey();
+            boolean isValid = true;
 
             World world = null;
             Location location = null;
@@ -78,41 +74,41 @@ public class RepeaterTaskStorage {
             double y = 0;
             double z = 0;
 
-            String[] items = EUtils.split(key, keyDelimiter);
-            if(!error && (items.length != 6)) {
+            String[] items = EUtils.split(key, KEY_DELIMITER);
+            if(items.length != 6) {
                 customLogger.error(String.format("Key '%s' is invalid", key));
-                error = true;
+                isValid = false;
             }
 
-            if(!error) {
+            if(isValid) {
                 world = plugin.getServer().getWorld(items[0]);
-                if(null == world) {
+                if(world == null) {
                     customLogger.error(String.format("Key '%s' does not links to proper world", key));
-                    error =  true;
+                    isValid = false;
                 }
             }
-            if(!error) {
+            if(isValid) {
                 try {
                     x = Double.valueOf(items[1]);
                     y = Double.valueOf(items[2]);
                     z = Double.valueOf(items[3]);
                 } catch (NumberFormatException e) {
                     customLogger.error(e.toString());
-                    error = true;
+                    isValid = false;
                 }
             }
 
-            if(!error) {
+            if(isValid) {
                 location = new Location(world, x, y, z);
 
                 action = EScenarioActionRepeaterMap.INSTANCE.get(items[4]);
-                if(null == action) {
+                if(action == null) {
                     customLogger.warning(String.format("Key '%s' does not links to proper action", key));
-                    error = true;
+                    isValid = false;
                 }
             }
-            if(!error) {
-                int runsCount = Integer.valueOf(entry.getValue().toString());
+            if(isValid) {
+                int runsCount = Integer.valueOf(entry.getValue());
                 if(runsCount >= 0) {
                     actions.add(action);
                     locations.add(location);
@@ -121,25 +117,28 @@ public class RepeaterTaskStorage {
             }
         }
         storage.clear();
-        for(int i = 0; i < locations.size(); i++)
+        int locationsSize = locations.size();
+        for(int i = 0; i < locationsSize; i++) {
             actions.get(i).explodeEx(plugin, locations.get(i), runsCounts.get(i));
+        }
 
     }
 
     private void initData() {
-        tasks = new HashMap<Integer,BukkitTask>();
+        tasks = new HashMap<>();
     }
 
     private void set(Location location, String actionId, int taskId, int runsCount) {
         String mapKey = getMapKey(location, actionId, taskId);
 
-        if(runsCount >= 0)
+        if(runsCount >= 0) {
             storage.set(mapKey, String.valueOf(runsCount));
-        else
+        } else {
             storage.delete(mapKey);
+        }
     }
 
-    private String getMapKey(Location location, String actionId, int taskId) {
+    private static String getMapKey(Location location, String actionId, int taskId) {
         String[] items = new String[6];
         items[0] = location.getWorld().getName();
         items[1] = String.format(Locale.US, "%.2f", location.getX());
@@ -148,7 +147,7 @@ public class RepeaterTaskStorage {
         items[4] = actionId;
         items[5] = String.valueOf(taskId);
 
-        return EUtils.join(items, keyDelimiter);
+        return EUtils.join(items, KEY_DELIMITER);
     }
 
 }

@@ -18,6 +18,7 @@ import org.bukkit.scheduler.BukkitTask;
 import java.io.File;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import static com.gmail.uprial.customnukes.CustomNukesCommandExecutor.COMMAND_NS;
 
@@ -25,13 +26,14 @@ public final class CustomNukes extends JavaPlugin {
     private final String CONFIG_FILE_NAME = "config.yml";
     private final File configFile = new File(getDataFolder(), CONFIG_FILE_NAME);
 
-    private static int saveInterval = 20 * 300;
+    @SuppressWarnings("FieldCanBeLocal")
+    private static final int SAVE_INTERVAL = 20 * 300;
 
-    private ExplosivesConfig explosivesConfig;
-    private CustomLogger consoleLogger;
-    private BlockMetaStorage blockMetaStorage;
-    private RepeaterTaskStorage repeaterTaskStorage;
-    private BukkitTask saveTask;
+    private ExplosivesConfig explosivesConfig = null;
+    private CustomLogger consoleLogger = null;
+    private BlockMetaStorage blockMetaStorage = null;
+    private RepeaterTaskStorage repeaterTaskStorage = null;
+    private BukkitTask saveTask = null;
 
     @Override
     public void onEnable() {
@@ -44,7 +46,7 @@ public final class CustomNukes extends JavaPlugin {
         repeaterTaskStorage.restore();
         loadExplosives();
 
-        saveTask = new TaskPeriodicSave(this).runTaskTimer(this, saveInterval, saveInterval);
+        saveTask = new TaskPeriodicSave(this).runTaskTimer(this, SAVE_INTERVAL, SAVE_INTERVAL);
 
         getServer().getPluginManager().registerEvents(new ExplosivesBlocksListener(this, consoleLogger), this);
         getServer().getPluginManager().registerEvents(new ExplosivesActivateListener(this, consoleLogger), this);
@@ -77,11 +79,12 @@ public final class CustomNukes extends JavaPlugin {
         return YamlConfiguration.loadConfiguration(configFile);
     }
 
+    @SuppressWarnings("unused")
     public void global_log(String message) {
         getLogger().info(message);
         for(World w : getServer().getWorlds()){
             for(Player p : w.getPlayers()){
-                  p.sendMessage("[" + MicroTimestamp.INSTANCE.get() + "] " + message);
+                  p.sendMessage('[' + MicroTimestamp.INSTANCE.get() + "] " + message);
             }
         }
     }
@@ -98,8 +101,8 @@ public final class CustomNukes extends JavaPlugin {
         return repeaterTaskStorage;
     }
 
-    public int scheduleDelayed(Runnable runnable, long delay) {
-        return getServer().getScheduler().scheduleSyncDelayedTask(this, runnable, delay);
+    public void scheduleDelayed(Runnable runnable, long delay) {
+        getServer().getScheduler().scheduleSyncDelayedTask(this, runnable, delay);
     }
 
     public void saveData() {
@@ -117,10 +120,12 @@ public final class CustomNukes extends JavaPlugin {
     public Player getPlayerByName(String playerName) {
         Collection<? extends Player> players = getServer().getOnlinePlayers();
         Iterator<? extends Player> iterator = players.iterator();
+        //noinspection WhileLoopReplaceableByForEach
         while (iterator.hasNext()) {
             Player player = iterator.next();
-            if(player.getName().equalsIgnoreCase(playerName))
+            if(player.getName().equalsIgnoreCase(playerName)) {
                 return player;
+            }
         }
 
         return null;
@@ -132,12 +137,15 @@ public final class CustomNukes extends JavaPlugin {
     }
 
     private void loadExplosives() {
-        for(int i = 0; i < explosivesConfig.getExplosives().size(); i++) {
-            EItem explosive = explosivesConfig.getExplosives().get(i);
+        List<EItem> explosives = explosivesConfig.getExplosives();
+        int explosivesSize = explosives.size();
+        //noinspection ForLoopReplaceableByForEach
+        for(int i = 0; i < explosivesSize; i++) {
+            EItem explosive = explosives.get(i);
 
             ShapedRecipe shapedRecipe = explosive.getShapedRecipe();
             getServer().addRecipe(shapedRecipe);
-            consoleLogger.info("Added " + explosive.toString());
+            consoleLogger.info("Added " + explosive);
         }
     }
 
@@ -146,9 +154,9 @@ public final class CustomNukes extends JavaPlugin {
         while (iterator.hasNext()) {
             Recipe recipe = iterator.next();
             EItem explosive = explosivesConfig.searchExplosiveByItemStack(recipe.getResult());
-            if(null != explosive) {
+            if(explosive != null) {
                 iterator.remove();
-                consoleLogger.info("Removed " + explosive.toString());
+                consoleLogger.info("Removed " + explosive);
             }
         }
     }

@@ -1,37 +1,38 @@
 package com.gmail.uprial.customnukes;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.gmail.uprial.customnukes.common.CustomLogger;
+import com.gmail.uprial.customnukes.common.EUtils;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import com.gmail.uprial.customnukes.common.CustomLogger;
-import com.gmail.uprial.customnukes.common.EUtils;
+import java.util.ArrayList;
+import java.util.List;
 
-public class ConfigReader {
+public final class ConfigReader {
     public static int getInt(FileConfiguration config, CustomLogger customLogger, String key, String title, String name, int min, int max, int defaultValue) {
         int value = defaultValue;
 
-        if(null == config.getString(key)) {
+        if(config.getString(key) == null) {
             customLogger.debug(String.format("Empty %s '%s'. Use default value %d", EUtils.lcFirst(title), name, defaultValue));
         } else {
             int intValue = config.getInt(key);
-            if(min > intValue)
+            if(min > intValue) {
                 customLogger.error(String.format("%s '%s' should be at least %d. Use default value %d", title, name, min, defaultValue));
-            else if(max < intValue)
+            } else if(max < intValue) {
                 customLogger.error(String.format("%s '%s' should be at most %d. Use default value %d", title, name, max, defaultValue));
-            else
+            } else {
                 value = intValue;
+            }
         }
 
         return value;
     }
 
+    @SuppressWarnings({"StaticMethodOnlyUsedInOneClass", "SameParameterValue"})
     public static String getString(FileConfiguration config, CustomLogger customLogger, String key, String title) {
         String name = config.getString(key);
 
-        if(null == name) {
+        if(name == null) {
             customLogger.error(String.format("Null/Empty %s '%s'", title, key));
             return null;
         }
@@ -39,12 +40,17 @@ public class ConfigReader {
         return name;
     }
 
+    @SuppressWarnings({"StaticMethodOnlyUsedInOneClass", "SameParameterValue"})
     public static List<String> getStringList(FileConfiguration config, CustomLogger customLogger, String key, String title, String name) {
         List<?> lines = config.getList(key);
-        if(null != lines) {
-            List<String> description = new ArrayList<String>();
-            for(int i = 0; i < lines.size(); i++)
+        if(lines != null) {
+            List<String> description = new ArrayList<>();
+
+            int linesSize = lines.size();
+            //noinspection ForLoopReplaceableByForEach
+            for(int i = 0; i < linesSize; i++) {
                 description.add(lines.get(i).toString());
+            }
 
             return description;
         } else {
@@ -53,26 +59,28 @@ public class ConfigReader {
         }
     }
 
+    @SuppressWarnings({"BooleanParameter", "BooleanMethodNameMustStartWithQuestion"})
     public static boolean getBoolean(FileConfiguration config, CustomLogger customLogger, String key, String title, String name, boolean defaultValue) {
         boolean value = defaultValue;
 
-        if(null == config.getString(key)) {
+        if(config.getString(key) == null) {
             customLogger.debug(String.format("Empty %s '%s'. Use default value %b", title, name, defaultValue));
         } else {
             String strValue = config.getString(key);
-            if(strValue.equalsIgnoreCase("true"))
+            if(strValue.equalsIgnoreCase("true")) {
                 value = true;
-            else if(strValue.equalsIgnoreCase("false"))
+            } else if(strValue.equalsIgnoreCase("false")) {
                 value = false;
-            else
+            } else {
                 customLogger.error(String.format("Invalid %s '%s'. Use default value %b", title, name, defaultValue));
+            }
         }
 
         return value;
     }
 
     public static ConfigReaderResult getFloatComplex(FileConfiguration config, CustomLogger customLogger, String key, String title, String name, float min, float max) {
-        if(null == config.getString(key)) {
+        if(config.getString(key) == null) {
             customLogger.error(String.format("Null %s '%s", EUtils.lcFirst(title), name));
             return ConfigReaderResult.errorResult();
         }
@@ -90,8 +98,9 @@ public class ConfigReader {
         return ConfigReaderResult.floatResult(value);
     }
 
+    @SuppressWarnings("SameParameterValue")
     public static ConfigReaderResult getIntComplex(FileConfiguration config, CustomLogger customLogger, String key, String title, String name, int min, int max) {
-        if(null == config.getString(key)) {
+        if(config.getString(key) == null) {
             customLogger.error(String.format("Null %s '%s", EUtils.lcFirst(title), name));
             return ConfigReaderResult.errorResult();
         }
@@ -113,22 +122,24 @@ public class ConfigReader {
         Material resMaterial = defaultMaterial;
 
         String strMaterial = config.getString(key);
-        if(null == strMaterial)
+        if(strMaterial == null) {
             customLogger.debug(String.format("Empty %s, use default '%s'", EUtils.lcFirst(title), defaultMaterial));
-        else {
+        } else {
             Material tmpMaterial = Material.getMaterial(strMaterial);
-            if(null == tmpMaterial)
-                customLogger.error(String.format("Unknown %s '%s', use default '%s'", EUtils.lcFirst(title), tmpMaterial, defaultMaterial));
-            else if(!tmpMaterial.isBlock())
+            //noinspection IfStatementWithTooManyBranches
+            if(tmpMaterial == null) {
+                customLogger.error(String.format("Unknown %s '%s', use default '%s'", EUtils.lcFirst(title), strMaterial, defaultMaterial));
+            } else if(!tmpMaterial.isBlock()) {
                 customLogger.error(String.format("%s '%s' is not block, use default '%s'", title, tmpMaterial, defaultMaterial));
-            else if(tmpMaterial.hasGravity())
+            } else if(tmpMaterial.hasGravity()) {
                 customLogger.error(String.format("%s '%s' has gravity, use default '%s'", title, tmpMaterial, defaultMaterial));
-            else if(!tmpMaterial.isSolid())
+            } else if(!tmpMaterial.isSolid()) {
                 customLogger.error(String.format("%s '%s' is not solid, use default '%s'", title, tmpMaterial, defaultMaterial));
-            else if(tmpMaterial.isTransparent())
+            } else if(tmpMaterial.isTransparent()) {
                 customLogger.error(String.format("%s '%s' is transparent, use default '%s'", title, tmpMaterial, defaultMaterial));
-            else
+            } else {
                 resMaterial = tmpMaterial;
+            }
         }
 
         return resMaterial;

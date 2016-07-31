@@ -8,16 +8,17 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 public class CustomStorage {
-    protected static Character valueDelimiter = '=';
+    private static final Character VALUE_DELIMITER = '=';
 
-    protected final File dataFolder;
-    protected final String fileName;
-    protected final CustomLogger customLogger;
+    private final File dataFolder;
+    private final String fileName;
+    private final CustomLogger customLogger;
 
-    protected Map<String,String> data;
+    private Map<String,String> data = null;
 
     public CustomStorage(File dataFolder, String fileName, CustomLogger customLogger) {
         this.dataFolder = dataFolder;
@@ -38,13 +39,15 @@ public class CustomStorage {
         return data.get(key);
     }
 
-    public Set<Map.Entry<String,String>> entrySet() {
+    public Set<Entry<String,String>> entrySet() {
         return data.entrySet();
     }
 
     public void save() {
-        if(!dataFolder.exists())
-             dataFolder.mkdir();
+        if(!dataFolder.exists()) {
+            //noinspection ResultOfMethodCallIgnored
+            dataFolder.mkdir();
+        }
 
         try {
             saveData();
@@ -65,7 +68,7 @@ public class CustomStorage {
     }
 
     public void clear() {
-        data = new HashMap<String, String>();
+        data = new HashMap<>();
     }
 
     private void saveData() throws IOException {
@@ -73,10 +76,10 @@ public class CustomStorage {
         BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 
         String[] row = new String[2];
-        for (Map.Entry<String,String> entry : data.entrySet()) {
-            row[0] = entry.getKey().toString();
-            row[1] = entry.getValue().toString();
-            bufferedWriter.write(EUtils.join(row, valueDelimiter));
+        for (Entry<String,String> entry : data.entrySet()) {
+            row[0] = entry.getKey();
+            row[1] = entry.getValue();
+            bufferedWriter.write(EUtils.join(row, VALUE_DELIMITER));
             bufferedWriter.newLine();
         }
 
@@ -88,8 +91,9 @@ public class CustomStorage {
         BufferedReader bufferedReader = new BufferedReader(fileReader);
 
         String line;
+        //noinspection NestedAssignment,MethodCallInLoopCondition
         while((line = bufferedReader.readLine()) != null) {
-            String[] row = EUtils.split(line, valueDelimiter);
+            String[] row = EUtils.split(line, VALUE_DELIMITER);
             data.put(row[0], row[1]);
         }
 
@@ -98,7 +102,7 @@ public class CustomStorage {
 
     private String getFileName() {
         File file = new File(dataFolder, fileName);
-        return file.getPath().toString();
+        return file.getPath();
     }
 
 }

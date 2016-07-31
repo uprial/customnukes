@@ -8,35 +8,41 @@ import com.gmail.uprial.customnukes.CustomNukes;
 import com.gmail.uprial.customnukes.common.CustomLogger;
 
 public class EScenarioActionExplosion extends AbstractEScenarioActionExplosion {
+    @Override
     protected int defaultMinDelay() { return 2; }
+    @Override
     protected int defaultMaxDelay() { return 8; }
+    @Override
     protected int minDelayValue() { return 2; }
+    @Override
     protected int maxDelayValue() { return 1000; }
 
+    @Override
     protected float minRadius() { return 0; }
+    @Override
     protected float maxRadius() { return 320; }
 
-    protected boolean defaultDestroyBlocks() { return true; }
+    @SuppressWarnings({"SameReturnValue", "BooleanMethodNameMustStartWithQuestion"})
+    private static boolean defaultDestroyBlocks() { return true; }
 
-    private boolean destroyBlocks;
+    private boolean destroyBlocks = false;
 
     public EScenarioActionExplosion(String actionId) {
         super(actionId);
     }
 
+    @Override
     public void explode(CustomNukes plugin, Location location) {
         location.getWorld().createExplosion(location.getX(), location.getY(), location.getZ(), radius, false, destroyBlocks);
     }
 
-    public void setDestroyBlocks(boolean destroyBlocks) {
-        this.destroyBlocks = destroyBlocks;
-    }
-
+    @Override
     public boolean isLoadedFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String name) {
-        if(!super.isLoadedFromConfig(config, customLogger, key, name))
+        if(!super.isLoadedFromConfig(config, customLogger, key, name)) {
             return false;
+        }
 
-        setDestroyBlocks(ConfigReader.getBoolean(config, customLogger, key + ".destroy-blocks", "'destroy-blocks' value of action", name, defaultDestroyBlocks()));
+        destroyBlocks = ConfigReader.getBoolean(config, customLogger, key + ".destroy-blocks", "'destroy-blocks' value of action", name, defaultDestroyBlocks());
 
         return true;
     }

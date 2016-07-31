@@ -1,58 +1,63 @@
 package com.gmail.uprial.customnukes.schema;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.gmail.uprial.customnukes.CustomNukes;
+import com.gmail.uprial.customnukes.common.CustomLogger;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import com.gmail.uprial.customnukes.CustomNukes;
-import com.gmail.uprial.customnukes.common.CustomLogger;
+import java.util.ArrayList;
+import java.util.List;
 
-public class EScenario {
-    private List<EScenarioAction> actions;
+public final class EScenario {
+    private final List<EScenarioAction> actions;
 
-    public EScenario() {
-        actions = new ArrayList<EScenarioAction>();
+    private EScenario() {
+        actions = new ArrayList<>();
     }
 
-    public void addAction(EScenarioAction action) {
+    private void addAction(EScenarioAction action) {
         actions.add(action);
     }
 
     public void execute(CustomNukes plugin, Location location) {
         int delay = 0;
-        for(int i = 0; i < actions.size(); i++)
+        int actionsSize = actions.size();
+        //noinspection ForLoopReplaceableByForEach
+        for(int i = 0; i < actionsSize; i++) {
             delay = actions.get(i).execute(plugin, location, delay);
+        }
     }
 
+    @SuppressWarnings("BooleanParameter")
     public static EScenario getFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String name, boolean isRepeaterAllowed) {
         List<?> scenarioConfig = config.getList(key + ".scenario");
-        if((null == scenarioConfig) || (scenarioConfig.size() < 0)) {
+        if((scenarioConfig == null) || (scenarioConfig.size() < 0)) {
             customLogger.error(String.format("Empty scenario of item '%s'", name));
             return null;
         }
 
         EScenario scenario = new EScenario();
-        for(int i = 0; i < scenarioConfig.size(); i++) {
+        int scenarioConfigSize = scenarioConfig.size();
+        for(int i = 0; i < scenarioConfigSize; i++) {
             Object item = scenarioConfig.get(i);
-            if(null == item) {
+            if(item == null) {
                 customLogger.error(String.format("Null key in scenario of item '%s' at pos %d", name, i));
                 return null;
             }
-            String scenario_key = item.toString();
-            if(scenario_key.length() < 1) {
+            String scenarioKey = item.toString();
+            if(scenarioKey.length() < 1) {
                 customLogger.error(String.format("Empty key in scenario of item '%s' at pos %d", name, i));
                 return null;
             }
-            if(null == config.getConfigurationSection(key + "." + scenario_key)) {
-                customLogger.error(String.format("Null definition of scenario action '%s' from pos %d of item '%s'", scenario_key, i, name));
+            if(config.getConfigurationSection(key + '.' + scenarioKey) == null) {
+                customLogger.error(String.format("Null definition of scenario action '%s' from pos %d of item '%s'", scenarioKey, i, name));
                 return null;
             }
 
-            EScenarioAction action = EScenarioAction.getFromConfig(config, customLogger, key + "." + scenario_key, name + "/" + scenario_key, isRepeaterAllowed);
-            if(null == action)
+            EScenarioAction action = EScenarioAction.getFromConfig(config, customLogger, key + '.' + scenarioKey, name + '/' + scenarioKey, isRepeaterAllowed);
+            if(action == null) {
                 return null;
+            }
 
             scenario.addAction(action);
         }

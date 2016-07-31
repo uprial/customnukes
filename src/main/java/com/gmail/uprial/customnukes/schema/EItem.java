@@ -1,7 +1,9 @@
 package com.gmail.uprial.customnukes.schema;
 
-import java.util.List;
-
+import com.gmail.uprial.customnukes.ConfigReader;
+import com.gmail.uprial.customnukes.CustomNukes;
+import com.gmail.uprial.customnukes.common.CustomLogger;
+import com.gmail.uprial.customnukes.common.CustomRecipe;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -11,70 +13,44 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import com.gmail.uprial.customnukes.ConfigReader;
-import com.gmail.uprial.customnukes.CustomNukes;
-import com.gmail.uprial.customnukes.common.CustomLogger;
-import com.gmail.uprial.customnukes.common.CustomRecipe;
+import java.util.List;
+import java.util.Locale;
 
-public class EItem {
-    private static int defaultAmount = 1;
-    private static int minAmount = 1;
-    private static int maxAmount = 64;
+public final class EItem {
+    @SuppressWarnings("FieldCanBeLocal")
+    private static final int DEFAULT_AMOUNT = 1;
+    @SuppressWarnings("FieldCanBeLocal")
+    private static final int MIN_AMOUNT = 1;
+    @SuppressWarnings("FieldCanBeLocal")
+    private static final int MAX_AMOUNT = 64;
 
-    private String key;
-    private boolean checkPermissions;
-    private Material material;
-    private String name;
-    private List<String> description;
-    private CustomRecipe recipe;
-    private int amount;
-    private EScenario scenario;
+    private final String key;
+    private boolean skipPermissions = true;
+    private Material material = null;
+    private String name = null;
+    private List<String> description = null;
+    private CustomRecipe recipe = null;
+    private int amount = 0;
+    private EScenario scenario = null;
 
-    public EItem(String key, boolean checkPermissions) {
+    @SuppressWarnings("BooleanParameter")
+    private EItem(String key, boolean skipPermissions) {
         this.key = key;
-        this.checkPermissions = checkPermissions;
-    }
-
-    public void setMaterial(Material material) {
-        this.material = material;
+        this.skipPermissions = !skipPermissions;
     }
 
     public Material getMaterial() {
-        return this.material;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+        return material;
     }
 
     public String getName() {
-        return this.name;
-    }
-
-    public void setRecipe(CustomRecipe recipe) {
-        this.recipe = recipe;
-    }
-
-    public void setDescription(List<String> description) {
-        this.description = description;
-    }
-
-    public void setAmount(int amount) {
-        this.amount = amount;
-    }
-
-    public void setScenario(EScenario scenario) {
-        this.scenario = scenario;
+        return name;
     }
 
     public String toString() {
-        String description_string;
-        if(null == description)
-            description_string = "";
-        else
-            description_string = " (" + StringUtils.join(description, " ") + ")";
+        String descriptionString = (description == null) ? "" : (" (" + StringUtils.join(description, " ") + ')');
 
-        return material.toString() + "~'" + name + description_string + "'=" + recipe.toString();
+        return material + "~'" + name + descriptionString + "'=" + recipe;
     }
 
     public ItemStack getDroppedItemStack() {
@@ -100,34 +76,39 @@ public class EItem {
     }
 
     public boolean hasPermission(Player player) {
-        return (!checkPermissions) || (null != player) && (player.hasPermission("customnukes.explosive." + key.toLowerCase()));
+        return (skipPermissions) || ((player != null) && (player.hasPermission("customnukes.explosive." + key.toLowerCase(Locale.getDefault()))));
     }
 
+    @SuppressWarnings({"BooleanParameter", "AccessingNonPublicFieldOfAnotherObject"})
     public static EItem getFromConfig(Material defaultMaterial, FileConfiguration config, CustomLogger customLogger, String key, boolean checkPermissions) {
         String name = getNameFromConfig(config, customLogger, key);
-        if(null == name)
+        if(name == null) {
             return null;
+        }
 
         EItem explosive = new EItem(key, checkPermissions);
-        explosive.setMaterial(ConfigReader.getMaterial(config, customLogger, key + ".service-material", String.format("Material of '%s'", name), defaultMaterial));
-        explosive.setName(name);
+        explosive.material = ConfigReader.getMaterial(config, customLogger, key + ".service-material", String.format("Material of '%s'", name), defaultMaterial);
+        explosive.name = name;
         List<String> description = getDescriptionFromConfig(config, customLogger, key, name);
-        if(null != description)
-            explosive.setDescription(description);
+        if(description != null) {
+            explosive.description = description;
+        }
 
-        explosive.setAmount(getAmountFromConfig(config, customLogger, key, name));
+        explosive.amount = getAmountFromConfig(config, customLogger, key, name);
 
         CustomRecipe recipe = CustomRecipe.getFromConfig(config, customLogger, key, name);
-        if(null == recipe)
+        if(recipe == null) {
             return null;
+        }
 
-        explosive.setRecipe(recipe);
+        explosive.recipe = recipe;
 
         EScenario scenario = EScenario.getFromConfig(config, customLogger, key, name, true);
-        if(null == scenario)
+        if(scenario == null) {
             return null;
+        }
 
-        explosive.setScenario(scenario);
+        explosive.scenario = scenario;
 
         return explosive;
     }
@@ -141,15 +122,16 @@ public class EItem {
     }
 
     private static int getAmountFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String name) {
-        return ConfigReader.getInt(config, customLogger, key + ".amount", "Amount of explosive", name, minAmount, maxAmount, defaultAmount);
+        return ConfigReader.getInt(config, customLogger, key + ".amount", "Amount of explosive", name, MIN_AMOUNT, MAX_AMOUNT, DEFAULT_AMOUNT);
     }
 
     private ItemStack getItemStack() {
         ItemStack result = new ItemStack(material);
         ItemMeta meta = result.getItemMeta();
 
-        if(null != description)
+        if(description != null) {
             meta.setLore(description);
+        }
 
         meta.setDisplayName(name);
         result.setItemMeta(meta);
@@ -157,4 +139,5 @@ public class EItem {
 
         return result;
     }
+
 }

@@ -18,14 +18,14 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import java.util.List;
 import java.util.Random;
 
-public class ExplosivesBlocksListener implements Listener {
-    public static String blockMetaKey = "explosive";
+class ExplosivesBlocksListener implements Listener {
+    public static final String BLOCK_META_KEY = "explosive";
 
     private final CustomNukes plugin;
     private final Random random;
     private final CustomLogger customLogger;
 
-    public ExplosivesBlocksListener(CustomNukes plugin, CustomLogger customLogger) {
+    ExplosivesBlocksListener(CustomNukes plugin, CustomLogger customLogger) {
         this.plugin = plugin;
         this.customLogger = customLogger;
 
@@ -34,67 +34,77 @@ public class ExplosivesBlocksListener implements Listener {
         scheduleCleaning();
     }
 
+    @SuppressWarnings("unused")
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockPlace(BlockPlaceEvent event) {
         if(!event.isCancelled()) {
             EItem explosive = plugin.getExplosivesConfig().searchExplosiveByItemStack(event.getItemInHand());
-            if(null != explosive) {
+            if(explosive != null) {
                 Player player = event.getPlayer();
-                if (!explosive.hasPermission(player)) {
-                    event.setCancelled(true);
-                    CustomLogger userLogger = new CustomLogger(plugin.getLogger(), player);
-                    userLogger.error("You don't have permissions to place this type of block.");
-                } else {
+                if (explosive.hasPermission(player)) {
                     Block block = event.getBlock();
                     customLogger.debug(String.format("Place '%s' at %s:%d:%d:%d",
                             explosive.getName(), block.getWorld().getName(), block.getX(), block.getY(), block.getZ()));
                     setExplosive(block, explosive);
+                } else {
+                    event.setCancelled(true);
+                    CustomLogger userLogger = new CustomLogger(plugin.getLogger(), player);
+                    userLogger.error("You don't have permissions to place this type of block.");
                 }
-            } else
+            } else {
                 deleteExplosive(event.getBlock());
+            }
         }
     }
 
+    @SuppressWarnings("unused")
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockBreak(BlockBreakEvent event) {
         if(!event.isCancelled()) {
             Block block = event.getBlock();
             EItem explosive = searchExplosiveByBlock(block);
-            if(null != explosive) {
+            if(explosive != null) {
                 Player player = event.getPlayer();
-                if (!explosive.hasPermission(player)) {
-                    event.setCancelled(true);
-                    CustomLogger userLogger = new CustomLogger(plugin.getLogger(), player);
-                    userLogger.error("You don't have permissions to break this type of block.");
-                } else {
+                if (explosive.hasPermission(player)) {
                     customLogger.debug(String.format("Break '%s' at %s:%d:%d:%d",
                             explosive.getName(), block.getWorld().getName(), block.getX(), block.getY(), block.getZ()));
                     deleteExplosive(block);
 
                     event.setCancelled(true);
                     block.setType(Material.AIR);
-                    if(event.getPlayer().getGameMode() != GameMode.CREATIVE)
+                    if (event.getPlayer().getGameMode() != GameMode.CREATIVE) {
                         block.getWorld().dropItemNaturally(block.getLocation(), explosive.getDroppedItemStack());
+                    }
+                } else {
+                    event.setCancelled(true);
+                    CustomLogger userLogger = new CustomLogger(plugin.getLogger(), player);
+                    userLogger.error("You don't have permissions to break this type of block.");
                 }
             }
         }
     }
 
+    @SuppressWarnings("unused")
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockPistonExtend(BlockPistonExtendEvent event) {
         if(!event.isCancelled()) {
             List<Block> blocks = event.getBlocks();
-            for(int i = 0; i < blocks.size(); i++) {
+            int blocksSize = blocks.size();
+            //noinspection ForLoopReplaceableByForEach
+            for(int i = 0; i < blocksSize; i++) {
                 Block block = blocks.get(i);
                 maybeMoveBlock(block, event.getDirection());
             }
         }
     }
+    @SuppressWarnings("unused")
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockPistonRetract(BlockPistonRetractEvent event) {
         if(!event.isCancelled() && event.isSticky()) {
             List<Block> blocks = event.getBlocks();
-            for(int i = 0; i < blocks.size(); i++) {
+            int blocksSize = blocks.size();
+            //noinspection ForLoopReplaceableByForEach
+            for(int i = 0; i < blocksSize; i++) {
                 Block block = blocks.get(i);
                 maybeMoveBlock(block, event.getDirection());
             }
@@ -103,7 +113,9 @@ public class ExplosivesBlocksListener implements Listener {
 
     private void onTaskMetaClean() {
         List<Block> blocks = plugin.getBlockMetaStorage().getAllBlocks();
-        for(int i = 0; i < blocks.size(); i++) {
+        int blocksSize = blocks.size();
+        //noinspection ForLoopReplaceableByForEach
+        for(int i = 0; i < blocksSize; i++) {
             Block block = blocks.get(i);
             if(!plugin.getExplosivesConfig().isRegisteredMaterial(block.getType())) {
                 customLogger.info(String.format("Block '%s' at x=%d y=%d z=%d is not from the registered material. Meta will be deleted.",
@@ -114,29 +126,27 @@ public class ExplosivesBlocksListener implements Listener {
     }
 
     private void setExplosive(Block block, EItem explosive) {
-        plugin.getBlockMetaStorage().set(block, blockMetaKey, explosive.getName());
+        plugin.getBlockMetaStorage().set(block, BLOCK_META_KEY, explosive.getName());
         maybeScheduleCleaning();
     }
 
     private void deleteExplosive(Block block) {
-        plugin.getBlockMetaStorage().delete(block, blockMetaKey);
+        plugin.getBlockMetaStorage().delete(block, BLOCK_META_KEY);
     }
 
     private EItem searchExplosiveByBlock(Block block) {
         if(plugin.getExplosivesConfig().isRegisteredMaterial(block.getType())) {
-            String name = plugin.getBlockMetaStorage().get(block, blockMetaKey);
-            if (null != name)
-                return plugin.getExplosivesConfig().searchExplosiveByName(name);
-            else
-                return null;
+            String name = plugin.getBlockMetaStorage().get(block, BLOCK_META_KEY);
+            return (name != null) ? plugin.getExplosivesConfig().searchExplosiveByName(name) : null;
         }
-        else
+        else {
             return null;
+        }
     }
 
     private void maybeMoveBlock(Block block, BlockFace direction) {
         EItem explosive = searchExplosiveByBlock(block);
-        if(null != explosive) {
+        if(explosive != null) {
             Block blockInDirection = getBlockInDirection(block, direction);
             customLogger.debug(String.format("Move '%s' from %s:%d:%d:%d to %s:%d:%d:%d",
                     explosive.getName(),
@@ -151,15 +161,16 @@ public class ExplosivesBlocksListener implements Listener {
         }
     }
 
-    private Block getBlockInDirection(Block block, BlockFace direction) {
+    private static Block getBlockInDirection(Block block, BlockFace direction) {
         return block.getWorld().getBlockAt(block.getX() + direction.getModX(),
                                             block.getY() + direction.getModY(),
                                             block.getZ() + direction.getModZ());
     }
 
     private void maybeScheduleCleaning() {
-        if(0 == random.nextInt(10))
+        if(random.nextInt(10) == 0) {
             scheduleCleaning();
+        }
     }
 
     private void scheduleCleaning() {

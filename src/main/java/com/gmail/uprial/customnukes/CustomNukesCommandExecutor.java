@@ -8,12 +8,12 @@ import org.bukkit.entity.Player;
 import com.gmail.uprial.customnukes.common.CustomLogger;
 import com.gmail.uprial.customnukes.schema.EItem;
 
-public class CustomNukesCommandExecutor implements CommandExecutor {
+class CustomNukesCommandExecutor implements CommandExecutor {
     public static final String COMMAND_NS = "customnukes";
 
     private final CustomNukes plugin;
 
-    public CustomNukesCommandExecutor(CustomNukes plugin) {
+    CustomNukesCommandExecutor(CustomNukes plugin) {
         this.plugin = plugin;
     }
 
@@ -21,6 +21,7 @@ public class CustomNukesCommandExecutor implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase(COMMAND_NS)) {
             CustomLogger customLogger = new CustomLogger(plugin.getLogger(), sender);
+            //noinspection IfStatementWithTooManyBranches
             if((args.length >= 1) && (args[0].equalsIgnoreCase("reload"))) {
                 if (sender.hasPermission(COMMAND_NS + ".reload")) {
                     plugin.reloadExplosivesConfig(customLogger);
@@ -37,7 +38,7 @@ public class CustomNukesCommandExecutor implements CommandExecutor {
             }
             else if((args.length >= 1) && (args[0].equalsIgnoreCase("give"))) {
                 if (sender.hasPermission(COMMAND_NS + ".give")) {
-                    boolean error = false;
+                    boolean canGive = true;
 
                     Player player = null;
                     EItem explosive = null;
@@ -45,48 +46,49 @@ public class CustomNukesCommandExecutor implements CommandExecutor {
 
                     if(args.length < 3) {
                         customLogger.info(COMMAND_NS + " give <player> <explosive-key> <amount>");
-                        error = true;
+                        canGive = false;
                     }
 
-                    if(!error) {
+                    if(canGive) {
                         player = plugin.getPlayerByName(args[1]);
-                        if(null == player) {
+                        if(player == null) {
                             customLogger.error(String.format("Player '%s' is not exists.", args[1]));
-                            error = true;
+                            canGive = false;
                         }
                     }
-                    if(!error) {
+                    if(canGive) {
                         explosive = plugin.getExplosivesConfig().searchExplosiveByKey(args[2]);
-                        if(null == explosive)
+                        if(explosive == null) {
                             explosive = plugin.getExplosivesConfig().searchExplosiveByName(args[2]);
+                        }
 
-                        if(null == explosive) {
+                        if(explosive == null) {
                             customLogger.error(String.format("Explosive '%s' is not exists.", args[2]));
-                            error = true;
+                            canGive = false;
                         }
                     }
-                    if(!error) {
-                        if(args.length < 4)
+                    if(canGive) {
+                        if(args.length < 4) {
                             amount = 1;
-                        else {
+                        } else {
                             try {
                                 amount = Integer.valueOf(args[3]);
-                            } catch (NumberFormatException e) {
+                            } catch (NumberFormatException ignored) {
                                 customLogger.error("Amount should be an integer between 1 and 64.");
-                                error = true;
+                                canGive = false;
                             }
-                            if(!error) {
+                            if(canGive) {
                                 if(amount < 1) {
                                     customLogger.error("Amount should be at least 1.");
-                                    error = true;
+                                    canGive = false;
                                 } else if(amount > 64) {
                                     customLogger.error("Amount should be at most 64.");
-                                    error = true;
+                                    canGive = false;
                                 }
                             }
                         }
                     }
-                    if(!error) {
+                    if(canGive) {
                         player.getInventory().addItem(explosive.getCustomItemStack(amount));
                         customLogger.info(String.format("Player '%s' got %d * '%s'", player.getName(), amount, explosive.getName()));
                     }
@@ -95,15 +97,18 @@ public class CustomNukesCommandExecutor implements CommandExecutor {
                 }
             }
             else if((args.length == 0) || (args[0].equalsIgnoreCase("help"))) {
-                String Help = "==== CustomNukes help ====";
-                if (sender.hasPermission(COMMAND_NS + ".reload"))
-                    Help += "\n/" + COMMAND_NS + " reload - reload config from disk";
-                if (sender.hasPermission(COMMAND_NS + ".give"))
-                    Help += "\n/" + COMMAND_NS + " give <player> <explosive-key> <amount>";
-                if (sender.hasPermission(COMMAND_NS + ".clear"))
-                    Help += "\n/" + COMMAND_NS + " clear - remove all explosive blocks and active repeaters";
-                Help += "\n";
-                customLogger.info(Help);
+                String helpString = "==== CustomNukes help ====";
+                if (sender.hasPermission(COMMAND_NS + ".reload")) {
+                    helpString += "\n/" + COMMAND_NS + " reload - reload config from disk";
+                }
+                if (sender.hasPermission(COMMAND_NS + ".give")) {
+                    helpString += "\n/" + COMMAND_NS + " give <player> <explosive-key> <amount>";
+                }
+                if (sender.hasPermission(COMMAND_NS + ".clear")) {
+                    helpString += "\n/" + COMMAND_NS + " clear - remove all explosive blocks and active repeaters";
+                }
+                helpString += "\n";
+                customLogger.info(helpString);
                 return true;
             }
         }

@@ -25,6 +25,7 @@ public class CustomLogger {
         debugMode = value;
     }
 
+    @SuppressWarnings("unused")
     public boolean isDebugMode() {
         return debugMode;
     }

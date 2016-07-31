@@ -10,23 +10,24 @@ import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import com.gmail.uprial.customnukes.common.CustomLogger;
 import com.gmail.uprial.customnukes.schema.EItem;
 
-public class ExplosivesCraftListener implements Listener {
+class ExplosivesCraftListener implements Listener {
 
     private final CustomNukes plugin;
 
-    public ExplosivesCraftListener(CustomNukes plugin) {
+    ExplosivesCraftListener(CustomNukes plugin) {
         this.plugin = plugin;
     }
 
+    @SuppressWarnings("unused")
     @EventHandler(priority = EventPriority.NORMAL)
     public void onItemCraft(PrepareItemCraftEvent event) {
         EItem explosive = plugin.getExplosivesConfig().searchExplosiveByItemStack(event.getRecipe().getResult());
-        if(null != explosive) {
+        if(explosive != null) {
             HumanEntity entityPlayer = event.getView().getPlayer();
             Player player = plugin.getPlayerByName(entityPlayer.getName());
-            if(null == player)
+            if(player == null) {
                 event.getInventory().setResult(null);
-            else if (!explosive.hasPermission(player)) {
+            } else if (!explosive.hasPermission(player)) {
                 event.getInventory().setResult(null);
                 CustomLogger userLogger = new CustomLogger(plugin.getLogger(), player);
                 userLogger.error("you don't have permissions to craft this type of item.");

@@ -6,10 +6,10 @@ import java.util.Map;
 public enum EScenarioActionRepeaterMap {
     INSTANCE;
 
-    private Map<String,EScenarioActionRepeater> data;
+    private final Map<String,EScenarioActionRepeater> data;
 
-    private EScenarioActionRepeaterMap() {
-        data = new HashMap<String,EScenarioActionRepeater>();
+    EScenarioActionRepeaterMap() {
+        data = new HashMap<>();
     }
 
     public void set(String actionId, EScenarioActionRepeater action) {

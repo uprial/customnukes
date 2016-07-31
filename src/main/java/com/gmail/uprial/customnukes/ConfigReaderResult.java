@@ -1,45 +1,48 @@
 package com.gmail.uprial.customnukes;
 
-public class ConfigReaderResult {
-    private boolean error;
-    private int intValue;
-    private float floatValue;
+public final class ConfigReaderResult {
+    private final boolean error;
+    private int intValue = 0;
+    private float floatValue = 0.0F;
 
-    public ConfigReaderResult() {
-        this.error = true;
+    private ConfigReaderResult() {
+        error = true;
     }
 
-    public ConfigReaderResult(int value) {
-        this.error = false;
-        this.intValue = value;
+    private ConfigReaderResult(int value) {
+        error = false;
+        intValue = value;
     }
 
-    public ConfigReaderResult(float value) {
-        this.error = false;
-        this.floatValue = value;
+    private ConfigReaderResult(float value) {
+        error = false;
+        floatValue = value;
     }
 
+    @SuppressWarnings("StaticMethodOnlyUsedInOneClass")
     public static ConfigReaderResult errorResult() {
         return new ConfigReaderResult();
     }
 
+    @SuppressWarnings("StaticMethodOnlyUsedInOneClass")
     public static ConfigReaderResult intResult(int value) {
         return new ConfigReaderResult(value);
     }
 
+    @SuppressWarnings("StaticMethodOnlyUsedInOneClass")
     public static ConfigReaderResult floatResult(float value) {
         return new ConfigReaderResult(value);
     }
 
     public boolean isError() {
-        return this.error;
+        return error;
     }
 
-    public int getInt() {
-        return this.intValue;
+    public int getIntValue() {
+        return intValue;
     }
 
-    public float getFloat() {
-        return this.floatValue;
+    public float getFloatValue() {
+        return floatValue;
     }
 }

@@ -1,41 +1,43 @@
 package com.gmail.uprial.customnukes.common;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 
-public class CustomRecipe {
-    private String[] recipe;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-    public CustomRecipe() {
+public final class CustomRecipe {
+    private final String[] recipe;
+
+    private CustomRecipe() {
         recipe = new String[9];
-        for(int i = 0; i < 9; i++)
+        for(int i = 0; i < 9; i++) {
             recipe[i] = Material.AIR.toString();
+        }
     }
 
-    public void setItem(int i, int j, String material) {
-        if((i >= 0) && (i < 3) && (j >= 0) && (j < 3))
+    private void setItem(int i, int j, String material) {
+        if((i >= 0) && (i < 3) && (j >= 0) && (j < 3)) {
             recipe[dim2line(i, j)] = material;
+        }
     }
 
     public String toString() {
-        return "[" + StringUtils.join(recipe, ",") + "]";
+        return '[' + StringUtils.join(recipe, ",") + ']';
     }
 
     public ShapedRecipe getShapedRecipe(ItemStack result) {
-        Map<String, Character> materials2char = new HashMap<String, Character>();
-        Map<Character, String> char2materials = new HashMap<Character, String>();
-        int chars_count = 0;
+        Map<String, Character> materials2char = new HashMap<>();
+        Map<Character, String> char2materials = new HashMap<>();
+        int charsCount = 0;
         for(int i = 0; i < 9; i++) {
-            if(null == materials2char.get(recipe[i])) {
-                char c = id2char(chars_count);
-                chars_count++;
+            if(materials2char.get(recipe[i]) == null) {
+                char c = id2char(charsCount);
+                charsCount++;
 
                 materials2char.put(recipe[i], c);
                 char2materials.put(c, recipe[i]);
@@ -52,19 +54,20 @@ public class CustomRecipe {
 
         ShapedRecipe shapedRecipe = new ShapedRecipe(result);
         shapedRecipe.shape(shapes[0], shapes[1], shapes[2]);
-        for(int i = 0; i < chars_count; i++) {
+        for(int i = 0; i < charsCount; i++) {
             char c = id2char(i);
-            shapedRecipe.setIngredient(c, Material.getMaterial(char2materials.get(c).toString()));
+            shapedRecipe.setIngredient(c, Material.getMaterial(char2materials.get(c)));
         }
 
         return shapedRecipe;
     }
 
+    @SuppressWarnings("StaticMethodOnlyUsedInOneClass")
     public static CustomRecipe getFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String name) {
         CustomRecipe recipe = new CustomRecipe();
 
         List<?> rows = config.getList(key + ".recipe");
-        if(null == rows) {
+        if(rows == null) {
             customLogger.error(String.format("Empty recipe of item '%s'", name));
             return null;
         }
@@ -79,12 +82,13 @@ public class CustomRecipe {
                 return null;
             }
             for(int j = 0; j < 3; j++) {
-                if(null == Material.getMaterial(cols[j])) {
+                if(Material.getMaterial(cols[j]) == null) {
                     customLogger.error(String.format("Invalid material '%s' in explosive '%s' at row %d, col %d", cols[j], name, i ,j));
                     return null;
                 }
-                else
+                else {
                     recipe.setItem(i, j, cols[j]);
+                }
             }
         }
 
@@ -92,7 +96,7 @@ public class CustomRecipe {
     }
 
     private static int dim2line(int i, int j) {
-        return i * 3 + j;
+        return (i * 3) + j;
     }
 
     private static char id2char(int id) {

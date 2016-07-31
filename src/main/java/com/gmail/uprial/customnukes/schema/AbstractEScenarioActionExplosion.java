@@ -6,36 +6,28 @@ import com.gmail.uprial.customnukes.ConfigReader;
 import com.gmail.uprial.customnukes.ConfigReaderResult;
 import com.gmail.uprial.customnukes.common.CustomLogger;
 
-abstract public class AbstractEScenarioActionExplosion extends AbstractEScenarioActionDelayed {
+public abstract class AbstractEScenarioActionExplosion extends AbstractEScenarioActionDelayed {
     abstract float minRadius();
     abstract float maxRadius();
 
-    protected float radius;
+    float radius = 0.0F;
 
-    public AbstractEScenarioActionExplosion(String actionId) {
+    AbstractEScenarioActionExplosion(String actionId) {
         super(actionId);
     }
 
-    public void setRadius(float radius) {
-        this.radius = radius;
-    }
-
+    @Override
     public boolean isLoadedFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String name) {
-        if(!super.isLoadedFromConfig(config, customLogger, key, name))
-            return false;
+        return super.isLoadedFromConfig(config, customLogger, key, name) && isLoadedRadiusFromConfig(config, customLogger, key, name);
 
-        if(!this.isLoadedRadiusFromConfig(config, customLogger, key, name))
-            return false;
-
-        return true;
     }
 
     private boolean isLoadedRadiusFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String name) {
         ConfigReaderResult result = ConfigReader.getFloatComplex(config, customLogger, key + ".radius", "Radius of action", name, minRadius(), maxRadius());
-        if(result.isError())
+        if(result.isError()) {
             return false;
-        else {
-            setRadius(result.getFloat());
+        } else {
+            radius = result.getFloatValue();
             return true;
         }
     }
