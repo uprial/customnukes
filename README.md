@@ -22,18 +22,18 @@ Existing blocks' physics will be not changed.
 
 #### Default set of explosives:
 
-![Toy Bomb](http://dev.bukkit.org/media/images/73/938/Toy_Bomb.png)
+![Toy Bomb](https://raw.githubusercontent.com/uprial/customnukes/master/images/Toy_Bomb.png)
 
-![Bomb](http://dev.bukkit.org/media/images/73/939/Bomb.png)
+![Bomb](https://raw.githubusercontent.com/uprial/customnukes/master/images/Bomb.png)
 
-![Flash Bomb](http://dev.bukkit.org/media/images/74/96/Flash_Bomb.png)
+![Flash Bomb](https://raw.githubusercontent.com/uprial/customnukes/master/images/Flash_Bomb.png)
 
-![Nuclear Bomb](http://dev.bukkit.org/media/images/73/940/Nuclear_Bomb.png)
+![Nuclear Bomb](https://raw.githubusercontent.com/uprial/customnukes/master/images/Nuclear_Bomb.png)
 
 #### A custom nuke may be activated by:
 
 * Red stone right above this block:
-![Activate Custom Nuke by Red stone](http://dev.bukkit.org/media/images/73/937/Activate.png)
+![Activate Custom Nuke by Red stone](https://raw.githubusercontent.com/uprial/customnukes/master/images/Activate.png)
 
 * A click via "flint and steel"
 
