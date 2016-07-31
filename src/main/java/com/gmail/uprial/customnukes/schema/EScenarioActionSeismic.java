@@ -19,8 +19,8 @@ public class EScenarioActionSeismic extends AbstractEScenarioActionDelayed {
 
     protected int defaultMinDelay() { return 2; }
     protected int defaultMaxDelay() { return 8; }
-    protected int minDelayValue() { return 2; } 
-    protected int maxDelayValue() { return 1000; } 
+    protected int minDelayValue() { return 2; }
+    protected int maxDelayValue() { return 1000; }
 
     protected float minMinRadius() { return 0; }
     protected float maxMinRadius() { return 5000; }
@@ -29,7 +29,7 @@ public class EScenarioActionSeismic extends AbstractEScenarioActionDelayed {
 
     protected float minEpicenterExplosionPower() { return 1; }
     protected float maxEpicenterExplosionPower() { return 320; }
-    
+
     protected boolean defaultPlayersOnly() { return true; }
 
     protected float minRadius;
@@ -37,11 +37,11 @@ public class EScenarioActionSeismic extends AbstractEScenarioActionDelayed {
     private float epicenterExplosionPower;
     private boolean playersOnly;
     private int attenuation;
-    
+
     public EScenarioActionSeismic(String actionId) {
         super(actionId);
     }
-    
+
     public void explode(CustomNukes plugin, Location location) {
         List<?> entities;
         if(playersOnly)
@@ -57,7 +57,7 @@ public class EScenarioActionSeismic extends AbstractEScenarioActionDelayed {
             }
         }
     }
-    
+
     private void explodeEntity(CustomNukes plugin, Location location, LivingEntity entity) {
         double explosionPower;
         if(attenuation == attenuationNo) {
@@ -75,15 +75,15 @@ public class EScenarioActionSeismic extends AbstractEScenarioActionDelayed {
         double x = newCoord(location.getX(), entityLocation.getX());
         double y = newCoord(location.getY(), entityLocation.getY());
         double z = newCoord(location.getZ(), entityLocation.getZ());
-        
+
         location.getWorld().createExplosion(x, y, z, (float)explosionPower, false, false);
     }
-    
+
     private static double newCoord(double center, double target) {
         double dX = center - target;
         return target + Math.min(0.25, Math.abs(dX)) * Math.signum(dX);
     }
-    
+
     public void setMinRadius(float minRadius) {
         this.minRadius = minRadius;
     }
@@ -107,16 +107,16 @@ public class EScenarioActionSeismic extends AbstractEScenarioActionDelayed {
     public boolean isLoadedFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String name) {
         if(!super.isLoadedFromConfig(config, customLogger, key, name))
             return false;
-        
+
         if(!this.isLoadedMinRadiusFromConfig(config, customLogger, key, name))
             return false;
 
         if(!this.isLoadedMaxRadiusFromConfig(config, customLogger, key, name))
             return false;
-        
+
         if(!this.isLoadedEpicenterExplosionPowerFromConfig(config, customLogger, key, name))
             return false;
-        
+
         setPlayersOnly(ConfigReader.getBoolean(config, customLogger, key + ".players-only", "'players-only' value of action", name, defaultPlayersOnly()));
 
         if(!this.isLoadedAttenuationFromConfig(config, customLogger, key, name))
@@ -124,7 +124,7 @@ public class EScenarioActionSeismic extends AbstractEScenarioActionDelayed {
 
         return true;
     }
-    
+
     private boolean isLoadedMinRadiusFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String name) {
         ConfigReaderResult result = ConfigReader.getFloatComplex(config, customLogger, key + ".min-radius", "Minimum radius of action", name, minMinRadius(), maxMinRadius());
         if(result.isError())
@@ -155,7 +155,7 @@ public class EScenarioActionSeismic extends AbstractEScenarioActionDelayed {
             return true;
         }
     }
-    
+
     private boolean isLoadedAttenuationFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String name) {
         String strAttenuation = config.getString(key + ".attenuation");
         if(null == strAttenuation) {
@@ -179,7 +179,7 @@ public class EScenarioActionSeismic extends AbstractEScenarioActionDelayed {
             return false;
         }
         setAttenuation(resAttenuation);
-        
+
         return true;
-    }    
+    }
 }

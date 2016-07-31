@@ -19,7 +19,7 @@ import com.gmail.uprial.customnukes.schema.EItem;
 public class ExplosivesActivateListener implements Listener {
     private final CustomNukes plugin;
     private final CustomLogger customLogger;
-    
+
     public ExplosivesActivateListener(CustomNukes plugin, CustomLogger customLogger) {
         this.plugin = plugin;
         this.customLogger = customLogger;
@@ -36,7 +36,7 @@ public class ExplosivesActivateListener implements Listener {
             }
         }
     }
-    
+
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockRedstone(BlockRedstoneEvent event) {
         Block block = event.getBlock();
@@ -54,13 +54,13 @@ public class ExplosivesActivateListener implements Listener {
                 try_activate(blocks.get(i));
         }
     }
-    
+
     private boolean try_activate(Block block) {
         if(null == block)
             return false;
         if(!plugin.getExplosivesConfig().isRegisteredMaterial(block.getType()))
             return false;
-        
+
         String name = plugin.getBlockMetaStorage().get(block, ExplosivesBlocksListener.blockMetaKey);
         if(null == name)
             return false;

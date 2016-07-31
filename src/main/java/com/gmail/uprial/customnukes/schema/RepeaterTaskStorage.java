@@ -22,9 +22,9 @@ public class RepeaterTaskStorage {
     private final CustomNukes plugin;
     private final CustomStorage storage;
     private final CustomLogger customLogger;
-    
+
     private Map<Integer,BukkitTask> tasks;
-    
+
     public RepeaterTaskStorage(CustomNukes plugin, File dataFolder, CustomLogger customLogger) {
         this.plugin = plugin;
         this.storage = new CustomStorage(dataFolder, "repeater-task.txt", customLogger);
@@ -33,21 +33,21 @@ public class RepeaterTaskStorage {
         storage.load();
         initData();
     }
-    
+
     public void save() {
         storage.save();
     }
-    
+
     public void clear() {
         for (Map.Entry<Integer,BukkitTask> entry : tasks.entrySet()) {
             entry.getValue().cancel();
         }
         storage.clear();
         initData();
-        
+
         save();
     }
-    
+
     public void insert(Location location, String actionId, BukkitTask task, int runsCount) {
         tasks.put(task.getTaskId(), task);
         set(location, actionId, task.getTaskId(), runsCount);
@@ -56,7 +56,7 @@ public class RepeaterTaskStorage {
     public void update(Location location, String actionId, int taskId, int runsCount) {
         set(location, actionId, taskId, runsCount);
     }
-    
+
     public void delete(Location location, String actionId, int taskId) {
         tasks.remove(taskId);
         set(location, actionId, taskId, -1);
@@ -66,24 +66,24 @@ public class RepeaterTaskStorage {
         List<EScenarioActionRepeater> actions = new ArrayList<EScenarioActionRepeater>();
         List<Location> locations = new ArrayList<Location>();
         List<Integer> runsCounts = new ArrayList<Integer>();
-        
+
         for (Map.Entry<String,String> entry : storage.entrySet()) {
             String key = entry.getKey().toString();
             boolean error = false;
-            
+
             World world = null;
             Location location = null;
             EScenarioActionRepeater action = null;
             double x = 0;
             double y = 0;
             double z = 0;
-            
+
             String[] items = EUtils.split(key, keyDelimiter);
             if(!error && (items.length != 6)) {
                 customLogger.error(String.format("Key '%s' is invalid", key));
                 error = true;
             }
-            
+
             if(!error) {
                 world = plugin.getServer().getWorld(items[0]);
                 if(null == world) {
@@ -101,7 +101,7 @@ public class RepeaterTaskStorage {
                     error = true;
                 }
             }
-                
+
             if(!error) {
                 location = new Location(world, x, y, z);
 
@@ -121,18 +121,18 @@ public class RepeaterTaskStorage {
             }
         }
         storage.clear();
-        for(int i = 0; i < locations.size(); i++) 
+        for(int i = 0; i < locations.size(); i++)
             actions.get(i).explodeEx(plugin, locations.get(i), runsCounts.get(i));
-        
+
     }
 
     private void initData() {
         tasks = new HashMap<Integer,BukkitTask>();
     }
-    
+
     private void set(Location location, String actionId, int taskId, int runsCount) {
         String mapKey = getMapKey(location, actionId, taskId);
-        
+
         if(runsCount >= 0)
             storage.set(mapKey, String.valueOf(runsCount));
         else
@@ -147,7 +147,7 @@ public class RepeaterTaskStorage {
         items[3] = String.format(Locale.US, "%.2f", location.getZ());
         items[4] = actionId;
         items[5] = String.valueOf(taskId);
-        
+
         return EUtils.join(items, keyDelimiter);
     }
 

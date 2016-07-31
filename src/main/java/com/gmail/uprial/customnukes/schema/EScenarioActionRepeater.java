@@ -14,8 +14,8 @@ public class EScenarioActionRepeater extends AbstractEScenarioActionDelayed {
 
     protected int defaultMinDelay() { return 2; }
     protected int defaultMaxDelay() { return 60; }
-    protected int minDelayValue() { return 2; } 
-    protected int maxDelayValue() { return 10000; } 
+    protected int minDelayValue() { return 2; }
+    protected int maxDelayValue() { return 10000; }
 
     protected int minDuration() { return 1; }
     protected int maxDuration() { return 864000; }
@@ -23,16 +23,16 @@ public class EScenarioActionRepeater extends AbstractEScenarioActionDelayed {
     protected int minInterval() { return 20; }
     protected int maxInterval() { return 6000; }
     protected int defaultInterval() { return 40; }
-    
+
     private int duration;
     private int interval;
     private EScenario scenario;
-    
+
     public EScenarioActionRepeater(String actionId) {
         super(actionId);
         EScenarioActionRepeaterMap.INSTANCE.set(actionId, this);
     }
-    
+
     public void explode(CustomNukes plugin, Location location) {
         explodeEx(plugin, location, EUtils.seconds2ticks(duration) / interval);
     }
@@ -50,7 +50,7 @@ public class EScenarioActionRepeater extends AbstractEScenarioActionDelayed {
     public void finishAction(CustomNukes plugin, Location location, int taskId) {
         plugin.getRepeaterTaskStorage().delete(location, getActionId(), taskId);
     }
-    
+
     public void setDuration(int duration) {
         this.duration = duration;
     }
@@ -66,7 +66,7 @@ public class EScenarioActionRepeater extends AbstractEScenarioActionDelayed {
     public boolean isLoadedFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String name) {
         if(!super.isLoadedFromConfig(config, customLogger, key, name))
             return false;
-        
+
         if(!isLoadedDurationFromConfig(config, customLogger, key, name))
             return false;
 
@@ -76,10 +76,10 @@ public class EScenarioActionRepeater extends AbstractEScenarioActionDelayed {
         if(null == scenario)
             return false;
         setScenario(scenario);
-        
+
         return true;
     }
-    
+
     private boolean isLoadedDurationFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String name) {
         ConfigReaderResult result = ConfigReader.getIntComplex(config, customLogger, key + ".duration", "Duration of action", name, minDuration(), maxDuration());
         if(result.isError())

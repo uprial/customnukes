@@ -11,9 +11,9 @@ public class EScenarioAction {
     private static int typeEffect = 2;
     private static int typeRepeater = 3;
     private static int typeSeismic = 4;
-    
+
     private final I_EScenarioActionSubAction subAction;
-    
+
     public EScenarioAction(I_EScenarioActionSubAction subAction) {
         this.subAction = subAction;
     }
@@ -21,12 +21,12 @@ public class EScenarioAction {
     public int execute(CustomNukes plugin, Location location, int delay) {
         return subAction.execute(plugin, location, delay);
     }
-    
+
     public static EScenarioAction getFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String name, boolean isRepeaterAllowed) {
         int type = getTypeFromConfig(config, customLogger, key, name, isRepeaterAllowed);
         if(0 == type)
             return null;
-        
+
         if(null == config.getConfigurationSection(key + ".parameters")) {
             customLogger.error(String.format("Null definition of parameters of action '%s'", name));
             return null;
@@ -43,13 +43,13 @@ public class EScenarioAction {
             subAction = new EScenarioActionSeismic(name);
         else
             subAction = null;
-            
+
         if(!subAction.isLoadedFromConfig(config, customLogger, key + ".parameters", name))
             return null;
-        
+
         return new EScenarioAction(subAction);
     }
-    
+
     private static int getTypeFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String name, boolean isRepeaterAllowed) {
         String strType = config.getString(key + ".type");
         if(null == strType) {
@@ -72,7 +72,7 @@ public class EScenarioAction {
             resType = typeSeismic;
         else
             customLogger.error(String.format("Invalid type '%s' of action '%s'", strType, name));
-        
+
         return resType;
     }
 }

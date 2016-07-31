@@ -14,12 +14,12 @@ public class ExplosivesCraftListener implements Listener {
 
     private final CustomNukes plugin;
     private final CustomLogger customLogger;
-    
+
     public ExplosivesCraftListener(CustomNukes plugin, CustomLogger customLogger) {
         this.plugin = plugin;
         this.customLogger = customLogger;
     }
-    
+
     @EventHandler(priority = EventPriority.NORMAL)
     public void onItemCraft(PrepareItemCraftEvent event) {
         EItem explosive = plugin.getExplosivesConfig().searchExplosiveByItemStack(event.getRecipe().getResult());
@@ -33,5 +33,5 @@ public class ExplosivesCraftListener implements Listener {
                 customLogger.userError(player, "you don't have permissions to craft this type of item.");
             }
         }
-    }    
+    }
 }

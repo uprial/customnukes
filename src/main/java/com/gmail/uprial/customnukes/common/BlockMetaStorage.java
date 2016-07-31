@@ -19,19 +19,19 @@ public class BlockMetaStorage {
     private final JavaPlugin plugin;
     private final CustomStorage storage;
     private final CustomLogger customLogger;
-    
+
     public BlockMetaStorage(JavaPlugin plugin, File dataFolder, CustomLogger customLogger) {
         this.plugin = plugin;
         this.storage = new CustomStorage(dataFolder, "block-meta.txt", customLogger);
         this.customLogger = customLogger;
-        
+
         storage.load();
     }
-    
+
     public void save() {
         storage.save();
     }
-    
+
     public void clear() {
         for (Map.Entry<String,String> entry : storage.entrySet()) {
             String key = entry.getKey().toString();
@@ -46,17 +46,17 @@ public class BlockMetaStorage {
         storage.clear();
         save();
     }
-    
+
     public void set(Block block, String metadataKey, String value) {
         setToBlock(block, metadataKey, value);
         storage.set(getMapKey(block.getLocation(), metadataKey), value);
     }
-    
+
     public void delete(Block block, String metadataKey) {
         deleteFromBlock(block, metadataKey);
         storage.delete(getMapKey(block.getLocation(), metadataKey));
     }
-    
+
     public String get(Block block, String metadataKey) {
         String value = getFromBlock(block, metadataKey);
         if(null == value) {
@@ -64,14 +64,14 @@ public class BlockMetaStorage {
             if(null != value)
                 setToBlock(block, metadataKey, value);
         }
-        
+
         return value;
     }
-    
+
     public List<Block> getAllBlocks() {
         List<Block> blocks = new ArrayList<Block>();
         List<String> errorKeys = new ArrayList<String>();
-        
+
         for (Map.Entry<String,String> entry : storage.entrySet()) {
             String key = entry.getKey().toString();
             Block block = getBlockByKey(key);
@@ -84,7 +84,7 @@ public class BlockMetaStorage {
         }
         for(int i = 0; i < errorKeys.size(); i++)
             storage.delete(errorKeys.get(i));
-        
+
         return blocks;
     }
 
@@ -92,19 +92,19 @@ public class BlockMetaStorage {
         String[] items = EUtils.split(key, keyDelimiter);
         if(items.length != 5)
             return null;
-        
+
         World world = plugin.getServer().getWorld(items[0]);
         if(null == world)
             return null;
-    
+
         return world.getBlockAt(Integer.valueOf(items[1]), Integer.valueOf(items[2]), Integer.valueOf(items[3]));
        }
-       
+
        private String getMetadataKeyByKey(String key) {
         String[] items = EUtils.split(key, keyDelimiter);
         return items[4];
        }
-   
+
     private void setToBlock(Block block, String metadataKey, String value) {
         block.setMetadata(metadataKey, new FixedMetadataValue(plugin, value));
     }
@@ -120,7 +120,7 @@ public class BlockMetaStorage {
     private void deleteFromBlock(Block block, String metadataKey) {
         block.removeMetadata(metadataKey, plugin);
     }
-    
+
     private String getMapKey(Location location, String metadataKey) {
         String[] items = new String[5];
         items[0] = location.getWorld().getName();
@@ -128,8 +128,8 @@ public class BlockMetaStorage {
         items[2] = String.valueOf(location.getBlockY());
         items[3] = String.valueOf(location.getBlockZ());
         items[4] = metadataKey;
-        
+
         return EUtils.join(items, keyDelimiter);
     }
-    
+
 }

@@ -22,15 +22,15 @@ public class ExplosivesConfig {
     private Map<String,Integer> names;
     private Map<String,Integer> keys;
     private Material material;
-    
+
     public ExplosivesConfig(FileConfiguration config, CustomLogger customLogger) {
         readConfig(config, customLogger);
     }
-    
+
     public List<EItem> getExplosives() {
         return explosives;
     }
-    
+
     public EItem searchExplosiveByItemStack(ItemStack itemStack) {
         if(isRegisteredMaterial(itemStack.getType())) {
             String displayName = itemStack.getItemMeta().getDisplayName();
@@ -41,7 +41,7 @@ public class ExplosivesConfig {
         } else
             return null;
     }
-    
+
     public EItem searchExplosiveByName(String name) {
         Integer idx = names.get(name.toLowerCase());
         if (null != idx)
@@ -49,7 +49,7 @@ public class ExplosivesConfig {
         else
             return null;
     }
-    
+
     public EItem searchExplosiveByKey(String key) {
         Integer idx = keys.get(key.toLowerCase());
         if (null != idx)
@@ -57,30 +57,30 @@ public class ExplosivesConfig {
         else
             return null;
     }
-    
+
     public boolean isRegisteredMaterial(Material material) {
         return materials.contains(material);
     }
 
     private void readConfig(FileConfiguration config, CustomLogger customLogger) {
-        this.material = ConfigReader.getMaterial(config, customLogger, "service-material", "Default service material", defaultMaterial); 
+        this.material = ConfigReader.getMaterial(config, customLogger, "service-material", "Default service material", defaultMaterial);
 
         explosives = new ArrayList<EItem>();
         materials = new HashSet<Material>();
         names = new HashMap<String,Integer>();
         keys = new HashMap<String,Integer>();
-        
+
         boolean debug = ConfigReader.getBoolean(config, customLogger, "debug", "value flag", "debug", false);
         customLogger.setDebugMode(debug);
-        
+
         List<?> explosivesConfig = config.getList("enabled-explosives");
         if((null == explosivesConfig) || (explosivesConfig.size() <= 0)) {
             customLogger.error("Empty 'enabled-explosives' list");
             return;
         }
-        
+
         boolean checkPermissions = ConfigReader.getBoolean(config, customLogger, "check-permissions", "value flag", "check-permissions", false);
-        
+
         for(int i = 0; i < explosivesConfig.size(); i++) {
             Object item = explosivesConfig.get(i);
             if(null == item) {
@@ -101,11 +101,11 @@ public class ExplosivesConfig {
                 customLogger.error(String.format("Null definition of explosive-key '%s' from pos %d", key, i));
                 continue;
             }
-            
+
             EItem explosive = EItem.getFromConfig(material, config, customLogger, key, checkPermissions);
             if(null == explosive)
                 continue;
-            
+
             if(names.containsKey(explosive.getName().toLowerCase())) {
                 customLogger.error(String.format("Name '%s' of explosive-key '%s' is not unique", explosive.getName(), key));
                 continue;
@@ -114,11 +114,11 @@ public class ExplosivesConfig {
             explosives.add(explosive);
             materials.add(explosive.getMaterial());
             int idx = explosives.size() - 1;
-            
+
             names.put(explosive.getName().toLowerCase(), idx);
             keys.put(key.toLowerCase(), idx);
         }
-        
+
         if(explosives.size() < 1)
             customLogger.error("There are no valid explosives definitions");
     }

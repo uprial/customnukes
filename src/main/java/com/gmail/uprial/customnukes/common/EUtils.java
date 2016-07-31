@@ -8,20 +8,20 @@ import org.bukkit.Location;
 
 public class EUtils {
     private static Character escapeChar = '\\';
-    
+
     public static int seconds2ticks(int seconds) {
         return seconds * 20;
     }
-    
+
     public static String join(String[] items, Character delimiter) {
         String escapeString = escapeChar.toString();
         String[] escapedItems = new String[items.length];
         for(int i = 0; i < items.length; i++)
             escapedItems[i] = items[i].replace(escapeString, escapeString + escapeString).replace(delimiter.toString(), escapeString + delimiter);
-        
+
         return StringUtils.join(escapedItems, delimiter);
     }
-    
+
     public static String[] split(String value, Character delimiter) {
         List<String> items = new ArrayList<String>();
         String item = "";
@@ -41,7 +41,7 @@ public class EUtils {
             }
         }
         items.add(item);
-        
+
         return items.toArray(new String[items.size()]);
     }
 
@@ -54,13 +54,13 @@ public class EUtils {
                 && (location1.getZ() > location2.getZ() - radius)
                 && (location1.distance(location2) < radius);
     }
-    
+
     public static double expBase(double degree, double result) {
         return Math.exp(Math.log(result) / degree);
     }
-    
+
     public static String lcFirst(String string) {
         return Character.toLowerCase(string.charAt(0)) + string.substring(1);
     }
-    
+
 }

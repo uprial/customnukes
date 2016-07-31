@@ -18,7 +18,7 @@ public enum MicroTimestamp {
    public String get() {
        long microSeconds = (System.nanoTime() - this.startNanoseconds) / 1000 ;
        long date = this.startDate + (microSeconds / 1000) ;
-       
+
        return this.dateFormat.format(date) + String.format("%03d", microSeconds % 1000) ;
    }
 }

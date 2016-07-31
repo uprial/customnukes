@@ -29,12 +29,12 @@ public class EItem {
     private CustomRecipe recipe;
     private int amount;
     private EScenario scenario;
-    
+
     public EItem(String key, boolean checkPermissions) {
         this.key = key;
         this.checkPermissions = checkPermissions;
     }
-    
+
     public void setMaterial(Material material) {
         this.material = material;
     }
@@ -50,7 +50,7 @@ public class EItem {
     public String getName() {
         return this.name;
     }
-    
+
     public void setRecipe(CustomRecipe recipe) {
         this.recipe = recipe;
     }
@@ -58,84 +58,84 @@ public class EItem {
     public void setDescription(List<String> description) {
         this.description = description;
     }
-    
+
     public void setAmount(int amount) {
         this.amount = amount;
     }
-    
+
     public void setScenario(EScenario scenario) {
         this.scenario = scenario;
     }
-    
+
     public String toString() {
         String description_string;
         if(null == description)
             description_string = "";
         else
             description_string = " (" + StringUtils.join(description, " ") + ")";
-        
-        return material.toString() + "~'" + name + description_string + "'=" + recipe.toString(); 
+
+        return material.toString() + "~'" + name + description_string + "'=" + recipe.toString();
     }
 
     public ItemStack getDroppedItemStack() {
         ItemStack itemStack = getItemStack();
         itemStack.setAmount(1);
-        
+
         return itemStack;
     }
 
     public ItemStack getCustomItemStack(int amount) {
         ItemStack itemStack = getItemStack();
         itemStack.setAmount(amount);
-        
+
         return itemStack;
     }
 
     public ShapedRecipe getShapedRecipe() {
         return recipe.getShapedRecipe(getItemStack());
     }
-    
+
     public void explode(CustomNukes plugin, Location location) {
         scenario.execute(plugin, location);
     }
-    
+
     public boolean hasPermission(Player player) {
         return (!checkPermissions) || (null != player) && (player.hasPermission("customnukes.explosive." + key.toLowerCase()));
     }
-    
+
     public static EItem getFromConfig(Material defaultMaterial, FileConfiguration config, CustomLogger customLogger, String key, boolean checkPermissions) {
         String name = getNameFromConfig(config, customLogger, key);
         if(null == name)
             return null;
-        
+
         EItem explosive = new EItem(key, checkPermissions);
         explosive.setMaterial(ConfigReader.getMaterial(config, customLogger, key + ".service-material", String.format("Material of '%s'", name), defaultMaterial));
         explosive.setName(name);
         List<String> description = getDescriptionFromConfig(config, customLogger, key, name);
         if(null != description)
             explosive.setDescription(description);
-    
+
         explosive.setAmount(getAmountFromConfig(config, customLogger, key, name));
-        
+
         CustomRecipe recipe = CustomRecipe.getFromConfig(config, customLogger, key, name);
         if(null == recipe)
             return null;
-        
+
         explosive.setRecipe(recipe);
-        
+
         EScenario scenario = EScenario.getFromConfig(config, customLogger, key, name, true);
         if(null == scenario)
             return null;
-        
+
         explosive.setScenario(scenario);
-    
+
         return explosive;
     }
-    
+
     private static String getNameFromConfig(FileConfiguration config, CustomLogger customLogger, String key) {
         return ConfigReader.getString(config, customLogger, key + ".name", "name of explosive-key");
     }
-    
+
     private static List<String> getDescriptionFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String name) {
         return ConfigReader.getStringList(config, customLogger, key + ".description", "description of explosive", name);
     }
@@ -143,18 +143,18 @@ public class EItem {
     private static int getAmountFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String name) {
         return ConfigReader.getInt(config, customLogger, key + ".amount", "Amount of explosive", name, minAmount, maxAmount, defaultAmount);
     }
-    
+
     private ItemStack getItemStack() {
         ItemStack result = new ItemStack(material);
         ItemMeta meta = result.getItemMeta();
-        
+
         if(null != description)
             meta.setLore(description);
-        
+
         meta.setDisplayName(name);
         result.setItemMeta(meta);
         result.setAmount(amount);
-        
+
         return result;
     }
 }

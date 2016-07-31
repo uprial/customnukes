@@ -10,14 +10,14 @@ public class TaskEScenarioActionRepeaterAction extends BukkitRunnable  {
     private final CustomNukes plugin;
     private final Location location;
     private int runsCount;
-    
+
     public TaskEScenarioActionRepeaterAction(EScenarioActionRepeater executor, CustomNukes plugin, Location location, int runsCount) {
         this.executor = executor;
         this.plugin = plugin;
         this.location = location;
         this.runsCount = runsCount;
     }
-    
+
     public void run() {
         if(runsCount >= 0) {
             runsCount--;

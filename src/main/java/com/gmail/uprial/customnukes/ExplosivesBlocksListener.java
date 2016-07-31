@@ -25,16 +25,16 @@ public class ExplosivesBlocksListener implements Listener {
     private final CustomNukes plugin;
     private final Random random;
     private final CustomLogger customLogger;
-    
+
     public ExplosivesBlocksListener(CustomNukes plugin, CustomLogger customLogger) {
         this.plugin = plugin;
         this.customLogger = customLogger;
-        
+
         random = new Random();
-        
+
         scheduleCleaning();
     }
-    
+
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockPlace(BlockPlaceEvent event) {
         if(!event.isCancelled()) {
@@ -69,7 +69,7 @@ public class ExplosivesBlocksListener implements Listener {
                     customLogger.debug(String.format("Break '%s' at %s:%d:%d:%d",
                                                      explosive.getName(), block.getWorld().getName(), block.getX(), block.getY(), block.getZ()));
                     deleteExplosive(block);
-    
+
                     event.setCancelled(true);
                     block.setType(Material.AIR);
                     if(event.getPlayer().getGameMode() != GameMode.CREATIVE)
@@ -99,7 +99,7 @@ public class ExplosivesBlocksListener implements Listener {
             }
         }
     }
-    
+
     private void onTaskMetaClean() {
         List<Block> blocks = plugin.getBlockMetaStorage().getAllBlocks();
         for(int i = 0; i < blocks.size(); i++) {
@@ -132,7 +132,7 @@ public class ExplosivesBlocksListener implements Listener {
         else
             return null;
     }
-    
+
     private void maybeMoveBlock(Block block, BlockFace direction) {
         EItem explosive = searchExplosiveByBlock(block);
         if(null != explosive) {
@@ -155,12 +155,12 @@ public class ExplosivesBlocksListener implements Listener {
                                             block.getY() + direction.getModY(),
                                             block.getZ() + direction.getModZ());
     }
-    
+
     private void maybeScheduleCleaning() {
         if(0 == random.nextInt(10))
             scheduleCleaning();
     }
-    
+
     private void scheduleCleaning() {
         plugin.scheduleDelayed(new Runnable() {
             @Override

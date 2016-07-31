@@ -8,7 +8,7 @@ public class TaskEScenarioActionDelayedExplode implements Runnable {
     private final AbstractEScenarioActionDelayed parent;
     private final CustomNukes plugin;
     private final Location location;
-    
+
     public TaskEScenarioActionDelayedExplode(AbstractEScenarioActionDelayed parent, CustomNukes plugin, Location location) {
         this.parent = parent;
         this.plugin = plugin;

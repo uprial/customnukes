@@ -12,7 +12,7 @@ import com.gmail.uprial.customnukes.common.EUtils;
 public class ConfigReader {
     public static int getInt(FileConfiguration config, CustomLogger customLogger, String key, String title, String name, int min, int max, int defaultValue) {
         int value = defaultValue;
-        
+
         if(null == config.getString(key)) {
             customLogger.debug(String.format("Empty %s '%s'. Use default value %d", EUtils.lcFirst(title), name, defaultValue));
         } else {
@@ -24,38 +24,38 @@ public class ConfigReader {
             else
                 value = intValue;
         }
-        
+
         return value;
     }
-    
+
     public static String getString(FileConfiguration config, CustomLogger customLogger, String key, String title) {
         String name = config.getString(key);
-        
+
         if(null == name) {
             customLogger.error(String.format("Null/Empty %s '%s'", title, key));
             return null;
         }
-        
+
         return name;
     }
-    
+
     public static List<String> getStringList(FileConfiguration config, CustomLogger customLogger, String key, String title, String name) {
         List<?> lines = config.getList(key);
         if(null != lines) {
             List<String> description = new ArrayList<String>();
             for(int i = 0; i < lines.size(); i++)
                 description.add(lines.get(i).toString());
-            
+
             return description;
         } else {
             customLogger.warning(String.format("Empty %s '%s'", title, name));
             return null;
         }
     }
-    
+
     public static boolean getBoolean(FileConfiguration config, CustomLogger customLogger, String key, String title, String name, boolean defaultValue) {
         boolean value = defaultValue;
-        
+
         if(null == config.getString(key)) {
             customLogger.debug(String.format("Empty %s '%s'. Use default value %b", title, name, defaultValue));
         } else {
@@ -70,13 +70,13 @@ public class ConfigReader {
 
         return value;
     }
-    
+
     public static ConfigReaderResult getFloatComplex(FileConfiguration config, CustomLogger customLogger, String key, String title, String name, float min, float max) {
         if(null == config.getString(key)) {
             customLogger.error(String.format("Null %s '%s", EUtils.lcFirst(title), name));
             return ConfigReaderResult.errorResult();
         }
-        
+
         float value = (float)config.getDouble(key);
         if(min > value) {
             customLogger.error(String.format("%s '%s' should be at least %.2f", title, name, min));
@@ -86,7 +86,7 @@ public class ConfigReader {
             customLogger.error(String.format("%s '%s' should be at most %.2f", title, name, max));
             return ConfigReaderResult.errorResult();
         }
-        
+
         return ConfigReaderResult.floatResult(value);
     }
 
@@ -95,7 +95,7 @@ public class ConfigReader {
             customLogger.error(String.format("Null %s '%s", EUtils.lcFirst(title), name));
             return ConfigReaderResult.errorResult();
         }
-        
+
         int value = config.getInt(key);
         if(min > value) {
             customLogger.error(String.format("%s '%s' should be at least %d", title, name, min));
@@ -108,10 +108,10 @@ public class ConfigReader {
 
         return ConfigReaderResult.intResult(value);
     }
-    
+
     public static Material getMaterial(FileConfiguration config, CustomLogger customLogger, String key, String title, Material defaultMaterial) {
-        Material resMaterial = defaultMaterial; 
-        
+        Material resMaterial = defaultMaterial;
+
         String strMaterial = config.getString(key);
         if(null == strMaterial)
             customLogger.debug(String.format("Empty %s, use default '%s'", EUtils.lcFirst(title), defaultMaterial));
@@ -130,7 +130,7 @@ public class ConfigReader {
             else
                 resMaterial = tmpMaterial;
         }
-        
+
         return resMaterial;
-    }    
+    }
 }

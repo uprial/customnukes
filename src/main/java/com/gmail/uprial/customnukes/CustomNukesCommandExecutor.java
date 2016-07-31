@@ -16,7 +16,7 @@ public class CustomNukesCommandExecutor implements CommandExecutor {
         this.plugin = plugin;
         this.customLogger = customLogger;
     }
-    
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase("customnukes")) {
@@ -37,11 +37,11 @@ public class CustomNukesCommandExecutor implements CommandExecutor {
             else if((args.length >= 1) && (args[0].equalsIgnoreCase("give"))) {
                 if (sender.hasPermission("customnukes.give")) {
                     boolean error = false;
-                        
+
                     Player player = null;
                     EItem explosive = null;
                     int amount = 0;
-                    
+
                     if(args.length < 3) {
                         customLogger.userInfo(sender, "customnukes give <player> <explosive-key> <amount>");
                         error = true;
@@ -58,7 +58,7 @@ public class CustomNukesCommandExecutor implements CommandExecutor {
                         explosive = plugin.getExplosivesConfig().searchExplosiveByKey(args[2]);
                         if(null == explosive)
                             explosive = plugin.getExplosivesConfig().searchExplosiveByName(args[2]);
-                        
+
                         if(null == explosive) {
                             customLogger.userError(sender, String.format("Explosive '%s' is not exists.", args[2]));
                             error = true;
@@ -89,7 +89,7 @@ public class CustomNukesCommandExecutor implements CommandExecutor {
                         player.getInventory().addItem(explosive.getCustomItemStack(amount));
                         customLogger.userInfo(sender, String.format("Player '%s' got %d * '%s'", player.getName(), amount, explosive.getName()));
                     }
-                        
+
                     return true;
                 }
             }
@@ -105,7 +105,7 @@ public class CustomNukesCommandExecutor implements CommandExecutor {
                 customLogger.userInfo(sender, Help);
                 return true;
             }
-        } 
-        return false; 
-    }    
+        }
+        return false;
+    }
 }

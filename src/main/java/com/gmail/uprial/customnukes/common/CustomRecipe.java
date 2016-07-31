@@ -18,16 +18,16 @@ public class CustomRecipe {
         for(int i = 0; i < 9; i++)
             recipe[i] = Material.AIR.toString();
     }
-    
+
     public void setItem(int i, int j, String material) {
         if((i >= 0) && (i < 3) && (j >= 0) && (j < 3))
             recipe[dim2line(i, j)] = material;
     }
 
     public String toString() {
-        return "[" + StringUtils.join(recipe, ",") + "]"; 
+        return "[" + StringUtils.join(recipe, ",") + "]";
     }
-    
+
     public ShapedRecipe getShapedRecipe(ItemStack result) {
         Map<String, Character> materials2char = new HashMap<String, Character>();
         Map<Character, String> char2materials = new HashMap<Character, String>();
@@ -49,7 +49,7 @@ public class CustomRecipe {
                 shapes[i] += materials2char.get(recipe[dim2line(i, j)]).toString();
             }
         }
-        
+
         ShapedRecipe shapedRecipe = new ShapedRecipe(result);
         shapedRecipe.shape(shapes[0], shapes[1], shapes[2]);
         for(int i = 0; i < chars_count; i++) {
@@ -59,10 +59,10 @@ public class CustomRecipe {
 
         return shapedRecipe;
     }
-    
+
     public static CustomRecipe getFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String name) {
         CustomRecipe recipe = new CustomRecipe();
-        
+
         List<?> rows = config.getList(key + ".recipe");
         if(null == rows) {
             customLogger.error(String.format("Empty recipe of item '%s'", name));
@@ -87,14 +87,14 @@ public class CustomRecipe {
                     recipe.setItem(i, j, cols[j]);
             }
         }
-        
+
         return recipe;
-    }    
-    
+    }
+
     private static int dim2line(int i, int j) {
         return i * 3 + j;
     }
-    
+
     private static char id2char(int id) {
         return (char)((byte)'A' + id);
     }

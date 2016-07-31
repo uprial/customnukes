@@ -19,8 +19,8 @@ import com.gmail.uprial.customnukes.common.EUtils;
 public class EScenarioActionEffect extends AbstractEScenarioActionExplosion {
     protected int defaultMinDelay() { return 2; }
     protected int defaultMaxDelay() { return 10; }
-    protected int minDelayValue() { return 2; } 
-    protected int maxDelayValue() { return 2000; } 
+    protected int minDelayValue() { return 2; }
+    protected int maxDelayValue() { return 2000; }
 
     protected float minRadius() { return 1; }
     protected float maxRadius() { return 5000; }
@@ -28,10 +28,10 @@ public class EScenarioActionEffect extends AbstractEScenarioActionExplosion {
     protected int minStrength() { return 1; }
     protected int maxStrength() { return 100; }
     protected int defaultStrength() { return 1; }
-    
+
     protected int minDuration() { return 1; }
     protected int maxDuration() { return 6000; }
-    
+
     protected boolean defaultPlayersOnly() { return true; }
 
     private List<PotionEffectType> effects;
@@ -42,7 +42,7 @@ public class EScenarioActionEffect extends AbstractEScenarioActionExplosion {
     public EScenarioActionEffect(String actionId) {
         super(actionId);
     }
-    
+
     public void explode(CustomNukes plugin, Location location) {
         List<?> entities;
         if(playersOnly)
@@ -60,7 +60,7 @@ public class EScenarioActionEffect extends AbstractEScenarioActionExplosion {
             }
         }
     }
-    
+
     private void addEffect(LivingEntity entity, PotionEffect effect) {
         boolean hasPowered = false;
         Iterator<PotionEffect> effectsIterator = entity.getActivePotionEffects().iterator();
@@ -76,15 +76,15 @@ public class EScenarioActionEffect extends AbstractEScenarioActionExplosion {
         if(!hasPowered)
             entity.addPotionEffect(effect);
     }
-    
+
     public void setEffects(List<PotionEffectType> effects) {
         this.effects = effects;
     }
-    
+
     public void setStrength(int strength) {
         this.strength = strength;
     }
-    
+
     public void setDuration(int duration) {
         this.duration = duration;
     }
@@ -96,20 +96,20 @@ public class EScenarioActionEffect extends AbstractEScenarioActionExplosion {
     public boolean isLoadedFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String name) {
         if(!super.isLoadedFromConfig(config, customLogger, key, name))
             return false;
-        
+
         if(!isLoadedTypeConfig(config, customLogger, key, name))
             return false;
-        
+
         setStrength(ConfigReader.getInt(config, customLogger, key + ".strength", "Strength of action", name, minStrength(), maxStrength(), defaultStrength()));
 
         if(!isLoadedDurationFromConfig(config, customLogger, key, name))
             return false;
-        
+
         setPlayersOnly(ConfigReader.getBoolean(config, customLogger, key + ".players-only", "'players-only' value of action", name, defaultPlayersOnly()));
 
         return true;
     }
-    
+
     private boolean isLoadedTypeConfig(FileConfiguration config, CustomLogger customLogger, String key, String name) {
         List<?> typeConfig = config.getList(key + ".effects");
         if((null == typeConfig) || (typeConfig.size() < 0)) {
@@ -130,12 +130,12 @@ public class EScenarioActionEffect extends AbstractEScenarioActionExplosion {
                 customLogger.error(String.format("Invalid effect '%s' of action '%s' at pos %d", effectName, name, i));
                 return false;
             }
-            
+
             effects.add(effect);
         }
-        
+
         setEffects(effects);
-        
+
         return true;
     }
 

@@ -8,21 +8,21 @@ import org.bukkit.command.CommandSender;
 
 public class CustomLogger {
     private boolean debug = true;
-            
+
     private final Logger logger;
-    
+
     public CustomLogger(Logger logger) {
         this.logger = logger;
     }
-    
+
     public void setDebugMode(boolean value) {
         this.debug = value;
     }
-    
+
     public boolean isDebugMode() {
         return this.debug;
     }
-    
+
     public void error(String message) {
         logger.log(Level.SEVERE, "[ERROR] " + message);
     }
@@ -40,7 +40,7 @@ public class CustomLogger {
     public void info(String message) {
         logger.log(Level.INFO, message);
     }
-    
+
     public void userError(CommandSender sender, String message) {
         sender.sendMessage(ChatColor.RED + "ERROR: " + message);
         logger.log(Level.INFO, "[user-error] <" + sender.getName() + ">: " + message);
