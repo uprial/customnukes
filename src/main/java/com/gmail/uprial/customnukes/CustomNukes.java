@@ -1,9 +1,13 @@
 package com.gmail.uprial.customnukes;
 
-import java.util.Collection;
-import java.util.Iterator;
-
+import com.gmail.uprial.customnukes.common.BlockMetaStorage;
+import com.gmail.uprial.customnukes.common.CustomLogger;
+import com.gmail.uprial.customnukes.common.MicroTimestamp;
+import com.gmail.uprial.customnukes.schema.EItem;
+import com.gmail.uprial.customnukes.schema.RepeaterTaskStorage;
 import org.bukkit.World;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.Recipe;
@@ -11,17 +15,20 @@ import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
-import com.gmail.uprial.customnukes.common.BlockMetaStorage;
-import com.gmail.uprial.customnukes.common.CustomLogger;
-import com.gmail.uprial.customnukes.common.MicroTimestamp;
-import com.gmail.uprial.customnukes.schema.RepeaterTaskStorage;
-import com.gmail.uprial.customnukes.schema.EItem;
+import java.io.File;
+import java.util.Collection;
+import java.util.Iterator;
+
+import static com.gmail.uprial.customnukes.CustomNukesCommandExecutor.COMMAND_NS;
 
 public final class CustomNukes extends JavaPlugin {
+    private final String CONFIG_FILE_NAME = "config.yml";
+    private final File configFile = new File(getDataFolder(), CONFIG_FILE_NAME);
+
     private static int saveInterval = 20 * 300;
 
     private ExplosivesConfig explosivesConfig;
-    private CustomLogger customLogger;
+    private CustomLogger consoleLogger;
     private BlockMetaStorage blockMetaStorage;
     private RepeaterTaskStorage repeaterTaskStorage;
     private BukkitTask saveTask;
@@ -29,22 +36,22 @@ public final class CustomNukes extends JavaPlugin {
     @Override
     public void onEnable() {
         saveDefaultConfig();
-        customLogger = new CustomLogger(getLogger());
+        consoleLogger = new CustomLogger(getLogger());
 
-        blockMetaStorage = new BlockMetaStorage(this, getDataFolder(), customLogger);
-        repeaterTaskStorage = new RepeaterTaskStorage(this, getDataFolder(), customLogger);
-        explosivesConfig = new ExplosivesConfig(getConfig(), customLogger);
+        blockMetaStorage = new BlockMetaStorage(this, getDataFolder(), consoleLogger);
+        repeaterTaskStorage = new RepeaterTaskStorage(this, getDataFolder(), consoleLogger);
+        explosivesConfig = loadConfig(getConfig(), consoleLogger);
         repeaterTaskStorage.restore();
         loadExplosives();
 
         saveTask = new TaskPeriodicSave(this).runTaskTimer(this, saveInterval, saveInterval);
 
-        getServer().getPluginManager().registerEvents(new ExplosivesBlocksListener(this, customLogger), this);
-        getServer().getPluginManager().registerEvents(new ExplosivesActivateListener(this, customLogger), this);
-        getServer().getPluginManager().registerEvents(new ExplosivesCraftListener(this, customLogger), this);
-        getCommand("customnukes").setExecutor(new CustomNukesCommandExecutor(this, customLogger));
+        getServer().getPluginManager().registerEvents(new ExplosivesBlocksListener(this, consoleLogger), this);
+        getServer().getPluginManager().registerEvents(new ExplosivesActivateListener(this, consoleLogger), this);
+        getServer().getPluginManager().registerEvents(new ExplosivesCraftListener(this), this);
+        getCommand(COMMAND_NS).setExecutor(new CustomNukesCommandExecutor(this));
 
-        customLogger.info("Plugin enabled");
+        consoleLogger.info("Plugin enabled");
     }
 
     @Override
@@ -55,7 +62,19 @@ public final class CustomNukes extends JavaPlugin {
         unloadExplosives();
         saveData();
 
-        customLogger.info("Plugin disabled");
+        consoleLogger.info("Plugin disabled");
+    }
+
+    @Override
+    public void saveDefaultConfig() {
+        if (!configFile.exists()) {
+            saveResource(CONFIG_FILE_NAME, false);
+        }
+    }
+
+    @Override
+    public FileConfiguration getConfig() {
+        return YamlConfiguration.loadConfiguration(configFile);
     }
 
     public void global_log(String message) {
@@ -88,10 +107,10 @@ public final class CustomNukes extends JavaPlugin {
         blockMetaStorage.save();
     }
 
-    public void reloadExplosivesConfig() {
+    public void reloadExplosivesConfig(CustomLogger userLogger) {
         reloadConfig();
         unloadExplosives();
-        explosivesConfig = new ExplosivesConfig(getConfig(), customLogger);
+        explosivesConfig = loadConfig(getConfig(), userLogger, consoleLogger);
         loadExplosives();
     }
 
@@ -118,7 +137,7 @@ public final class CustomNukes extends JavaPlugin {
 
             ShapedRecipe shapedRecipe = explosive.getShapedRecipe();
             getServer().addRecipe(shapedRecipe);
-            customLogger.info("Added " + explosive.toString());
+            consoleLogger.info("Added " + explosive.toString());
         }
     }
 
@@ -129,8 +148,23 @@ public final class CustomNukes extends JavaPlugin {
             EItem explosive = explosivesConfig.searchExplosiveByItemStack(recipe.getResult());
             if(null != explosive) {
                 iterator.remove();
-                customLogger.info("Removed " + explosive.toString());
+                consoleLogger.info("Removed " + explosive.toString());
             }
         }
+    }
+
+
+    private static ExplosivesConfig loadConfig(FileConfiguration config, CustomLogger customLogger) {
+        return loadConfig(config, customLogger, null);
+    }
+
+    private static ExplosivesConfig loadConfig(FileConfiguration config, CustomLogger mainLogger, CustomLogger secondLogger) {
+        boolean isDebugMode = ExplosivesConfig.isDebugMode(config, mainLogger);
+        mainLogger.setDebugMode(isDebugMode);
+        if(secondLogger != null) {
+            secondLogger.setDebugMode(isDebugMode);
+        }
+
+        return ExplosivesConfig.getFromConfig(config, mainLogger);
     }
 }

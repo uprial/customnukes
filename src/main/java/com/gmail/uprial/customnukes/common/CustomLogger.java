@@ -1,53 +1,74 @@
 package com.gmail.uprial.customnukes.common;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class CustomLogger {
-    private boolean debug = true;
+    private boolean debugMode = true;
 
     private final Logger logger;
+    private final CommandSender sender;
 
     public CustomLogger(Logger logger) {
+        this(logger, null);
+    }
+
+    public CustomLogger(Logger logger, CommandSender sender) {
         this.logger = logger;
+        this.sender = sender;
     }
 
     public void setDebugMode(boolean value) {
-        this.debug = value;
+        debugMode = value;
     }
 
     public boolean isDebugMode() {
-        return this.debug;
-    }
-
-    public void error(String message) {
-        logger.log(Level.SEVERE, "[ERROR] " + message);
-    }
-
-    public void warning(String message) {
-        logger.log(Level.WARNING, "[WARNING] " + message);
+        return debugMode;
     }
 
     public void debug(String message) {
-        if (debug) {
-            logger.log(Level.INFO, "[DEBUG] " + message);
+        if (debugMode) {
+            //Never ever show debug messages to user
+            log2console(Level.INFO, String.format("[DEBUG] %s", message));
         }
     }
 
     public void info(String message) {
-        logger.log(Level.INFO, message);
+        log(Level.INFO, "", null, message);
     }
 
-    public void userError(CommandSender sender, String message) {
-        sender.sendMessage(ChatColor.RED + "ERROR: " + message);
-        logger.log(Level.INFO, "[user-error] <" + sender.getName() + ">: " + message);
+    public void warning(String message) {
+        log(Level.WARNING, "WARNING", ChatColor.YELLOW, message);
     }
 
-    public void userInfo(CommandSender sender, String message) {
-        sender.sendMessage(message);
-        logger.log(Level.INFO, "[user-info] <" + sender.getName() + ">: " + message);
+    public void error(String message) {
+        log(Level.SEVERE, "ERROR", ChatColor.RED, message);
+    }
+
+    private void log(Level level, String messageType, ChatColor color, String message) {
+        String consoleMessage = !messageType.isEmpty()
+                ? String.format("[%s] %s", messageType, message) : message;
+
+        if (sender != null) {
+            log2console(level, String.format("%s [user=%s]", consoleMessage, sender.getName()));
+
+            String userMessage = message;
+            if (!messageType.isEmpty()) {
+                userMessage = String.format("%s: %s", messageType, userMessage);
+            }
+            if (color != null) {
+                userMessage = color + userMessage;
+            }
+            sender.sendMessage(userMessage);
+        } else {
+            log2console(level, consoleMessage);
+        }
+    }
+
+    private void log2console(Level level, String message) {
+        logger.log(level, message);
     }
 }

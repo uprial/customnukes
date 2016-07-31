@@ -1,18 +1,12 @@
 package com.gmail.uprial.customnukes;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import com.gmail.uprial.customnukes.common.CustomLogger;
+import com.gmail.uprial.customnukes.schema.EItem;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 
-import com.gmail.uprial.customnukes.common.CustomLogger;
-import com.gmail.uprial.customnukes.schema.EItem;
+import java.util.*;
 
 public class ExplosivesConfig {
     private static Material defaultMaterial = Material.SPONGE;
@@ -21,10 +15,12 @@ public class ExplosivesConfig {
     private Set<Material> materials;
     private Map<String,Integer> names;
     private Map<String,Integer> keys;
-    private Material material;
 
-    public ExplosivesConfig(FileConfiguration config, CustomLogger customLogger) {
-        readConfig(config, customLogger);
+    private ExplosivesConfig(List<EItem> explosives, Set<Material> materials, Map<String,Integer> names, Map<String,Integer> keys) {
+        this.explosives = explosives;
+        this.materials = materials;
+        this.names = names;
+        this.keys = keys;
     }
 
     public List<EItem> getExplosives() {
@@ -62,21 +58,22 @@ public class ExplosivesConfig {
         return materials.contains(material);
     }
 
-    private void readConfig(FileConfiguration config, CustomLogger customLogger) {
-        this.material = ConfigReader.getMaterial(config, customLogger, "service-material", "Default service material", defaultMaterial);
+    public static boolean isDebugMode(FileConfiguration config, CustomLogger customLogger) {
+        return ConfigReader.getBoolean(config, customLogger, "debug", "value flag", "debug", false);
+    }
 
-        explosives = new ArrayList<EItem>();
-        materials = new HashSet<Material>();
-        names = new HashMap<String,Integer>();
-        keys = new HashMap<String,Integer>();
+    public static ExplosivesConfig getFromConfig(FileConfiguration config, CustomLogger customLogger) {
+        Material material = ConfigReader.getMaterial(config, customLogger, "service-material", "Default service material", defaultMaterial);
 
-        boolean debug = ConfigReader.getBoolean(config, customLogger, "debug", "value flag", "debug", false);
-        customLogger.setDebugMode(debug);
+        List<EItem> explosives = new ArrayList<EItem>();
+        Set<Material> materials = new HashSet<Material>();
+        Map<String,Integer> names = new HashMap<String,Integer>();
+        Map<String,Integer> keys = new HashMap<String,Integer>();
 
         List<?> explosivesConfig = config.getList("enabled-explosives");
         if((null == explosivesConfig) || (explosivesConfig.size() <= 0)) {
             customLogger.error("Empty 'enabled-explosives' list");
-            return;
+            return null;
         }
 
         boolean checkPermissions = ConfigReader.getBoolean(config, customLogger, "check-permissions", "value flag", "check-permissions", false);
@@ -119,7 +116,11 @@ public class ExplosivesConfig {
             keys.put(key.toLowerCase(), idx);
         }
 
-        if(explosives.size() < 1)
+        if(explosives.size() < 1) {
             customLogger.error("There are no valid explosives definitions");
+            return null;
+        }
+
+        return new ExplosivesConfig(explosives, materials, names, keys);
     }
 }

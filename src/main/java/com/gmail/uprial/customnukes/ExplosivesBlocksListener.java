@@ -1,8 +1,7 @@
 package com.gmail.uprial.customnukes;
 
-import java.util.List;
-import java.util.Random;
-
+import com.gmail.uprial.customnukes.common.CustomLogger;
+import com.gmail.uprial.customnukes.schema.EItem;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -16,8 +15,8 @@ import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 
-import com.gmail.uprial.customnukes.common.CustomLogger;
-import com.gmail.uprial.customnukes.schema.EItem;
+import java.util.List;
+import java.util.Random;
 
 public class ExplosivesBlocksListener implements Listener {
     public static String blockMetaKey = "explosive";
@@ -43,11 +42,12 @@ public class ExplosivesBlocksListener implements Listener {
                 Player player = event.getPlayer();
                 if (!explosive.hasPermission(player)) {
                     event.setCancelled(true);
-                    customLogger.userError(player, "You don't have permissions to place this type of block.");
+                    CustomLogger userLogger = new CustomLogger(plugin.getLogger(), player);
+                    userLogger.error("You don't have permissions to place this type of block.");
                 } else {
                     Block block = event.getBlock();
                     customLogger.debug(String.format("Place '%s' at %s:%d:%d:%d",
-                                                     explosive.getName(), block.getWorld().getName(), block.getX(), block.getY(), block.getZ()));
+                            explosive.getName(), block.getWorld().getName(), block.getX(), block.getY(), block.getZ()));
                     setExplosive(block, explosive);
                 }
             } else
@@ -64,10 +64,11 @@ public class ExplosivesBlocksListener implements Listener {
                 Player player = event.getPlayer();
                 if (!explosive.hasPermission(player)) {
                     event.setCancelled(true);
-                    customLogger.userError(player, "You don't have permissions to break this type of block.");
+                    CustomLogger userLogger = new CustomLogger(plugin.getLogger(), player);
+                    userLogger.error("You don't have permissions to break this type of block.");
                 } else {
                     customLogger.debug(String.format("Break '%s' at %s:%d:%d:%d",
-                                                     explosive.getName(), block.getWorld().getName(), block.getX(), block.getY(), block.getZ()));
+                            explosive.getName(), block.getWorld().getName(), block.getX(), block.getY(), block.getZ()));
                     deleteExplosive(block);
 
                     event.setCancelled(true);

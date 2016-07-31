@@ -13,11 +13,9 @@ import com.gmail.uprial.customnukes.schema.EItem;
 public class ExplosivesCraftListener implements Listener {
 
     private final CustomNukes plugin;
-    private final CustomLogger customLogger;
 
-    public ExplosivesCraftListener(CustomNukes plugin, CustomLogger customLogger) {
+    public ExplosivesCraftListener(CustomNukes plugin) {
         this.plugin = plugin;
-        this.customLogger = customLogger;
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
@@ -30,7 +28,8 @@ public class ExplosivesCraftListener implements Listener {
                 event.getInventory().setResult(null);
             else if (!explosive.hasPermission(player)) {
                 event.getInventory().setResult(null);
-                customLogger.userError(player, "you don't have permissions to craft this type of item.");
+                CustomLogger userLogger = new CustomLogger(plugin.getLogger(), player);
+                userLogger.error("you don't have permissions to craft this type of item.");
             }
         }
     }
