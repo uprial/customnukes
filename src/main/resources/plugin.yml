@@ -1,6 +1,6 @@
 name: CustomNukes
 main: com.gmail.uprial.customnukes.CustomNukes
-version: 0.2.7
+version: 0.2.8
 commands:
    customnukes:
       description: Reload CustomNukes config
