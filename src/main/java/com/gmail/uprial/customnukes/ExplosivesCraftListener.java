@@ -9,6 +9,7 @@ import org.bukkit.event.inventory.PrepareItemCraftEvent;
 
 import com.gmail.uprial.customnukes.common.CustomLogger;
 import com.gmail.uprial.customnukes.schema.EItem;
+import org.bukkit.inventory.Recipe;
 
 class ExplosivesCraftListener implements Listener {
 
@@ -21,16 +22,19 @@ class ExplosivesCraftListener implements Listener {
     @SuppressWarnings("unused")
     @EventHandler(priority = EventPriority.NORMAL)
     public void onItemCraft(PrepareItemCraftEvent event) {
-        EItem explosive = plugin.getExplosivesConfig().searchExplosiveByItemStack(event.getRecipe().getResult());
-        if(explosive != null) {
-            HumanEntity entityPlayer = event.getView().getPlayer();
-            Player player = plugin.getPlayerByName(entityPlayer.getName());
-            if(player == null) {
-                event.getInventory().setResult(null);
-            } else if (!explosive.hasPermission(player)) {
-                event.getInventory().setResult(null);
-                CustomLogger userLogger = new CustomLogger(plugin.getLogger(), player);
-                userLogger.error("you don't have permissions to craft this type of item.");
+        Recipe recipe = event.getRecipe();
+        if (recipe != null) {
+            EItem explosive = plugin.getExplosivesConfig().searchExplosiveByItemStack(recipe.getResult());
+            if (explosive != null) {
+                HumanEntity entityPlayer = event.getView().getPlayer();
+                Player player = plugin.getPlayerByName(entityPlayer.getName());
+                if (player == null) {
+                    event.getInventory().setResult(null);
+                } else if (!explosive.hasPermission(player)) {
+                    event.getInventory().setResult(null);
+                    CustomLogger userLogger = new CustomLogger(plugin.getLogger(), player);
+                    userLogger.error("you don't have permissions to craft this type of item.");
+                }
             }
         }
     }
