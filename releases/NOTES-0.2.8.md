@@ -1,2 +1,2 @@
 # Bug fixes
-* Fixed a bug with empty reciepe in Spigot-1.14.1
+* Fixed a bug with an empty recipe in Spigot-1.14.1
