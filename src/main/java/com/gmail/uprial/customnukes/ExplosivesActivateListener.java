@@ -5,6 +5,7 @@ import com.gmail.uprial.customnukes.schema.EItem;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -27,7 +28,7 @@ class ExplosivesActivateListener implements Listener {
     @SuppressWarnings("unused")
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerInteract(PlayerInteractEvent event) {
-        if(!event.isCancelled()) {
+        if(!event.useItemInHand().equals(Event.Result.DENY) && !event.useInteractedBlock().equals(Event.Result.DENY)) {
             if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 if (event.getMaterial() == Material.FLINT_AND_STEEL) {
                     if(try_activate(event.getClickedBlock())) {

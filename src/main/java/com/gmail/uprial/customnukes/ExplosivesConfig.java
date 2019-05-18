@@ -55,7 +55,7 @@ public final class ExplosivesConfig {
         return ConfigReader.getBoolean(config, customLogger, "debug", "value flag", "debug", false);
     }
 
-    public static ExplosivesConfig getFromConfig(FileConfiguration config, CustomLogger customLogger) {
+    public static ExplosivesConfig getFromConfig(CustomNukes plugin, FileConfiguration config, CustomLogger customLogger) {
         Material material = ConfigReader.getMaterial(config, customLogger, "service-material", "Default service material", DEFAULT_MATERIAL);
 
         List<EItem> explosives = new ArrayList<>();
@@ -94,7 +94,7 @@ public final class ExplosivesConfig {
                 continue;
             }
 
-            EItem explosive = EItem.getFromConfig(material, config, customLogger, key, checkPermissions);
+            EItem explosive = EItem.getFromConfig(material, plugin, config, customLogger, key, checkPermissions);
             if(explosive == null) {
                 continue;
             }

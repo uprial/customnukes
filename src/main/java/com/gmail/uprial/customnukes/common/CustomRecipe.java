@@ -1,7 +1,9 @@
 package com.gmail.uprial.customnukes.common;
 
+import com.gmail.uprial.customnukes.CustomNukes;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
@@ -12,8 +14,10 @@ import java.util.Map;
 
 public final class CustomRecipe {
     private final String[] recipe;
+    private final CustomNukes plugin;
 
-    private CustomRecipe() {
+    private CustomRecipe(CustomNukes plugin) {
+        this.plugin = plugin;
         recipe = new String[9];
         for(int i = 0; i < 9; i++) {
             recipe[i] = Material.AIR.toString();
@@ -30,7 +34,7 @@ public final class CustomRecipe {
         return '[' + StringUtils.join(recipe, ",") + ']';
     }
 
-    public ShapedRecipe getShapedRecipe(ItemStack result) {
+    public ShapedRecipe getShapedRecipe(String keyLC, ItemStack result) {
         Map<String, Character> materials2char = new HashMap<>();
         Map<Character, String> char2materials = new HashMap<>();
         int charsCount = 0;
@@ -52,7 +56,8 @@ public final class CustomRecipe {
             }
         }
 
-        ShapedRecipe shapedRecipe = new ShapedRecipe(result);
+        NamespacedKey namespacedKey = new NamespacedKey(plugin, keyLC);
+        ShapedRecipe shapedRecipe = new ShapedRecipe(namespacedKey, result);
         shapedRecipe.shape(shapes[0], shapes[1], shapes[2]);
         for(int i = 0; i < charsCount; i++) {
             char c = id2char(i);
@@ -63,8 +68,8 @@ public final class CustomRecipe {
     }
 
     @SuppressWarnings("StaticMethodOnlyUsedInOneClass")
-    public static CustomRecipe getFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String name) {
-        CustomRecipe recipe = new CustomRecipe();
+    public static CustomRecipe getFromConfig(CustomNukes plugin, FileConfiguration config, CustomLogger customLogger, String key, String name) {
+        CustomRecipe recipe = new CustomRecipe(plugin);
 
         List<?> rows = config.getList(key + ".recipe");
         if(rows == null) {

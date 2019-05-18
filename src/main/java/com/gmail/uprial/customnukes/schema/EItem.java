@@ -24,7 +24,7 @@ public final class EItem {
     @SuppressWarnings("FieldCanBeLocal")
     private static final int MAX_AMOUNT = 64;
 
-    private final String key;
+    private final String keyLC;
     private boolean skipPermissions = true;
     private Material material = null;
     private String name = null;
@@ -35,7 +35,7 @@ public final class EItem {
 
     @SuppressWarnings("BooleanParameter")
     private EItem(String key, boolean skipPermissions) {
-        this.key = key;
+        this.keyLC = key.toLowerCase(Locale.getDefault());
         this.skipPermissions = !skipPermissions;
     }
 
@@ -68,7 +68,7 @@ public final class EItem {
     }
 
     public ShapedRecipe getShapedRecipe() {
-        return recipe.getShapedRecipe(getItemStack());
+        return recipe.getShapedRecipe(keyLC, getItemStack());
     }
 
     public void explode(CustomNukes plugin, Location location) {
@@ -76,11 +76,11 @@ public final class EItem {
     }
 
     public boolean hasPermission(Player player) {
-        return (skipPermissions) || ((player != null) && (player.hasPermission("customnukes.explosive." + key.toLowerCase(Locale.getDefault()))));
+        return (skipPermissions) || ((player != null) && (player.hasPermission("customnukes.explosive." + keyLC)));
     }
 
     @SuppressWarnings({"BooleanParameter", "AccessingNonPublicFieldOfAnotherObject"})
-    public static EItem getFromConfig(Material defaultMaterial, FileConfiguration config, CustomLogger customLogger, String key, boolean checkPermissions) {
+    public static EItem getFromConfig(Material defaultMaterial, CustomNukes plugin, FileConfiguration config, CustomLogger customLogger, String key, boolean checkPermissions) {
         String name = getNameFromConfig(config, customLogger, key);
         if(name == null) {
             return null;
@@ -96,7 +96,7 @@ public final class EItem {
 
         explosive.amount = getAmountFromConfig(config, customLogger, key, name);
 
-        CustomRecipe recipe = CustomRecipe.getFromConfig(config, customLogger, key, name);
+        CustomRecipe recipe = CustomRecipe.getFromConfig(plugin, config, customLogger, key, name);
         if(recipe == null) {
             return null;
         }

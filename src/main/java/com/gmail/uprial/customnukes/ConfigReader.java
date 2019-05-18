@@ -135,8 +135,8 @@ public final class ConfigReader {
                 customLogger.error(String.format("%s '%s' has gravity, use default '%s'", title, tmpMaterial, defaultMaterial));
             } else if(!tmpMaterial.isSolid()) {
                 customLogger.error(String.format("%s '%s' is not solid, use default '%s'", title, tmpMaterial, defaultMaterial));
-            } else if(tmpMaterial.isTransparent()) {
-                customLogger.error(String.format("%s '%s' is transparent, use default '%s'", title, tmpMaterial, defaultMaterial));
+            } else if(tmpMaterial.isInteractable()) {
+                customLogger.error(String.format("%s '%s' is not interactable, use default '%s'", title, tmpMaterial, defaultMaterial));
             } else {
                 resMaterial = tmpMaterial;
             }

@@ -42,7 +42,7 @@ public final class CustomNukes extends JavaPlugin {
 
         blockMetaStorage = new BlockMetaStorage(this, getDataFolder(), consoleLogger);
         repeaterTaskStorage = new RepeaterTaskStorage(this, getDataFolder(), consoleLogger);
-        explosivesConfig = loadConfig(getConfig(), consoleLogger);
+        explosivesConfig = loadConfig(this, getConfig(), consoleLogger);
         repeaterTaskStorage.restore();
         loadExplosives();
 
@@ -113,7 +113,7 @@ public final class CustomNukes extends JavaPlugin {
     public void reloadExplosivesConfig(CustomLogger userLogger) {
         reloadConfig();
         unloadExplosives();
-        explosivesConfig = loadConfig(getConfig(), userLogger, consoleLogger);
+        explosivesConfig = loadConfig(this, getConfig(), userLogger, consoleLogger);
         loadExplosives();
     }
 
@@ -162,17 +162,17 @@ public final class CustomNukes extends JavaPlugin {
     }
 
 
-    private static ExplosivesConfig loadConfig(FileConfiguration config, CustomLogger customLogger) {
-        return loadConfig(config, customLogger, null);
+    private static ExplosivesConfig loadConfig(CustomNukes plugin, FileConfiguration config, CustomLogger customLogger) {
+        return loadConfig(plugin, config, customLogger, null);
     }
 
-    private static ExplosivesConfig loadConfig(FileConfiguration config, CustomLogger mainLogger, CustomLogger secondLogger) {
+    private static ExplosivesConfig loadConfig(CustomNukes plugin, FileConfiguration config, CustomLogger mainLogger, CustomLogger secondLogger) {
         boolean isDebugMode = ExplosivesConfig.isDebugMode(config, mainLogger);
         mainLogger.setDebugMode(isDebugMode);
         if(secondLogger != null) {
             secondLogger.setDebugMode(isDebugMode);
         }
 
-        return ExplosivesConfig.getFromConfig(config, mainLogger);
+        return ExplosivesConfig.getFromConfig(plugin, config, mainLogger);
     }
 }
