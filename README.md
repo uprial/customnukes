@@ -62,7 +62,7 @@ and error messages with explanation what exactly is wrong in your config (in con
 ## Commands
 
 * `customnukes reload` - reload config from disk
-* `customnukes give <player\> <explosive-key\> <amount\>`
+* `customnukes give @player @explosive-key @amount`
 * `customnukes clear` - remove all explosive blocks and active repeaters
 
 ## Permissions
@@ -74,7 +74,7 @@ and error messages with explanation what exactly is wrong in your config (in con
 `customnukes.give` (default: op)
 
 * Access to place, break, craft items of specific explosive type: 
-`customnukes.explosive.<explosive-key\>` (default: op)
+`customnukes.explosive.@explosive-key` (default: op)
 This works only if 'check-permissions' is set to 'true' in config.yml.
 
 * Access to 'clear' command:
