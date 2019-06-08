@@ -5,11 +5,13 @@ import com.gmail.uprial.customnukes.schema.EItem;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -54,11 +56,18 @@ class ExplosivesActivateListener implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityExplode(EntityExplodeEvent event) {
         if(!event.isCancelled()) {
-            List<Block> blocks = event.blockList();
-            int blocksSize = blocks.size();
-            //noinspection ForLoopReplaceableByForEach
-            for(int i = 0; i < blocksSize; i++) {
-                try_activate(blocks.get(i));
+            for (Block block : event.blockList()) {
+                try_activate(block);
+            }
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onBlockExplodeEvent(BlockExplodeEvent event) {
+        if(!event.isCancelled()) {
+            for (Block block : event.blockList()) {
+                try_activate(block);
             }
         }
     }
