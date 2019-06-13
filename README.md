@@ -1,6 +1,6 @@
 ## Compatibility
 
-Tested on Spigot-1.8.8, Spigot-1.10.2 and Spigot-1.14.1.
+Tested on Spigot-1.14.2.
 
 ## Introduction
 
