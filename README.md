@@ -4,7 +4,7 @@ Tested on Spigot-1.14.2.
 
 ## Introduction
 
-This is fully customizable Minecraft (Bukkit) plugin that allows you to make your own explosives.
+This is a fully customizable Minecraft (Bukkit) plugin that allows you to make your own explosives.
 Existing blocks' physics will be not changed.
 
 ## Screencasts
@@ -37,27 +37,21 @@ Existing blocks' physics will be not changed.
 
 * A click via "flint and steel"
 
-* Other explosion, if this block will be destroyed
+* Another explosion, if this block will be destroyed
 
 The main idea to activate explosives is: make a schema of red stones
 or a chain of "Toy Bomb" close to main explosive (like "Nuclear Bomb") .
 
 ## Features
-* You can assign infinite number of different actions to one explosive.
-For example, your "Bomb" can be exploded twice with small interval between
-two explosions and glass-blocks will not protect enemy from this type of explosive.
+* You can assign an infinite number of different actions to one explosive. For example, your "Bomb" can be exploded twice with a small interval between two explosions and glass-blocks will not protect the enemy from this type of explosive.
 
-* You can add several potion effects with different strength,
-depending on distance between epicenter and target.
+* You can add several potion effects with different strength, depending on a distance between epicenter and target.
 
-* You can add "static" repeaters to run a scenario every some seconds.
-For example, add "radiation effect": area with radius 200 where every
-2 seconds  all living entities will take a potion effect "poison".
+* You can add "static" repeaters to run a scenario every N seconds. For example, add "radiation effect": area with radius 200 where every 2 seconds  all living entities will take a potion effect "poison".
 
 * All special blocks and repeaters will be saved after server reload.
 
-* Additionally there are good help in configuration file (config.yml)
-and error messages with explanation what exactly is wrong in your config (in console logs).
+* Additionally there is a good help in the configuration file (config.yml) and error messages with explanation what exactly is wrong in your config (in console logs).
 
 ## Commands
 
