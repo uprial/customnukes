@@ -21,10 +21,8 @@ public final class EScenario {
 
     public void execute(CustomNukes plugin, Location location) {
         int delay = 0;
-        int actionsSize = actions.size();
-        //noinspection ForLoopReplaceableByForEach
-        for(int i = 0; i < actionsSize; i++) {
-            delay = actions.get(i).execute(plugin, location, delay);
+        for(EScenarioAction action : actions) {
+            delay = action.execute(plugin, location, delay);
         }
     }
 

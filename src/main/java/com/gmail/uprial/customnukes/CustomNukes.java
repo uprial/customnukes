@@ -123,11 +123,7 @@ public final class CustomNukes extends JavaPlugin {
 
     private void loadExplosives() {
         List<EItem> explosives = explosivesConfig.getExplosives();
-        int explosivesSize = explosives.size();
-        //noinspection ForLoopReplaceableByForEach
-        for(int i = 0; i < explosivesSize; i++) {
-            EItem explosive = explosives.get(i);
-
+        for(EItem explosive : explosives) {
             ShapedRecipe shapedRecipe = explosive.getShapedRecipe();
             getServer().addRecipe(shapedRecipe);
             consoleLogger.info("Added " + explosive);

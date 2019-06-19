@@ -89,10 +89,7 @@ class ExplosivesBlocksListener implements Listener {
     public void onBlockPistonExtend(BlockPistonExtendEvent event) {
         if(!event.isCancelled()) {
             List<Block> blocks = event.getBlocks();
-            int blocksSize = blocks.size();
-            //noinspection ForLoopReplaceableByForEach
-            for(int i = 0; i < blocksSize; i++) {
-                Block block = blocks.get(i);
+            for(Block block : blocks) {
                 maybeMoveBlock(block, event.getDirection());
             }
         }
@@ -102,10 +99,7 @@ class ExplosivesBlocksListener implements Listener {
     public void onBlockPistonRetract(BlockPistonRetractEvent event) {
         if(!event.isCancelled() && event.isSticky()) {
             List<Block> blocks = event.getBlocks();
-            int blocksSize = blocks.size();
-            //noinspection ForLoopReplaceableByForEach
-            for(int i = 0; i < blocksSize; i++) {
-                Block block = blocks.get(i);
+            for(Block block : blocks) {
                 maybeMoveBlock(block, event.getDirection());
             }
         }
@@ -113,10 +107,7 @@ class ExplosivesBlocksListener implements Listener {
 
     private void onTaskMetaClean() {
         List<Block> blocks = plugin.getBlockMetaStorage().getAllBlocks();
-        int blocksSize = blocks.size();
-        //noinspection ForLoopReplaceableByForEach
-        for(int i = 0; i < blocksSize; i++) {
-            Block block = blocks.get(i);
+        for(Block block : blocks) {
             if(!plugin.getExplosivesConfig().isRegisteredMaterial(block.getType())) {
                 customLogger.info(String.format("Block '%s' at x=%d y=%d z=%d is not from the registered material. Meta will be deleted.",
                                                 block.getType().toString(), block.getX(), block.getY(), block.getZ()));

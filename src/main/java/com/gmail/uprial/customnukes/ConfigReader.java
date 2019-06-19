@@ -44,11 +44,8 @@ public final class ConfigReader {
         List<?> lines = config.getList(key);
         if(lines != null) {
             List<String> description = new ArrayList<>();
-
-            int linesSize = lines.size();
-            //noinspection ForLoopReplaceableByForEach
-            for(int i = 0; i < linesSize; i++) {
-                description.add(lines.get(i).toString());
+            for(Object line : lines) {
+                description.add(line.toString());
             }
 
             return description;

@@ -89,10 +89,8 @@ public class BlockMetaStorage {
             }
         }
 
-        int errorKeysSize = errorKeys.size();
-        //noinspection ForLoopReplaceableByForEach
-        for(int i = 0; i < errorKeysSize; i++) {
-            storage.delete(errorKeys.get(i));
+        for(String key : errorKeys) {
+            storage.delete(key);
         }
 
         return blocks;
