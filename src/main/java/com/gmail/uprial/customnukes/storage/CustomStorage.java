@@ -1,13 +1,8 @@
-package com.gmail.uprial.customnukes.common;
+package com.gmail.uprial.customnukes.storage;
 
-import com.gmail.uprial.customnukes.storage.StorageUtils;
+import com.gmail.uprial.customnukes.common.CustomLogger;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;

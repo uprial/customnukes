@@ -1,6 +1,6 @@
-package com.gmail.uprial.customnukes.common;
+package com.gmail.uprial.customnukes.storage;
 
-import com.gmail.uprial.customnukes.storage.StorageUtils;
+import com.gmail.uprial.customnukes.common.CustomLogger;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;

@@ -2,7 +2,7 @@ package com.gmail.uprial.customnukes.schema;
 
 import com.gmail.uprial.customnukes.CustomNukes;
 import com.gmail.uprial.customnukes.common.CustomLogger;
-import com.gmail.uprial.customnukes.common.CustomStorage;
+import com.gmail.uprial.customnukes.storage.CustomStorage;
 import com.gmail.uprial.customnukes.storage.StorageUtils;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -44,16 +44,16 @@ public class RepeaterTaskStorage {
         save();
     }
 
-    public void insert(Location location, String actionId, BukkitTask task, int runsCount) {
+    void insert(Location location, String actionId, BukkitTask task, int runsCount) {
         tasks.put(task.getTaskId(), task);
         set(location, actionId, task.getTaskId(), runsCount);
     }
 
-    public void update(Location location, String actionId, int taskId, int runsCount) {
+    void update(Location location, String actionId, int taskId, int runsCount) {
         set(location, actionId, taskId, runsCount);
     }
 
-    public void delete(Location location, String actionId, int taskId) {
+    void delete(Location location, String actionId, int taskId) {
         tasks.remove(taskId);
         set(location, actionId, taskId, -1);
     }

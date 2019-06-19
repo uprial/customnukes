@@ -1,6 +1,6 @@
 package com.gmail.uprial.customnukes;
 
-import com.gmail.uprial.customnukes.common.BlockMetaStorage;
+import com.gmail.uprial.customnukes.storage.BlockMetaStorage;
 import com.gmail.uprial.customnukes.common.CustomLogger;
 import com.gmail.uprial.customnukes.common.MicroTimestamp;
 import com.gmail.uprial.customnukes.schema.EItem;
