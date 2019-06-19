@@ -1,5 +1,6 @@
 package com.gmail.uprial.customnukes.schema;
 
+import com.gmail.uprial.customnukes.common.Utils;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.scheduler.BukkitTask;
@@ -8,7 +9,6 @@ import com.gmail.uprial.customnukes.ConfigReader;
 import com.gmail.uprial.customnukes.ConfigReaderResult;
 import com.gmail.uprial.customnukes.CustomNukes;
 import com.gmail.uprial.customnukes.common.CustomLogger;
-import com.gmail.uprial.customnukes.common.EUtils;
 
 public class EScenarioActionRepeater extends AbstractEScenarioActionDelayed {
 
@@ -44,7 +44,7 @@ public class EScenarioActionRepeater extends AbstractEScenarioActionDelayed {
 
     @Override
     public void explode(CustomNukes plugin, Location location) {
-        explodeEx(plugin, location, EUtils.seconds2ticks(duration) / interval);
+        explodeEx(plugin, location, Utils.seconds2ticks(duration) / interval);
     }
 
     public void explodeEx(CustomNukes plugin, Location location, int runsCount) {

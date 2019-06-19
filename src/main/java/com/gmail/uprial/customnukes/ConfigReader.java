@@ -1,7 +1,6 @@
 package com.gmail.uprial.customnukes;
 
 import com.gmail.uprial.customnukes.common.CustomLogger;
-import com.gmail.uprial.customnukes.common.EUtils;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -13,7 +12,7 @@ public final class ConfigReader {
         int value = defaultValue;
 
         if(config.getString(key) == null) {
-            customLogger.debug(String.format("Empty %s '%s'. Use default value %d", EUtils.lcFirst(title), name, defaultValue));
+            customLogger.debug(String.format("Empty %s '%s'. Use default value %d", title, name, defaultValue));
         } else {
             int intValue = config.getInt(key);
             if(min > intValue) {
@@ -81,7 +80,7 @@ public final class ConfigReader {
 
     public static ConfigReaderResult getFloatComplex(FileConfiguration config, CustomLogger customLogger, String key, String title, String name, float min, float max) {
         if(config.getString(key) == null) {
-            customLogger.error(String.format("Null %s '%s", EUtils.lcFirst(title), name));
+            customLogger.error(String.format("Null %s '%s", title, name));
             return ConfigReaderResult.errorResult();
         }
 
@@ -101,7 +100,7 @@ public final class ConfigReader {
     @SuppressWarnings("SameParameterValue")
     public static ConfigReaderResult getIntComplex(FileConfiguration config, CustomLogger customLogger, String key, String title, String name, int min, int max) {
         if(config.getString(key) == null) {
-            customLogger.error(String.format("Null %s '%s", EUtils.lcFirst(title), name));
+            customLogger.error(String.format("Null %s '%s", title, name));
             return ConfigReaderResult.errorResult();
         }
 
@@ -123,12 +122,12 @@ public final class ConfigReader {
 
         String strMaterial = config.getString(key);
         if(strMaterial == null) {
-            customLogger.debug(String.format("Empty %s, use default '%s'", EUtils.lcFirst(title), defaultMaterial));
+            customLogger.debug(String.format("Empty %s, use default '%s'", title, defaultMaterial));
         } else {
             Material tmpMaterial = Material.getMaterial(strMaterial);
             //noinspection IfStatementWithTooManyBranches
             if(tmpMaterial == null) {
-                customLogger.error(String.format("Unknown %s '%s', use default '%s'", EUtils.lcFirst(title), strMaterial, defaultMaterial));
+                customLogger.error(String.format("Unknown %s '%s', use default '%s'", title, strMaterial, defaultMaterial));
             } else if(!tmpMaterial.isBlock()) {
                 customLogger.error(String.format("%s '%s' is not block, use default '%s'", title, tmpMaterial, defaultMaterial));
             } else if(tmpMaterial.hasGravity()) {

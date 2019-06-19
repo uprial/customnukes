@@ -4,7 +4,7 @@ import com.gmail.uprial.customnukes.ConfigReader;
 import com.gmail.uprial.customnukes.ConfigReaderResult;
 import com.gmail.uprial.customnukes.CustomNukes;
 import com.gmail.uprial.customnukes.common.CustomLogger;
-import com.gmail.uprial.customnukes.common.EUtils;
+import com.gmail.uprial.customnukes.common.Utils;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.LivingEntity;
@@ -63,8 +63,8 @@ public class EScenarioActionSeismic extends AbstractEScenarioActionDelayed {
         //noinspection ForLoopReplaceableByForEach
         for(int pid = 0; pid < entitiesSize; pid++) {
             LivingEntity entity = (LivingEntity)entities.get(pid);
-            if(EUtils.isInRange(location, entity.getLocation(), maxRadius)
-                && ((minRadius <= 0.01) || !EUtils.isInRange(location, entity.getLocation(), minRadius))) {
+            if(Utils.isInRange(location, entity.getLocation(), maxRadius)
+                && ((minRadius <= 0.01) || !Utils.isInRange(location, entity.getLocation(), minRadius))) {
                 explodeEntity(location, entity);
             }
         }
@@ -79,7 +79,7 @@ public class EScenarioActionSeismic extends AbstractEScenarioActionDelayed {
             if (attenuation == ATTENUATION_LINE) {
                 explosionPower = (epicenterExplosionPower * (maxRadius - distance)) / maxRadius;
             } else { //if (attenuation == attenuationExp) {
-                double base = EUtils.expBase(maxRadius, epicenterExplosionPower);
+                double base = expBase(maxRadius, epicenterExplosionPower);
                 explosionPower = Math.pow(base, maxRadius - distance);
             }
         }
@@ -177,5 +177,9 @@ public class EScenarioActionSeismic extends AbstractEScenarioActionDelayed {
         attenuation = resAttenuation;
 
         return true;
+    }
+
+    private static double expBase(double degree, double result) {
+        return Math.exp(Math.log(result) / degree);
     }
 }

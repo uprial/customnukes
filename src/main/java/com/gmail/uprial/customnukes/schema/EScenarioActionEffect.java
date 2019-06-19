@@ -4,7 +4,7 @@ import com.gmail.uprial.customnukes.ConfigReader;
 import com.gmail.uprial.customnukes.ConfigReaderResult;
 import com.gmail.uprial.customnukes.CustomNukes;
 import com.gmail.uprial.customnukes.common.CustomLogger;
-import com.gmail.uprial.customnukes.common.EUtils;
+import com.gmail.uprial.customnukes.common.Utils;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.LivingEntity;
@@ -64,12 +64,12 @@ public class EScenarioActionEffect extends AbstractEScenarioActionExplosion {
         //noinspection ForLoopReplaceableByForEach
         for(int pid = 0; pid < entitiesSize; pid++) {
             LivingEntity entity = (LivingEntity)entities.get(pid);
-            if(EUtils.isInRange(location, entity.getLocation(), radius)) {
+            if(Utils.isInRange(location, entity.getLocation(), radius)) {
                 int effectsSize = effects.size();
                 //noinspection ForLoopReplaceableByForEach
                 for(int eid = 0; eid < effectsSize; eid++) {
                     PotionEffectType effect = effects.get(eid);
-                    addEffect(entity, new PotionEffect(effect, EUtils.seconds2ticks(duration), strength - 1));
+                    addEffect(entity, new PotionEffect(effect, Utils.seconds2ticks(duration), strength - 1));
                 }
             }
         }

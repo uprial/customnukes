@@ -1,5 +1,6 @@
 package com.gmail.uprial.customnukes.common;
 
+import com.gmail.uprial.customnukes.storage.StorageUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -98,7 +99,7 @@ public class BlockMetaStorage {
     }
 
        private Block getBlockByKey(String key) {
-        String[] items = EUtils.split(key, KEY_DELIMITER);
+        String[] items = StorageUtils.split(key, KEY_DELIMITER);
         if(items.length != 5) {
             return null;
         }
@@ -112,7 +113,7 @@ public class BlockMetaStorage {
        }
 
        private static String getMetadataKeyByKey(String key) {
-        String[] items = EUtils.split(key, KEY_DELIMITER);
+        String[] items = StorageUtils.split(key, KEY_DELIMITER);
         return items[4];
        }
 
@@ -137,7 +138,7 @@ public class BlockMetaStorage {
         items[3] = String.valueOf(location.getBlockZ());
         items[4] = metadataKey;
 
-        return EUtils.join(items, KEY_DELIMITER);
+        return StorageUtils.join(items, KEY_DELIMITER);
     }
 
 }

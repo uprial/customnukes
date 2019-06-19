@@ -1,5 +1,7 @@
 package com.gmail.uprial.customnukes.common;
 
+import com.gmail.uprial.customnukes.storage.StorageUtils;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -79,7 +81,7 @@ public class CustomStorage {
         for (Entry<String,String> entry : data.entrySet()) {
             row[0] = entry.getKey();
             row[1] = entry.getValue();
-            bufferedWriter.write(EUtils.join(row, VALUE_DELIMITER));
+            bufferedWriter.write(StorageUtils.join(row, VALUE_DELIMITER));
             bufferedWriter.newLine();
         }
 
@@ -93,7 +95,7 @@ public class CustomStorage {
         String line;
         //noinspection NestedAssignment,MethodCallInLoopCondition
         while((line = bufferedReader.readLine()) != null) {
-            String[] row = EUtils.split(line, VALUE_DELIMITER);
+            String[] row = StorageUtils.split(line, VALUE_DELIMITER);
             data.put(row[0], row[1]);
         }
 

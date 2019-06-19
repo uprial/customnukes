@@ -3,7 +3,7 @@ package com.gmail.uprial.customnukes.schema;
 import com.gmail.uprial.customnukes.CustomNukes;
 import com.gmail.uprial.customnukes.common.CustomLogger;
 import com.gmail.uprial.customnukes.common.CustomStorage;
-import com.gmail.uprial.customnukes.common.EUtils;
+import com.gmail.uprial.customnukes.storage.StorageUtils;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.scheduler.BukkitTask;
@@ -74,7 +74,7 @@ public class RepeaterTaskStorage {
             double y = 0;
             double z = 0;
 
-            String[] items = EUtils.split(key, KEY_DELIMITER);
+            String[] items = StorageUtils.split(key, KEY_DELIMITER);
             if(items.length != 6) {
                 customLogger.error(String.format("Key '%s' is invalid", key));
                 isValid = false;
@@ -147,7 +147,7 @@ public class RepeaterTaskStorage {
         items[4] = actionId;
         items[5] = String.valueOf(taskId);
 
-        return EUtils.join(items, KEY_DELIMITER);
+        return StorageUtils.join(items, KEY_DELIMITER);
     }
 
 }
