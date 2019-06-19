@@ -1,11 +1,9 @@
 package com.gmail.uprial.customnukes;
 
-import com.gmail.uprial.customnukes.storage.BlockMetaStorage;
 import com.gmail.uprial.customnukes.common.CustomLogger;
-import com.gmail.uprial.customnukes.common.MicroTimestamp;
 import com.gmail.uprial.customnukes.schema.EItem;
 import com.gmail.uprial.customnukes.schema.RepeaterTaskStorage;
-import org.bukkit.World;
+import com.gmail.uprial.customnukes.storage.BlockMetaStorage;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -26,9 +24,6 @@ public final class CustomNukes extends JavaPlugin {
     private final String CONFIG_FILE_NAME = "config.yml";
     private final File configFile = new File(getDataFolder(), CONFIG_FILE_NAME);
 
-    @SuppressWarnings("FieldCanBeLocal")
-    private static final int SAVE_INTERVAL = 20 * 300;
-
     private ExplosivesConfig explosivesConfig = null;
     private CustomLogger consoleLogger = null;
     private BlockMetaStorage blockMetaStorage = null;
@@ -46,7 +41,7 @@ public final class CustomNukes extends JavaPlugin {
         repeaterTaskStorage.restore();
         loadExplosives();
 
-        saveTask = new TaskPeriodicSave(this).runTaskTimer(this, SAVE_INTERVAL, SAVE_INTERVAL);
+        saveTask = new TaskPeriodicSave(this).runTaskTimer();
 
         getServer().getPluginManager().registerEvents(new ExplosivesBlocksListener(this, consoleLogger), this);
         getServer().getPluginManager().registerEvents(new ExplosivesActivateListener(this, consoleLogger), this);
@@ -77,16 +72,6 @@ public final class CustomNukes extends JavaPlugin {
     @Override
     public FileConfiguration getConfig() {
         return YamlConfiguration.loadConfiguration(configFile);
-    }
-
-    @SuppressWarnings("unused")
-    public void global_log(String message) {
-        getLogger().info(message);
-        for(World w : getServer().getWorlds()){
-            for(Player p : w.getPlayers()){
-                  p.sendMessage('[' + MicroTimestamp.INSTANCE.get() + "] " + message);
-            }
-        }
     }
 
     public ExplosivesConfig getExplosivesConfig() {
