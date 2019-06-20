@@ -1,6 +1,7 @@
 package com.gmail.uprial.customnukes;
 
 import com.gmail.uprial.customnukes.common.CustomLogger;
+import com.gmail.uprial.customnukes.config.ConfigReaderSimple;
 import com.gmail.uprial.customnukes.schema.EItem;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -52,11 +53,11 @@ public final class ExplosivesConfig {
 
     @SuppressWarnings("StaticMethodOnlyUsedInOneClass")
     public static boolean isDebugMode(FileConfiguration config, CustomLogger customLogger) {
-        return ConfigReader.getBoolean(config, customLogger, "debug", "'debug' flag",false);
+        return ConfigReaderSimple.getBoolean(config, customLogger, "debug", "'debug' flag",false);
     }
 
     public static ExplosivesConfig getFromConfig(CustomNukes plugin, FileConfiguration config, CustomLogger customLogger) {
-        Material material = ConfigReader.getMaterial(config, customLogger, "service-material", "Default service material", DEFAULT_MATERIAL);
+        Material material = ConfigReaderSimple.getMaterial(config, customLogger, "service-material", "Default service material", DEFAULT_MATERIAL);
 
         List<EItem> explosives = new ArrayList<>();
         Set<Material> materials = new HashSet<>();
@@ -69,7 +70,7 @@ public final class ExplosivesConfig {
             return null;
         }
 
-        boolean checkPermissions = ConfigReader.getBoolean(config, customLogger, "check-permissions", "'check-permissions' flag", false);
+        boolean checkPermissions = ConfigReaderSimple.getBoolean(config, customLogger, "check-permissions", "'check-permissions' flag", false);
 
         int explosivesConfigSize = explosivesConfig.size();
         for(int i = 0; i < explosivesConfigSize; i++) {

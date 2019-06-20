@@ -1,6 +1,6 @@
 package com.gmail.uprial.customnukes.schema;
 
-import com.gmail.uprial.customnukes.ConfigReader;
+import com.gmail.uprial.customnukes.config.ConfigReaderSimple;
 import com.gmail.uprial.customnukes.CustomNukes;
 import com.gmail.uprial.customnukes.common.CustomLogger;
 import org.bukkit.Location;
@@ -62,6 +62,6 @@ public abstract class AbstractEScenarioActionDelayed implements I_EScenarioActio
     }
 
     private int getDelayFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String title, int defaultValue) {
-        return ConfigReader.getInt(config, customLogger, key, title, minDelayValue(), maxDelayValue(), defaultValue);
+        return ConfigReaderSimple.getInt(config, customLogger, key, title, minDelayValue(), maxDelayValue(), defaultValue);
     }
 }

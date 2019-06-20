@@ -5,8 +5,8 @@ import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.scheduler.BukkitTask;
 
-import com.gmail.uprial.customnukes.ConfigReader;
-import com.gmail.uprial.customnukes.ConfigReaderResult;
+import com.gmail.uprial.customnukes.config.ConfigReaderSimple;
+import com.gmail.uprial.customnukes.config.ConfigReaderResult;
 import com.gmail.uprial.customnukes.CustomNukes;
 import com.gmail.uprial.customnukes.common.CustomLogger;
 
@@ -71,7 +71,7 @@ public class EScenarioActionRepeater extends AbstractEScenarioActionDelayed {
             return false;
         }
 
-        interval = ConfigReader.getInt(config, customLogger, key + ".interval", String.format("interval of %s", title), minInterval(), maxInterval(), defaultInterval());
+        interval = ConfigReaderSimple.getInt(config, customLogger, key + ".interval", String.format("interval of %s", title), minInterval(), maxInterval(), defaultInterval());
 
         EScenario scenario = EScenario.getFromConfig(config, customLogger, key, String.format("scenario of %s", title), false);
         if(scenario == null) {
@@ -83,7 +83,7 @@ public class EScenarioActionRepeater extends AbstractEScenarioActionDelayed {
     }
 
     private boolean isLoadedDurationFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String title) {
-        ConfigReaderResult result = ConfigReader.getIntComplex(config, customLogger, key + ".duration", String.format("duration of %s", title), minDuration(), maxDuration());
+        ConfigReaderResult result = ConfigReaderSimple.getIntComplex(config, customLogger, key + ".duration", String.format("duration of %s", title), minDuration(), maxDuration());
         if(result.isError()) {
             return false;
         } else {

@@ -1,4 +1,4 @@
-package com.gmail.uprial.customnukes;
+package com.gmail.uprial.customnukes.config;
 
 public final class ConfigReaderResult {
     private final boolean error;

@@ -1,9 +1,9 @@
 package com.gmail.uprial.customnukes.schema;
 
+import com.gmail.uprial.customnukes.config.ConfigReaderSimple;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import com.gmail.uprial.customnukes.ConfigReader;
-import com.gmail.uprial.customnukes.ConfigReaderResult;
+import com.gmail.uprial.customnukes.config.ConfigReaderResult;
 import com.gmail.uprial.customnukes.common.CustomLogger;
 
 public abstract class AbstractEScenarioActionExplosion extends AbstractEScenarioActionDelayed {
@@ -23,7 +23,7 @@ public abstract class AbstractEScenarioActionExplosion extends AbstractEScenario
     }
 
     private boolean isLoadedRadiusFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String title) {
-        ConfigReaderResult result = ConfigReader.getFloatComplex(config, customLogger, key + ".radius", String.format("radius of %s", title), minRadius(), maxRadius());
+        ConfigReaderResult result = ConfigReaderSimple.getFloatComplex(config, customLogger, key + ".radius", String.format("radius of %s", title), minRadius(), maxRadius());
         if(result.isError()) {
             return false;
         } else {

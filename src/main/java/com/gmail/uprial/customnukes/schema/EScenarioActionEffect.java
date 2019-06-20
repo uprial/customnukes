@@ -1,7 +1,7 @@
 package com.gmail.uprial.customnukes.schema;
 
-import com.gmail.uprial.customnukes.ConfigReader;
-import com.gmail.uprial.customnukes.ConfigReaderResult;
+import com.gmail.uprial.customnukes.config.ConfigReaderSimple;
+import com.gmail.uprial.customnukes.config.ConfigReaderResult;
 import com.gmail.uprial.customnukes.CustomNukes;
 import com.gmail.uprial.customnukes.common.CustomLogger;
 import com.gmail.uprial.customnukes.common.Utils;
@@ -105,13 +105,13 @@ public class EScenarioActionEffect extends AbstractEScenarioActionExplosion {
             return false;
         }
 
-        strength = ConfigReader.getInt(config, customLogger, key + ".strength", String.format("strength of %s", title), minStrength(), maxStrength(), defaultStrength());
+        strength = ConfigReaderSimple.getInt(config, customLogger, key + ".strength", String.format("strength of %s", title), minStrength(), maxStrength(), defaultStrength());
 
         if(!isLoadedDurationFromConfig(config, customLogger, key, title)) {
             return false;
         }
 
-        playersOnly = ConfigReader.getBoolean(config, customLogger, key + ".players-only", String.format("'players-only' value of %s", title), defaultPlayersOnly());
+        playersOnly = ConfigReaderSimple.getBoolean(config, customLogger, key + ".players-only", String.format("'players-only' value of %s", title), defaultPlayersOnly());
 
         return true;
     }
@@ -147,7 +147,7 @@ public class EScenarioActionEffect extends AbstractEScenarioActionExplosion {
     }
 
     private boolean isLoadedDurationFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String title) {
-        ConfigReaderResult result = ConfigReader.getIntComplex(config, customLogger, key + ".duration", String.format("duration of %s", title), minDuration(), maxDuration());
+        ConfigReaderResult result = ConfigReaderSimple.getIntComplex(config, customLogger, key + ".duration", String.format("duration of %s", title), minDuration(), maxDuration());
         if(result.isError()) {
             return false;
         } else {

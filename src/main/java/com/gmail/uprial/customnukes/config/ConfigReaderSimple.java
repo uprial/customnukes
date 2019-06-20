@@ -1,4 +1,4 @@
-package com.gmail.uprial.customnukes;
+package com.gmail.uprial.customnukes.config;
 
 import com.gmail.uprial.customnukes.common.CustomLogger;
 import org.bukkit.Material;
@@ -7,7 +7,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class ConfigReader {
+public final class ConfigReaderSimple {
     public static int getInt(FileConfiguration config, CustomLogger customLogger, String key, String title, int min, int max, int defaultValue) {
         int value = defaultValue;
 

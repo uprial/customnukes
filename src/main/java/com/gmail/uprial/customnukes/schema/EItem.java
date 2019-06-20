@@ -1,6 +1,6 @@
 package com.gmail.uprial.customnukes.schema;
 
-import com.gmail.uprial.customnukes.ConfigReader;
+import com.gmail.uprial.customnukes.config.ConfigReaderSimple;
 import com.gmail.uprial.customnukes.CustomNukes;
 import com.gmail.uprial.customnukes.common.CustomLogger;
 import com.gmail.uprial.customnukes.common.CustomRecipe;
@@ -81,20 +81,20 @@ public final class EItem {
 
     @SuppressWarnings({"BooleanParameter", "AccessingNonPublicFieldOfAnotherObject"})
     public static EItem getFromConfig(Material defaultMaterial, CustomNukes plugin, FileConfiguration config, CustomLogger customLogger, String key, boolean checkPermissions) {
-        String name = ConfigReader.getString(config, customLogger, key + ".name", String.format("name of explosive-key '%s'", key));
+        String name = ConfigReaderSimple.getString(config, customLogger, key + ".name", String.format("name of explosive-key '%s'", key));
         if(name == null) {
             return null;
         }
 
         EItem explosive = new EItem(key, checkPermissions);
-        explosive.material = ConfigReader.getMaterial(config, customLogger, key + ".service-material", String.format("material of '%s'", name), defaultMaterial);
+        explosive.material = ConfigReaderSimple.getMaterial(config, customLogger, key + ".service-material", String.format("material of '%s'", name), defaultMaterial);
         explosive.name = name;
-        List<String> description = ConfigReader.getStringList(config, customLogger, key + ".description", String.format("description of explosive '%s'", name));;
+        List<String> description = ConfigReaderSimple.getStringList(config, customLogger, key + ".description", String.format("description of explosive '%s'", name));;
         if(description != null) {
             explosive.description = description;
         }
 
-        explosive.amount = ConfigReader.getInt(config, customLogger, key + ".amount", String.format("amount of explosive '%s'", name), MIN_AMOUNT, MAX_AMOUNT, DEFAULT_AMOUNT);
+        explosive.amount = ConfigReaderSimple.getInt(config, customLogger, key + ".amount", String.format("amount of explosive '%s'", name), MIN_AMOUNT, MAX_AMOUNT, DEFAULT_AMOUNT);
 
         CustomRecipe recipe = CustomRecipe.getFromConfig(plugin, config, customLogger, key, String.format("recipe of explosive '%s'", name));
         if(recipe == null) {

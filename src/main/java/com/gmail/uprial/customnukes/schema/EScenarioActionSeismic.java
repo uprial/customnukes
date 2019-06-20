@@ -1,7 +1,7 @@
 package com.gmail.uprial.customnukes.schema;
 
-import com.gmail.uprial.customnukes.ConfigReader;
-import com.gmail.uprial.customnukes.ConfigReaderResult;
+import com.gmail.uprial.customnukes.config.ConfigReaderSimple;
+import com.gmail.uprial.customnukes.config.ConfigReaderResult;
 import com.gmail.uprial.customnukes.CustomNukes;
 import com.gmail.uprial.customnukes.common.CustomLogger;
 import com.gmail.uprial.customnukes.common.Utils;
@@ -114,14 +114,14 @@ public class EScenarioActionSeismic extends AbstractEScenarioActionDelayed {
             return false;
         }
 
-        playersOnly = ConfigReader.getBoolean(config, customLogger, key + ".players-only", String.format("'players-only' value of %s", title), defaultPlayersOnly());
+        playersOnly = ConfigReaderSimple.getBoolean(config, customLogger, key + ".players-only", String.format("'players-only' value of %s", title), defaultPlayersOnly());
 
         return isLoadedAttenuationFromConfig(config, customLogger, key, title);
 
     }
 
     private boolean isLoadedMinRadiusFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String title) {
-        ConfigReaderResult result = ConfigReader.getFloatComplex(config, customLogger, key + ".min-radius", String.format("minimum radius of %s", title), minMinRadius(), maxMinRadius());
+        ConfigReaderResult result = ConfigReaderSimple.getFloatComplex(config, customLogger, key + ".min-radius", String.format("minimum radius of %s", title), minMinRadius(), maxMinRadius());
         if(result.isError()) {
             return false;
         } else {
@@ -131,7 +131,7 @@ public class EScenarioActionSeismic extends AbstractEScenarioActionDelayed {
     }
 
     private boolean isLoadedMaxRadiusFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String title) {
-        ConfigReaderResult result = ConfigReader.getFloatComplex(config, customLogger, key + ".max-radius", String.format("maximum radius of %s", title), minMaxRadius(), maxMaxRadius());
+        ConfigReaderResult result = ConfigReaderSimple.getFloatComplex(config, customLogger, key + ".max-radius", String.format("maximum radius of %s", title), minMaxRadius(), maxMaxRadius());
         if(result.isError()) {
             return false;
         } else {
@@ -141,7 +141,7 @@ public class EScenarioActionSeismic extends AbstractEScenarioActionDelayed {
     }
 
     private boolean isLoadedEpicenterExplosionPowerFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String title) {
-        ConfigReaderResult result = ConfigReader.getFloatComplex(config, customLogger, key + ".epicenter-explosion-power",
+        ConfigReaderResult result = ConfigReaderSimple.getFloatComplex(config, customLogger, key + ".epicenter-explosion-power",
                 String.format("Epicenter explosion power of %s", title), minEpicenterExplosionPower(), maxEpicenterExplosionPower());
         if(result.isError()) {
             return false;
