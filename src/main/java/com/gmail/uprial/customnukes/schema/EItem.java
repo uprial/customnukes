@@ -122,7 +122,7 @@ public final class EItem {
     }
 
     private static int getAmountFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String name) {
-        return ConfigReader.getInt(config, customLogger, key + ".amount", "Amount of explosive", name, MIN_AMOUNT, MAX_AMOUNT, DEFAULT_AMOUNT);
+        return ConfigReader.getInt(config, customLogger, key + ".amount", String.format("Amount of explosive '%s'", name), MIN_AMOUNT, MAX_AMOUNT, DEFAULT_AMOUNT);
     }
 
     private ItemStack getItemStack() {

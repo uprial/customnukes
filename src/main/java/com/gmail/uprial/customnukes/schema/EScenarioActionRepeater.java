@@ -71,7 +71,7 @@ public class EScenarioActionRepeater extends AbstractEScenarioActionDelayed {
             return false;
         }
 
-        interval = ConfigReader.getInt(config, customLogger, key + ".interval", "Interval of action", name, minInterval(), maxInterval(), defaultInterval());
+        interval = ConfigReader.getInt(config, customLogger, key + ".interval", String.format("Interval of action '%s'", name), minInterval(), maxInterval(), defaultInterval());
 
         EScenario scenario = EScenario.getFromConfig(config, customLogger, key, name, false);
         if(scenario == null) {

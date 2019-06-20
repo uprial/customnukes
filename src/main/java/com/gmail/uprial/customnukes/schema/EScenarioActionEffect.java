@@ -105,7 +105,7 @@ public class EScenarioActionEffect extends AbstractEScenarioActionExplosion {
             return false;
         }
 
-        strength = ConfigReader.getInt(config, customLogger, key + ".strength", "Strength of action", name, minStrength(), maxStrength(), defaultStrength());
+        strength = ConfigReader.getInt(config, customLogger, key + ".strength", String.format("Strength of action '%s'", name), minStrength(), maxStrength(), defaultStrength());
 
         if(!isLoadedDurationFromConfig(config, customLogger, key, name)) {
             return false;

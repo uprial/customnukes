@@ -8,17 +8,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class ConfigReader {
-    public static int getInt(FileConfiguration config, CustomLogger customLogger, String key, String title, String name, int min, int max, int defaultValue) {
+    public static int getInt(FileConfiguration config, CustomLogger customLogger, String key, String title, int min, int max, int defaultValue) {
         int value = defaultValue;
 
         if(config.getString(key) == null) {
-            customLogger.debug(String.format("Empty %s '%s'. Use default value %d", title, name, defaultValue));
+            customLogger.debug(String.format("Empty %s. Use default value %d", title, defaultValue));
         } else {
             int intValue = config.getInt(key);
             if(min > intValue) {
-                customLogger.error(String.format("%s '%s' should be at least %d. Use default value %d", title, name, min, defaultValue));
+                customLogger.error(String.format("%s should be at least %d. Use default value %d", title, min, defaultValue));
             } else if(max < intValue) {
-                customLogger.error(String.format("%s '%s' should be at most %d. Use default value %d", title, name, max, defaultValue));
+                customLogger.error(String.format("%s should be at most %d. Use default value %d", title, max, defaultValue));
             } else {
                 value = intValue;
             }

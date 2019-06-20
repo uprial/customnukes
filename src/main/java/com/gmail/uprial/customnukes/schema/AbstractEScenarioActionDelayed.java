@@ -62,6 +62,6 @@ public abstract class AbstractEScenarioActionDelayed implements I_EScenarioActio
     }
 
     private int getDelayFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String name, String valueName, int defaultValue) {
-        return ConfigReader.getInt(config, customLogger, key, String.format("%s of action", valueName), name, minDelayValue(), maxDelayValue(), defaultValue);
+        return ConfigReader.getInt(config, customLogger, key, String.format("%s of action '%s'", valueName, name), minDelayValue(), maxDelayValue(), defaultValue);
     }
 }
