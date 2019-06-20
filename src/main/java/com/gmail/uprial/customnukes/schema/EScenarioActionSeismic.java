@@ -114,7 +114,7 @@ public class EScenarioActionSeismic extends AbstractEScenarioActionDelayed {
             return false;
         }
 
-        playersOnly = ConfigReader.getBoolean(config, customLogger, key + ".players-only", "'players-only' value of action", name, defaultPlayersOnly());
+        playersOnly = ConfigReader.getBoolean(config, customLogger, key + ".players-only", String.format("'players-only' value of action '%s'", name), defaultPlayersOnly());
 
         return isLoadedAttenuationFromConfig(config, customLogger, key, name);
 

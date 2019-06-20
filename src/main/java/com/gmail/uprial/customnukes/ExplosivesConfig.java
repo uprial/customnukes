@@ -52,7 +52,7 @@ public final class ExplosivesConfig {
 
     @SuppressWarnings("StaticMethodOnlyUsedInOneClass")
     public static boolean isDebugMode(FileConfiguration config, CustomLogger customLogger) {
-        return ConfigReader.getBoolean(config, customLogger, "debug", "value flag", "debug", false);
+        return ConfigReader.getBoolean(config, customLogger, "debug", "'debug' flag",false);
     }
 
     public static ExplosivesConfig getFromConfig(CustomNukes plugin, FileConfiguration config, CustomLogger customLogger) {
@@ -69,7 +69,7 @@ public final class ExplosivesConfig {
             return null;
         }
 
-        boolean checkPermissions = ConfigReader.getBoolean(config, customLogger, "check-permissions", "value flag", "check-permissions", false);
+        boolean checkPermissions = ConfigReader.getBoolean(config, customLogger, "check-permissions", "'check-permissions' flag", false);
 
         int explosivesConfigSize = explosivesConfig.size();
         for(int i = 0; i < explosivesConfigSize; i++) {

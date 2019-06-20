@@ -42,7 +42,7 @@ public class EScenarioActionExplosion extends AbstractEScenarioActionExplosion {
             return false;
         }
 
-        destroyBlocks = ConfigReader.getBoolean(config, customLogger, key + ".destroy-blocks", "'destroy-blocks' value of action", name, defaultDestroyBlocks());
+        destroyBlocks = ConfigReader.getBoolean(config, customLogger, key + ".destroy-blocks", String.format("'destroy-blocks' value of action '%s'", name), defaultDestroyBlocks());
 
         return true;
     }
