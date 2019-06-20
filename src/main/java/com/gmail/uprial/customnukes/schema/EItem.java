@@ -118,7 +118,7 @@ public final class EItem {
     }
 
     private static List<String> getDescriptionFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String name) {
-        return ConfigReader.getStringList(config, customLogger, key + ".description", "description of explosive", name);
+        return ConfigReader.getStringList(config, customLogger, key + ".description", String.format("description of explosive '%s'", name));
     }
 
     private static int getAmountFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String name) {

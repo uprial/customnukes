@@ -40,7 +40,7 @@ public final class ConfigReader {
     }
 
     @SuppressWarnings({"StaticMethodOnlyUsedInOneClass", "SameParameterValue"})
-    public static List<String> getStringList(FileConfiguration config, CustomLogger customLogger, String key, String title, String name) {
+    public static List<String> getStringList(FileConfiguration config, CustomLogger customLogger, String key, String title) {
         List<?> lines = config.getList(key);
         if(lines != null) {
             List<String> description = new ArrayList<>();
@@ -50,7 +50,7 @@ public final class ConfigReader {
 
             return description;
         } else {
-            customLogger.warning(String.format("Empty %s '%s'", title, name));
+            customLogger.warning(String.format("Empty %s", title));
             return null;
         }
     }
