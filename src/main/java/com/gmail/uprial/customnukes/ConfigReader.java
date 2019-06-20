@@ -32,7 +32,7 @@ public final class ConfigReader {
         String name = config.getString(key);
 
         if(name == null) {
-            customLogger.error(String.format("Null/Empty %s '%s'", title, key));
+            customLogger.error(String.format("Null/Empty %s", title));
             return null;
         }
 

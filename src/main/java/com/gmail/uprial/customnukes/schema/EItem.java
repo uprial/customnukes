@@ -114,7 +114,7 @@ public final class EItem {
     }
 
     private static String getNameFromConfig(FileConfiguration config, CustomLogger customLogger, String key) {
-        return ConfigReader.getString(config, customLogger, key + ".name", "name of explosive-key");
+        return ConfigReader.getString(config, customLogger, key + ".name", String.format("name of explosive-key '%s'", key));
     }
 
     private static List<String> getDescriptionFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String name) {
