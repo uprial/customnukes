@@ -121,7 +121,7 @@ public class EScenarioActionSeismic extends AbstractEScenarioActionDelayed {
     }
 
     private boolean isLoadedMinRadiusFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String name) {
-        ConfigReaderResult result = ConfigReader.getFloatComplex(config, customLogger, key + ".min-radius", "Minimum radius of action", name, minMinRadius(), maxMinRadius());
+        ConfigReaderResult result = ConfigReader.getFloatComplex(config, customLogger, key + ".min-radius", String.format("Minimum radius of action '%s'", name), minMinRadius(), maxMinRadius());
         if(result.isError()) {
             return false;
         } else {
@@ -131,7 +131,7 @@ public class EScenarioActionSeismic extends AbstractEScenarioActionDelayed {
     }
 
     private boolean isLoadedMaxRadiusFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String name) {
-        ConfigReaderResult result = ConfigReader.getFloatComplex(config, customLogger, key + ".max-radius", "Maximum radius of action", name, minMaxRadius(), maxMaxRadius());
+        ConfigReaderResult result = ConfigReader.getFloatComplex(config, customLogger, key + ".max-radius", String.format("Maximum radius of action '%s'", name), minMaxRadius(), maxMaxRadius());
         if(result.isError()) {
             return false;
         } else {
@@ -142,7 +142,7 @@ public class EScenarioActionSeismic extends AbstractEScenarioActionDelayed {
 
     private boolean isLoadedEpicenterExplosionPowerFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String name) {
         ConfigReaderResult result = ConfigReader.getFloatComplex(config, customLogger, key + ".epicenter-explosion-power",
-                                                                    "Epicenter explosion power of action", name, minEpicenterExplosionPower(), maxEpicenterExplosionPower());
+                String.format("Epicenter explosion power of action '%s'", name), minEpicenterExplosionPower(), maxEpicenterExplosionPower());
         if(result.isError()) {
             return false;
         } else {

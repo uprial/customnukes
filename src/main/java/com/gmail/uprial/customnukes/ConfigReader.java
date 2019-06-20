@@ -73,19 +73,19 @@ public final class ConfigReader {
         return value;
     }
 
-    public static ConfigReaderResult getFloatComplex(FileConfiguration config, CustomLogger customLogger, String key, String title, String name, float min, float max) {
+    public static ConfigReaderResult getFloatComplex(FileConfiguration config, CustomLogger customLogger, String key, String title, float min, float max) {
         if(config.getString(key) == null) {
-            customLogger.error(String.format("Null %s '%s", title, name));
+            customLogger.error(String.format("Null %s", title));
             return ConfigReaderResult.errorResult();
         }
 
         float value = (float)config.getDouble(key);
         if(min > value) {
-            customLogger.error(String.format("%s '%s' should be at least %.2f", title, name, min));
+            customLogger.error(String.format("%s should be at least %.2f", title, min));
             return ConfigReaderResult.errorResult();
         }
         else if(max < value) {
-            customLogger.error(String.format("%s '%s' should be at most %.2f", title, name, max));
+            customLogger.error(String.format("%s should be at most %.2f", title, max));
             return ConfigReaderResult.errorResult();
         }
 
@@ -93,19 +93,19 @@ public final class ConfigReader {
     }
 
     @SuppressWarnings("SameParameterValue")
-    public static ConfigReaderResult getIntComplex(FileConfiguration config, CustomLogger customLogger, String key, String title, String name, int min, int max) {
+    public static ConfigReaderResult getIntComplex(FileConfiguration config, CustomLogger customLogger, String key, String title, int min, int max) {
         if(config.getString(key) == null) {
-            customLogger.error(String.format("Null %s '%s", title, name));
+            customLogger.error(String.format("Null %s", title));
             return ConfigReaderResult.errorResult();
         }
 
         int value = config.getInt(key);
         if(min > value) {
-            customLogger.error(String.format("%s '%s' should be at least %d", title, name, min));
+            customLogger.error(String.format("%s should be at least %d", title, min));
             return ConfigReaderResult.errorResult();
         }
         else if(max < value) {
-            customLogger.error(String.format("%s '%s' should be at most %d", title, name, max));
+            customLogger.error(String.format("%s should be at most %d", title, max));
             return ConfigReaderResult.errorResult();
         }
 

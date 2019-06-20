@@ -23,7 +23,7 @@ public abstract class AbstractEScenarioActionExplosion extends AbstractEScenario
     }
 
     private boolean isLoadedRadiusFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String name) {
-        ConfigReaderResult result = ConfigReader.getFloatComplex(config, customLogger, key + ".radius", "Radius of action", name, minRadius(), maxRadius());
+        ConfigReaderResult result = ConfigReader.getFloatComplex(config, customLogger, key + ".radius", String.format("Radius of action '%s'", name), minRadius(), maxRadius());
         if(result.isError()) {
             return false;
         } else {

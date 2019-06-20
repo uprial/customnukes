@@ -147,7 +147,7 @@ public class EScenarioActionEffect extends AbstractEScenarioActionExplosion {
     }
 
     private boolean isLoadedDurationFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String name) {
-        ConfigReaderResult result = ConfigReader.getIntComplex(config, customLogger, key + ".duration", "Duration of action", name, minDuration(), maxDuration());
+        ConfigReaderResult result = ConfigReader.getIntComplex(config, customLogger, key + ".duration", String.format("Duration of action '%s'", name), minDuration(), maxDuration());
         if(result.isError()) {
             return false;
         } else {
