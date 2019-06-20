@@ -37,12 +37,12 @@ public class EScenarioActionExplosion extends AbstractEScenarioActionExplosion {
     }
 
     @Override
-    public boolean isLoadedFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String name) {
-        if(!super.isLoadedFromConfig(config, customLogger, key, name)) {
+    public boolean isLoadedFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String title) {
+        if(!super.isLoadedFromConfig(config, customLogger, key, title)) {
             return false;
         }
 
-        destroyBlocks = ConfigReader.getBoolean(config, customLogger, key + ".destroy-blocks", String.format("'destroy-blocks' value of action '%s'", name), defaultDestroyBlocks());
+        destroyBlocks = ConfigReader.getBoolean(config, customLogger, key + ".destroy-blocks", String.format("'destroy-blocks' value of %s", title), defaultDestroyBlocks());
 
         return true;
     }

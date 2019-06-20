@@ -62,18 +62,18 @@ public class EScenarioActionRepeater extends AbstractEScenarioActionDelayed {
     }
 
     @Override
-    public boolean isLoadedFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String name) {
-        if(!super.isLoadedFromConfig(config, customLogger, key, name)) {
+    public boolean isLoadedFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String title) {
+        if(!super.isLoadedFromConfig(config, customLogger, key, title)) {
             return false;
         }
 
-        if(!isLoadedDurationFromConfig(config, customLogger, key, name)) {
+        if(!isLoadedDurationFromConfig(config, customLogger, key, title)) {
             return false;
         }
 
-        interval = ConfigReader.getInt(config, customLogger, key + ".interval", String.format("Interval of action '%s'", name), minInterval(), maxInterval(), defaultInterval());
+        interval = ConfigReader.getInt(config, customLogger, key + ".interval", String.format("interval of %s", title), minInterval(), maxInterval(), defaultInterval());
 
-        EScenario scenario = EScenario.getFromConfig(config, customLogger, key, name, false);
+        EScenario scenario = EScenario.getFromConfig(config, customLogger, key, String.format("scenario of %s", title), false);
         if(scenario == null) {
             return false;
         }
@@ -82,8 +82,8 @@ public class EScenarioActionRepeater extends AbstractEScenarioActionDelayed {
         return true;
     }
 
-    private boolean isLoadedDurationFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String name) {
-        ConfigReaderResult result = ConfigReader.getIntComplex(config, customLogger, key + ".duration", String.format("Duration of action '%s'", name), minDuration(), maxDuration());
+    private boolean isLoadedDurationFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String title) {
+        ConfigReaderResult result = ConfigReader.getIntComplex(config, customLogger, key + ".duration", String.format("duration of %s", title), minDuration(), maxDuration());
         if(result.isError()) {
             return false;
         } else {

@@ -17,13 +17,13 @@ public abstract class AbstractEScenarioActionExplosion extends AbstractEScenario
     }
 
     @Override
-    public boolean isLoadedFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String name) {
-        return super.isLoadedFromConfig(config, customLogger, key, name) && isLoadedRadiusFromConfig(config, customLogger, key, name);
+    public boolean isLoadedFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String title) {
+        return super.isLoadedFromConfig(config, customLogger, key, title) && isLoadedRadiusFromConfig(config, customLogger, key, title);
 
     }
 
-    private boolean isLoadedRadiusFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String name) {
-        ConfigReaderResult result = ConfigReader.getFloatComplex(config, customLogger, key + ".radius", String.format("Radius of action '%s'", name), minRadius(), maxRadius());
+    private boolean isLoadedRadiusFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String title) {
+        ConfigReaderResult result = ConfigReader.getFloatComplex(config, customLogger, key + ".radius", String.format("radius of %s", title), minRadius(), maxRadius());
         if(result.isError()) {
             return false;
         } else {

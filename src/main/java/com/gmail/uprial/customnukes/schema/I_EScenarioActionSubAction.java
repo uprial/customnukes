@@ -10,6 +10,6 @@ interface I_EScenarioActionSubAction {
 
     int execute(CustomNukes plugin, Location location, int delay);
 
-    boolean isLoadedFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String name);
+    boolean isLoadedFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String title);
 
 }

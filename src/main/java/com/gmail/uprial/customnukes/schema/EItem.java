@@ -81,20 +81,20 @@ public final class EItem {
 
     @SuppressWarnings({"BooleanParameter", "AccessingNonPublicFieldOfAnotherObject"})
     public static EItem getFromConfig(Material defaultMaterial, CustomNukes plugin, FileConfiguration config, CustomLogger customLogger, String key, boolean checkPermissions) {
-        String name = getNameFromConfig(config, customLogger, key);
+        String name = ConfigReader.getString(config, customLogger, key + ".name", String.format("name of explosive-key '%s'", key));
         if(name == null) {
             return null;
         }
 
         EItem explosive = new EItem(key, checkPermissions);
-        explosive.material = ConfigReader.getMaterial(config, customLogger, key + ".service-material", String.format("Material of '%s'", name), defaultMaterial);
+        explosive.material = ConfigReader.getMaterial(config, customLogger, key + ".service-material", String.format("material of '%s'", name), defaultMaterial);
         explosive.name = name;
-        List<String> description = getDescriptionFromConfig(config, customLogger, key, name);
+        List<String> description = ConfigReader.getStringList(config, customLogger, key + ".description", String.format("description of explosive '%s'", name));;
         if(description != null) {
             explosive.description = description;
         }
 
-        explosive.amount = getAmountFromConfig(config, customLogger, key, name);
+        explosive.amount = ConfigReader.getInt(config, customLogger, key + ".amount", String.format("amount of explosive '%s'", name), MIN_AMOUNT, MAX_AMOUNT, DEFAULT_AMOUNT);
 
         CustomRecipe recipe = CustomRecipe.getFromConfig(plugin, config, customLogger, key, name);
         if(recipe == null) {
@@ -103,7 +103,7 @@ public final class EItem {
 
         explosive.recipe = recipe;
 
-        EScenario scenario = EScenario.getFromConfig(config, customLogger, key, name, true);
+        EScenario scenario = EScenario.getFromConfig(config, customLogger, key, String.format("scenario of '%s'", name), true);
         if(scenario == null) {
             return null;
         }
@@ -111,18 +111,6 @@ public final class EItem {
         explosive.scenario = scenario;
 
         return explosive;
-    }
-
-    private static String getNameFromConfig(FileConfiguration config, CustomLogger customLogger, String key) {
-        return ConfigReader.getString(config, customLogger, key + ".name", String.format("name of explosive-key '%s'", key));
-    }
-
-    private static List<String> getDescriptionFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String name) {
-        return ConfigReader.getStringList(config, customLogger, key + ".description", String.format("description of explosive '%s'", name));
-    }
-
-    private static int getAmountFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String name) {
-        return ConfigReader.getInt(config, customLogger, key + ".amount", String.format("Amount of explosive '%s'", name), MIN_AMOUNT, MAX_AMOUNT, DEFAULT_AMOUNT);
     }
 
     private ItemStack getItemStack() {

@@ -97,31 +97,31 @@ public class EScenarioActionSeismic extends AbstractEScenarioActionDelayed {
     }
 
     @Override
-    public boolean isLoadedFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String name) {
-        if(!super.isLoadedFromConfig(config, customLogger, key, name)) {
+    public boolean isLoadedFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String title) {
+        if(!super.isLoadedFromConfig(config, customLogger, key, title)) {
             return false;
         }
 
-        if(!isLoadedMinRadiusFromConfig(config, customLogger, key, name)) {
+        if(!isLoadedMinRadiusFromConfig(config, customLogger, key, title)) {
             return false;
         }
 
-        if(!isLoadedMaxRadiusFromConfig(config, customLogger, key, name)) {
+        if(!isLoadedMaxRadiusFromConfig(config, customLogger, key, title)) {
             return false;
         }
 
-        if(!isLoadedEpicenterExplosionPowerFromConfig(config, customLogger, key, name)) {
+        if(!isLoadedEpicenterExplosionPowerFromConfig(config, customLogger, key, title)) {
             return false;
         }
 
-        playersOnly = ConfigReader.getBoolean(config, customLogger, key + ".players-only", String.format("'players-only' value of action '%s'", name), defaultPlayersOnly());
+        playersOnly = ConfigReader.getBoolean(config, customLogger, key + ".players-only", String.format("'players-only' value of %s", title), defaultPlayersOnly());
 
-        return isLoadedAttenuationFromConfig(config, customLogger, key, name);
+        return isLoadedAttenuationFromConfig(config, customLogger, key, title);
 
     }
 
-    private boolean isLoadedMinRadiusFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String name) {
-        ConfigReaderResult result = ConfigReader.getFloatComplex(config, customLogger, key + ".min-radius", String.format("Minimum radius of action '%s'", name), minMinRadius(), maxMinRadius());
+    private boolean isLoadedMinRadiusFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String title) {
+        ConfigReaderResult result = ConfigReader.getFloatComplex(config, customLogger, key + ".min-radius", String.format("minimum radius of %s", title), minMinRadius(), maxMinRadius());
         if(result.isError()) {
             return false;
         } else {
@@ -130,8 +130,8 @@ public class EScenarioActionSeismic extends AbstractEScenarioActionDelayed {
         }
     }
 
-    private boolean isLoadedMaxRadiusFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String name) {
-        ConfigReaderResult result = ConfigReader.getFloatComplex(config, customLogger, key + ".max-radius", String.format("Maximum radius of action '%s'", name), minMaxRadius(), maxMaxRadius());
+    private boolean isLoadedMaxRadiusFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String title) {
+        ConfigReaderResult result = ConfigReader.getFloatComplex(config, customLogger, key + ".max-radius", String.format("maximum radius of %s", title), minMaxRadius(), maxMaxRadius());
         if(result.isError()) {
             return false;
         } else {
@@ -140,9 +140,9 @@ public class EScenarioActionSeismic extends AbstractEScenarioActionDelayed {
         }
     }
 
-    private boolean isLoadedEpicenterExplosionPowerFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String name) {
+    private boolean isLoadedEpicenterExplosionPowerFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String title) {
         ConfigReaderResult result = ConfigReader.getFloatComplex(config, customLogger, key + ".epicenter-explosion-power",
-                String.format("Epicenter explosion power of action '%s'", name), minEpicenterExplosionPower(), maxEpicenterExplosionPower());
+                String.format("Epicenter explosion power of %s", title), minEpicenterExplosionPower(), maxEpicenterExplosionPower());
         if(result.isError()) {
             return false;
         } else {
@@ -151,14 +151,14 @@ public class EScenarioActionSeismic extends AbstractEScenarioActionDelayed {
         }
     }
 
-    private boolean isLoadedAttenuationFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String name) {
+    private boolean isLoadedAttenuationFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String title) {
         String strAttenuation = config.getString(key + ".attenuation");
         if(strAttenuation == null) {
-            customLogger.error(String.format("Null attenuation of action '%s'", name));
+            customLogger.error(String.format("Null attenuation of %s", title));
             return false;
         }
         if(strAttenuation.length() < 1) {
-            customLogger.error(String.format("Empty attenuation of action '%s'", name));
+            customLogger.error(String.format("Empty attenuation of %s", title));
             return false;
         }
 
@@ -171,7 +171,7 @@ public class EScenarioActionSeismic extends AbstractEScenarioActionDelayed {
         } else if(strAttenuation.equalsIgnoreCase("exp")) {
             resAttenuation = ATTENUATION_EXP;
         } else {
-            customLogger.error(String.format("Invalid attenuation '%s' of action '%s'", strAttenuation, name));
+            customLogger.error(String.format("Invalid attenuation '%s' of %s", strAttenuation, title));
             return false;
         }
         attenuation = resAttenuation;

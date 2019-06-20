@@ -42,12 +42,12 @@ public abstract class AbstractEScenarioActionDelayed implements I_EScenarioActio
 
 
     @Override
-    public boolean isLoadedFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String name) {
-        int minDelay = getDelayFromConfig(config, customLogger, key + ".min-delay", name, "minimum delay", defaultMinDelay());
-        int maxDelay = getDelayFromConfig(config, customLogger, key + ".max-delay", name, "maximum delay", defaultMaxDelay());
+    public boolean isLoadedFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String title) {
+        int minDelay = getDelayFromConfig(config, customLogger, key + ".min-delay", String.format("minimum delay of %s", title), defaultMinDelay());
+        int maxDelay = getDelayFromConfig(config, customLogger, key + ".max-delay", String.format("maximum delay of %s", title), defaultMaxDelay());
         if(minDelay > maxDelay) {
-            customLogger.error(String.format("Value of minimum delay of action '%s' should be lower or equal to maximum delay. Use default values: %d, %d",
-                    name, minDelayValue(), maxDelayValue()));
+            customLogger.error(String.format("Value of minimum delay of %s should be lower or equal to maximum delay. Use default values: %d, %d",
+                    title, minDelayValue(), maxDelayValue()));
             minDelay = minDelayValue();
             maxDelay = maxDelayValue();
         }
@@ -61,7 +61,7 @@ public abstract class AbstractEScenarioActionDelayed implements I_EScenarioActio
         return actionId;
     }
 
-    private int getDelayFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String name, String valueName, int defaultValue) {
-        return ConfigReader.getInt(config, customLogger, key, String.format("%s of action '%s'", valueName, name), minDelayValue(), maxDelayValue(), defaultValue);
+    private int getDelayFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String title, int defaultValue) {
+        return ConfigReader.getInt(config, customLogger, key, title, minDelayValue(), maxDelayValue(), defaultValue);
     }
 }

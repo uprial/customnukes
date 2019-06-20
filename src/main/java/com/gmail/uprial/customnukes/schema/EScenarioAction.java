@@ -23,46 +23,46 @@ public final class EScenarioAction {
     }
 
     @SuppressWarnings("BooleanParameter")
-    public static EScenarioAction getFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String name, boolean isRepeaterAllowed) {
-        int type = getTypeFromConfig(config, customLogger, key, name, isRepeaterAllowed);
+    public static EScenarioAction getFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String title, boolean isRepeaterAllowed) {
+        int type = getTypeFromConfig(config, customLogger, key, title, isRepeaterAllowed);
         if(type == 0) {
             return null;
         }
 
         if(config.getConfigurationSection(key + ".parameters") == null) {
-            customLogger.error(String.format("Null definition of parameters of action '%s'", name));
+            customLogger.error(String.format("Null definition of parameters of %s", title));
             return null;
         }
 
         I_EScenarioActionSubAction subAction;
         //noinspection IfStatementWithTooManyBranches
         if(type == TYPE_EXPLOSION) {
-            subAction = new EScenarioActionExplosion(name);
+            subAction = new EScenarioActionExplosion(key);
         } else if(type == TYPE_EFFECT) {
-            subAction = new EScenarioActionEffect(name);
+            subAction = new EScenarioActionEffect(key);
         } else if(type == TYPE_REPEATER) {
-            subAction = new EScenarioActionRepeater(name);
+            subAction = new EScenarioActionRepeater(key);
         } else if(type == TYPE_SEISMIC) {
-            subAction = new EScenarioActionSeismic(name);
+            subAction = new EScenarioActionSeismic(key);
         } else {
             return null;
         }
 
-        if(!subAction.isLoadedFromConfig(config, customLogger, key + ".parameters", name)) {
+        if(!subAction.isLoadedFromConfig(config, customLogger, key + ".parameters", String.format("parameters of %s", title))) {
             return null;
         }
 
         return new EScenarioAction(subAction);
     }
 
-    private static int getTypeFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String name, boolean isRepeaterAllowed) {
+    private static int getTypeFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String title, boolean isRepeaterAllowed) {
         String strType = config.getString(key + ".type");
         if(strType == null) {
-            customLogger.error(String.format("Null type of action '%s'", name));
+            customLogger.error(String.format("Null type of %s", title));
             return 0;
         }
         if(strType.length() < 1) {
-            customLogger.error(String.format("Empty type of action '%s'", name));
+            customLogger.error(String.format("Empty type of %s", title));
             return 0;
         }
 
@@ -77,7 +77,7 @@ public final class EScenarioAction {
         } else if(strType.equalsIgnoreCase("seismic")) {
             resType = TYPE_SEISMIC;
         } else {
-            customLogger.error(String.format("Invalid type '%s' of action '%s'", strType, name));
+            customLogger.error(String.format("Invalid type '%s' of %s", strType, title));
         }
 
         return resType;

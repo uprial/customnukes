@@ -96,30 +96,30 @@ public class EScenarioActionEffect extends AbstractEScenarioActionExplosion {
     }
 
     @Override
-    public boolean isLoadedFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String name) {
-        if(!super.isLoadedFromConfig(config, customLogger, key, name)) {
+    public boolean isLoadedFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String title) {
+        if(!super.isLoadedFromConfig(config, customLogger, key, title)) {
             return false;
         }
 
-        if(!isLoadedTypeConfig(config, customLogger, key, name)) {
+        if(!isLoadedTypeConfig(config, customLogger, key, title)) {
             return false;
         }
 
-        strength = ConfigReader.getInt(config, customLogger, key + ".strength", String.format("Strength of action '%s'", name), minStrength(), maxStrength(), defaultStrength());
+        strength = ConfigReader.getInt(config, customLogger, key + ".strength", String.format("Strength of %s", title), minStrength(), maxStrength(), defaultStrength());
 
-        if(!isLoadedDurationFromConfig(config, customLogger, key, name)) {
+        if(!isLoadedDurationFromConfig(config, customLogger, key, title)) {
             return false;
         }
 
-        playersOnly = ConfigReader.getBoolean(config, customLogger, key + ".players-only", String.format("'players-only' value of action '%s'", name), defaultPlayersOnly());
+        playersOnly = ConfigReader.getBoolean(config, customLogger, key + ".players-only", String.format("'players-only' value of %s", title), defaultPlayersOnly());
 
         return true;
     }
 
-    private boolean isLoadedTypeConfig(FileConfiguration config, CustomLogger customLogger, String key, String name) {
+    private boolean isLoadedTypeConfig(FileConfiguration config, CustomLogger customLogger, String key, String title) {
         List<?> typeConfig = config.getList(key + ".effects");
-        if((typeConfig == null) || (typeConfig.size() < 0)) {
-            customLogger.error(String.format("Empty effects list of action '%s'", name));
+        if((typeConfig == null) || (typeConfig.size() <= 0)) {
+            customLogger.error(String.format("Empty effects list of %s", title));
             return false;
         }
 
@@ -128,13 +128,13 @@ public class EScenarioActionEffect extends AbstractEScenarioActionExplosion {
         for(int i = 0; i < typeConfigSize; i++) {
             Object item = typeConfig.get(i);
             if(item == null) {
-                customLogger.error(String.format("Null effect in effects list of action '%s' at pos %d", name, i));
+                customLogger.error(String.format("Null effect in effects list of %s at pos %d", title, i));
                 return false;
             }
             String effectName = item.toString();
             PotionEffectType effect = PotionEffectType.getByName(effectName);
             if(effect == null) {
-                customLogger.error(String.format("Invalid effect '%s' of action '%s' at pos %d", effectName, name, i));
+                customLogger.error(String.format("Invalid effect '%s' of %s at pos %d", effectName, title, i));
                 return false;
             }
 
@@ -146,8 +146,8 @@ public class EScenarioActionEffect extends AbstractEScenarioActionExplosion {
         return true;
     }
 
-    private boolean isLoadedDurationFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String name) {
-        ConfigReaderResult result = ConfigReader.getIntComplex(config, customLogger, key + ".duration", String.format("Duration of action '%s'", name), minDuration(), maxDuration());
+    private boolean isLoadedDurationFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String title) {
+        ConfigReaderResult result = ConfigReader.getIntComplex(config, customLogger, key + ".duration", String.format("duration of %s", title), minDuration(), maxDuration());
         if(result.isError()) {
             return false;
         } else {

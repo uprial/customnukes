@@ -27,10 +27,10 @@ public final class EScenario {
     }
 
     @SuppressWarnings("BooleanParameter")
-    public static EScenario getFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String name, boolean isRepeaterAllowed) {
+    public static EScenario getFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String title, boolean isRepeaterAllowed) {
         List<?> scenarioConfig = config.getList(key + ".scenario");
-        if((scenarioConfig == null) || (scenarioConfig.size() < 0)) {
-            customLogger.error(String.format("Empty scenario of item '%s'", name));
+        if((scenarioConfig == null) || (scenarioConfig.size() <= 0)) {
+            customLogger.error(String.format("Empty %s", title));
             return null;
         }
 
@@ -39,20 +39,20 @@ public final class EScenario {
         for(int i = 0; i < scenarioConfigSize; i++) {
             Object item = scenarioConfig.get(i);
             if(item == null) {
-                customLogger.error(String.format("Null key in scenario of item '%s' at pos %d", name, i));
+                customLogger.error(String.format("Null key in %s at pos %d", title, i));
                 return null;
             }
             String scenarioKey = item.toString();
             if(scenarioKey.length() < 1) {
-                customLogger.error(String.format("Empty key in scenario of item '%s' at pos %d", name, i));
+                customLogger.error(String.format("Empty key in %s at pos %d", title, i));
                 return null;
             }
             if(config.getConfigurationSection(key + '.' + scenarioKey) == null) {
-                customLogger.error(String.format("Null definition of scenario action '%s' from pos %d of item '%s'", scenarioKey, i, name));
+                customLogger.error(String.format("Null definition of scenario action '%s' from pos %d of %s", scenarioKey, i, title));
                 return null;
             }
 
-            EScenarioAction action = EScenarioAction.getFromConfig(config, customLogger, key + '.' + scenarioKey, name + '/' + scenarioKey, isRepeaterAllowed);
+            EScenarioAction action = EScenarioAction.getFromConfig(config, customLogger, key + '.' + scenarioKey, String.format("action '%s' of %s", scenarioKey, title), isRepeaterAllowed);
             if(action == null) {
                 return null;
             }
