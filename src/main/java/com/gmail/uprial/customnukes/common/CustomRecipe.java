@@ -68,27 +68,27 @@ public final class CustomRecipe {
     }
 
     @SuppressWarnings("StaticMethodOnlyUsedInOneClass")
-    public static CustomRecipe getFromConfig(CustomNukes plugin, FileConfiguration config, CustomLogger customLogger, String key, String name) {
+    public static CustomRecipe getFromConfig(CustomNukes plugin, FileConfiguration config, CustomLogger customLogger, String key, String title) {
         CustomRecipe recipe = new CustomRecipe(plugin);
 
         List<?> rows = config.getList(key + ".recipe");
         if(rows == null) {
-            customLogger.error(String.format("Empty recipe of item '%s'", name));
+            customLogger.error(String.format("Empty %s", title));
             return null;
         }
         if(rows.size() != 3) {
-            customLogger.error(String.format("Recipe of item '%s' should have 3 rows", name));
+            customLogger.error(String.format("%s should have 3 rows", title));
             return null;
         }
         for(int i = 0; i < 3; i++) {
             String[] cols = rows.get(i).toString().split(" ");
             if(cols.length != 3) {
-                customLogger.error(String.format("Recipe of item '%s' should have 3 cols at row %s", name, i));
+                customLogger.error(String.format("%s should have 3 cols at row %s", title, i));
                 return null;
             }
             for(int j = 0; j < 3; j++) {
                 if(Material.getMaterial(cols[j]) == null) {
-                    customLogger.error(String.format("Invalid material '%s' in explosive '%s' at row %d, col %d", cols[j], name, i ,j));
+                    customLogger.error(String.format("Invalid material '%s' in %s at row %d, col %d", cols[j], title, i ,j));
                     return null;
                 }
                 else {

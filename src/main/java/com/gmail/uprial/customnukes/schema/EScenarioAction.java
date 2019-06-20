@@ -48,7 +48,7 @@ public final class EScenarioAction {
             return null;
         }
 
-        if(!subAction.isLoadedFromConfig(config, customLogger, key + ".parameters", String.format("parameters of %s", title))) {
+        if(!subAction.isLoadedFromConfig(config, customLogger, key + ".parameters", title)) {
             return null;
         }
 

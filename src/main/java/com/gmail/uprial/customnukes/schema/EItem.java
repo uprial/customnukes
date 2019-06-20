@@ -96,14 +96,14 @@ public final class EItem {
 
         explosive.amount = ConfigReader.getInt(config, customLogger, key + ".amount", String.format("amount of explosive '%s'", name), MIN_AMOUNT, MAX_AMOUNT, DEFAULT_AMOUNT);
 
-        CustomRecipe recipe = CustomRecipe.getFromConfig(plugin, config, customLogger, key, name);
+        CustomRecipe recipe = CustomRecipe.getFromConfig(plugin, config, customLogger, key, String.format("recipe of explosive '%s'", name));
         if(recipe == null) {
             return null;
         }
 
         explosive.recipe = recipe;
 
-        EScenario scenario = EScenario.getFromConfig(config, customLogger, key, String.format("scenario of '%s'", name), true);
+        EScenario scenario = EScenario.getFromConfig(config, customLogger, key, String.format("scenario of explosive '%s'", name), true);
         if(scenario == null) {
             return null;
         }
