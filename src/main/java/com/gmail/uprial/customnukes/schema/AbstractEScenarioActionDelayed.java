@@ -1,8 +1,9 @@
 package com.gmail.uprial.customnukes.schema;
 
-import com.gmail.uprial.customnukes.config.ConfigReaderSimple;
 import com.gmail.uprial.customnukes.CustomNukes;
 import com.gmail.uprial.customnukes.common.CustomLogger;
+import com.gmail.uprial.customnukes.config.ConfigReaderNumbers;
+import com.gmail.uprial.customnukes.config.InvalidConfigException;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -42,26 +43,19 @@ public abstract class AbstractEScenarioActionDelayed implements I_EScenarioActio
 
 
     @Override
-    public boolean isLoadedFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String title) {
-        int minDelay = getDelayFromConfig(config, customLogger, key + ".min-delay", String.format("minimum delay of %s", title), defaultMinDelay());
-        int maxDelay = getDelayFromConfig(config, customLogger, key + ".max-delay", String.format("maximum delay of %s", title), defaultMaxDelay());
+    public void loadFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String title) throws InvalidConfigException {
+        minDelay = getDelayFromConfig(config, customLogger, key + ".min-delay", String.format("minimum delay of %s", title), defaultMinDelay());
+        maxDelay = getDelayFromConfig(config, customLogger, key + ".max-delay", String.format("maximum delay of %s", title), defaultMaxDelay());
         if(minDelay > maxDelay) {
-            customLogger.error(String.format("Value of minimum delay of %s should be lower or equal to maximum delay. Use default values: %d, %d",
-                    title, minDelayValue(), maxDelayValue()));
-            minDelay = minDelayValue();
-            maxDelay = maxDelayValue();
+            throw new InvalidConfigException(String.format("Value of minimum delay of %s should be lower or equal to maximum delay.", title));
         }
-        this.minDelay = minDelay;
-        this.maxDelay = maxDelay;
-
-        return true;
     }
 
     String getActionId() {
         return actionId;
     }
 
-    private int getDelayFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String title, int defaultValue) {
-        return ConfigReaderSimple.getInt(config, customLogger, key, title, minDelayValue(), maxDelayValue(), defaultValue);
+    private int getDelayFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String title, int defaultValue) throws InvalidConfigException {
+        return ConfigReaderNumbers.getInt(config, customLogger, key, title, minDelayValue(), maxDelayValue(), defaultValue);
     }
 }

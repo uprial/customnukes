@@ -1,9 +1,12 @@
 package com.gmail.uprial.customnukes.schema;
 
+import com.gmail.uprial.customnukes.config.ConfigReaderMaterial;
+import com.gmail.uprial.customnukes.config.ConfigReaderNumbers;
 import com.gmail.uprial.customnukes.config.ConfigReaderSimple;
 import com.gmail.uprial.customnukes.CustomNukes;
 import com.gmail.uprial.customnukes.common.CustomLogger;
 import com.gmail.uprial.customnukes.common.CustomRecipe;
+import com.gmail.uprial.customnukes.config.InvalidConfigException;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -80,35 +83,21 @@ public final class EItem {
     }
 
     @SuppressWarnings({"BooleanParameter", "AccessingNonPublicFieldOfAnotherObject"})
-    public static EItem getFromConfig(Material defaultMaterial, CustomNukes plugin, FileConfiguration config, CustomLogger customLogger, String key, boolean checkPermissions) {
-        String name = ConfigReaderSimple.getString(config, customLogger, key + ".name", String.format("name of explosive-key '%s'", key));
-        if(name == null) {
-            return null;
-        }
-
+    public static EItem getFromConfig(Material defaultMaterial, CustomNukes plugin, FileConfiguration config, CustomLogger customLogger, String key, boolean checkPermissions) throws InvalidConfigException {
         EItem explosive = new EItem(key, checkPermissions);
-        explosive.material = ConfigReaderSimple.getMaterial(config, customLogger, key + ".service-material", String.format("material of '%s'", name), defaultMaterial);
-        explosive.name = name;
-        List<String> description = ConfigReaderSimple.getStringList(config, customLogger, key + ".description", String.format("description of explosive '%s'", name));;
-        if(description != null) {
-            explosive.description = description;
-        }
 
-        explosive.amount = ConfigReaderSimple.getInt(config, customLogger, key + ".amount", String.format("amount of explosive '%s'", name), MIN_AMOUNT, MAX_AMOUNT, DEFAULT_AMOUNT);
-
-        CustomRecipe recipe = CustomRecipe.getFromConfig(plugin, config, customLogger, key, String.format("recipe of explosive '%s'", name));
-        if(recipe == null) {
-            return null;
-        }
-
-        explosive.recipe = recipe;
-
-        EScenario scenario = EScenario.getFromConfig(config, customLogger, key, String.format("scenario of explosive '%s'", name), true);
-        if(scenario == null) {
-            return null;
-        }
-
-        explosive.scenario = scenario;
+        explosive.name = ConfigReaderSimple.getString(config,key + ".name",
+                String.format("name of explosive-key '%s'", key));
+        explosive.material = ConfigReaderMaterial.getMaterial(config, customLogger,
+                key + ".service-material", String.format("material of '%s'", explosive.name), defaultMaterial);
+        explosive.description = ConfigReaderSimple.getStringList(config, customLogger,
+                key + ".description", String.format("description of explosive '%s'", explosive.name));;
+        explosive.amount = ConfigReaderNumbers.getInt(config, customLogger,
+                key + ".amount", String.format("amount of explosive '%s'", explosive.name), MIN_AMOUNT, MAX_AMOUNT, DEFAULT_AMOUNT);
+        explosive.recipe = CustomRecipe.getFromConfig(plugin, config, key,
+                String.format("recipe of explosive '%s'", explosive.name));
+        explosive.scenario = EScenario.getFromConfig(config, customLogger, key,
+                String.format("scenario of explosive '%s'", explosive.name), true);
 
         return explosive;
     }

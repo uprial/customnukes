@@ -1,6 +1,7 @@
 package com.gmail.uprial.customnukes;
 
 import com.gmail.uprial.customnukes.common.CustomLogger;
+import com.gmail.uprial.customnukes.config.InvalidConfigException;
 import com.gmail.uprial.customnukes.schema.EItem;
 import com.gmail.uprial.customnukes.schema.RepeaterTaskStorage;
 import com.gmail.uprial.customnukes.storage.BlockMetaStorage;
@@ -148,12 +149,19 @@ public final class CustomNukes extends JavaPlugin {
     }
 
     private static ExplosivesConfig loadConfig(CustomNukes plugin, FileConfiguration config, CustomLogger mainLogger, CustomLogger secondLogger) {
-        boolean isDebugMode = ExplosivesConfig.isDebugMode(config, mainLogger);
-        mainLogger.setDebugMode(isDebugMode);
-        if(secondLogger != null) {
-            secondLogger.setDebugMode(isDebugMode);
+        ExplosivesConfig explosivesConfig = null;
+        try {
+            boolean isDebugMode = ExplosivesConfig.isDebugMode(config, mainLogger);
+            mainLogger.setDebugMode(isDebugMode);
+            if (secondLogger != null) {
+                secondLogger.setDebugMode(isDebugMode);
+            }
+
+            explosivesConfig = ExplosivesConfig.getFromConfig(plugin, config, mainLogger);
+        } catch (InvalidConfigException e) {
+            mainLogger.error(e.getMessage());
         }
 
-        return ExplosivesConfig.getFromConfig(plugin, config, mainLogger);
+        return explosivesConfig;
     }
 }

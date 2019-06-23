@@ -52,7 +52,7 @@ class CustomNukesCommandExecutor implements CommandExecutor {
                     if(canGive) {
                         player = plugin.getPlayerByName(args[1]);
                         if(player == null) {
-                            customLogger.error(String.format("Player '%s' is not exists.", args[1]));
+                            customLogger.info(String.format("Player '%s' is not exists.", args[1]));
                             canGive = false;
                         }
                     }
@@ -63,7 +63,7 @@ class CustomNukesCommandExecutor implements CommandExecutor {
                         }
 
                         if(explosive == null) {
-                            customLogger.error(String.format("Explosive '%s' is not exists.", args[2]));
+                            customLogger.info(String.format("Explosive '%s' is not exists.", args[2]));
                             canGive = false;
                         }
                     }
@@ -74,15 +74,15 @@ class CustomNukesCommandExecutor implements CommandExecutor {
                             try {
                                 amount = Integer.valueOf(args[3]);
                             } catch (NumberFormatException ignored) {
-                                customLogger.error("Amount should be an integer between 1 and 64.");
+                                customLogger.info("Amount should be an integer between 1 and 64.");
                                 canGive = false;
                             }
                             if(canGive) {
                                 if(amount < 1) {
-                                    customLogger.error("Amount should be at least 1.");
+                                    customLogger.info("Amount should be at least 1.");
                                     canGive = false;
                                 } else if(amount > 64) {
-                                    customLogger.error("Amount should be at most 64.");
+                                    customLogger.info("Amount should be at most 64.");
                                     canGive = false;
                                 }
                             }

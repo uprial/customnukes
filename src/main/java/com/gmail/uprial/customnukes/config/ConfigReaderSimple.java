@@ -1,141 +1,66 @@
 package com.gmail.uprial.customnukes.config;
 
 import com.gmail.uprial.customnukes.common.CustomLogger;
-import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public final class ConfigReaderSimple {
-    public static int getInt(FileConfiguration config, CustomLogger customLogger, String key, String title, int min, int max, int defaultValue) {
-        int value = defaultValue;
-
-        if(config.getString(key) == null) {
-            customLogger.debug(String.format("Empty %s. Use default value %d", title, defaultValue));
-        } else {
-            int intValue = config.getInt(key);
-            if(min > intValue) {
-                customLogger.error(String.format("%s should be at least %d. Use default value %d", title, min, defaultValue));
-            } else if(max < intValue) {
-                customLogger.error(String.format("%s should be at most %d. Use default value %d", title, max, defaultValue));
-            } else {
-                value = intValue;
-            }
+    public static String getKey(Object item, String title, int i) throws InvalidConfigException {
+        if (item == null) {
+            throw new InvalidConfigException(String.format("Null key in %s at pos %d", title, i));
         }
-
-        return value;
+        if (!(item instanceof String)) {
+            throw new InvalidConfigException(String.format("Key '%s' in %s at pos %d is not a string", item.toString(), title, i));
+        }
+        String key = item.toString();
+        if (key.length() < 1) {
+            throw new InvalidConfigException(String.format("Empty key in %s at pos %d", title, i));
+        }
+        return key;
     }
 
-    @SuppressWarnings({"StaticMethodOnlyUsedInOneClass", "SameParameterValue"})
-    public static String getString(FileConfiguration config, CustomLogger customLogger, String key, String title) {
-        String name = config.getString(key);
+    public static String getString(FileConfiguration config, String key, String title) throws InvalidConfigException {
+        String string = config.getString(key);
 
-        if(name == null) {
-            customLogger.error(String.format("Null/Empty %s", title));
-            return null;
+        if(string == null) {
+            throw new InvalidConfigException(String.format("Null %s", title));
+        }
+        if(string.length() < 1) {
+            throw new InvalidConfigException(String.format("Empty %s", title));
         }
 
-        return name;
+        return string;
     }
 
-    @SuppressWarnings({"StaticMethodOnlyUsedInOneClass", "SameParameterValue"})
     public static List<String> getStringList(FileConfiguration config, CustomLogger customLogger, String key, String title) {
         List<?> lines = config.getList(key);
         if(lines != null) {
-            List<String> description = new ArrayList<>();
-            for(Object line : lines) {
-                description.add(line.toString());
+            List<String> strings = new ArrayList<>();
+            for (Object line : lines) {
+                strings.add(line.toString());
             }
 
-            return description;
+            return strings;
         } else {
-            customLogger.warning(String.format("Empty %s", title));
+            customLogger.debug(String.format("Empty %s. Use default value NULL", title));
             return null;
         }
     }
 
-    @SuppressWarnings({"BooleanParameter", "BooleanMethodNameMustStartWithQuestion"})
-    public static boolean getBoolean(FileConfiguration config, CustomLogger customLogger, String key, String title, boolean defaultValue) {
-        boolean value = defaultValue;
+    public static boolean getBoolean(FileConfiguration config, CustomLogger customLogger, String key, String title, boolean defaultValue) throws InvalidConfigException {
         String strValue = config.getString(key);
 
         if(strValue == null) {
             customLogger.debug(String.format("Empty %s. Use default value %b", title, defaultValue));
+            return defaultValue;
         } else if(strValue.equalsIgnoreCase("true")) {
-            value = true;
+            return true;
         } else if(strValue.equalsIgnoreCase("false")) {
-            value = false;
+            return false;
         } else {
-            customLogger.error(String.format("Invalid %s. Use default value %b", title, defaultValue));
+            throw new InvalidConfigException(String.format("Invalid %s", title));
         }
-
-        return value;
-    }
-
-    public static ConfigReaderResult getFloatComplex(FileConfiguration config, CustomLogger customLogger, String key, String title, float min, float max) {
-        if(config.getString(key) == null) {
-            customLogger.error(String.format("Null %s", title));
-            return ConfigReaderResult.errorResult();
-        }
-
-        float value = (float)config.getDouble(key);
-        if(min > value) {
-            customLogger.error(String.format("%s should be at least %.2f", title, min));
-            return ConfigReaderResult.errorResult();
-        }
-        else if(max < value) {
-            customLogger.error(String.format("%s should be at most %.2f", title, max));
-            return ConfigReaderResult.errorResult();
-        }
-
-        return ConfigReaderResult.floatResult(value);
-    }
-
-    @SuppressWarnings("SameParameterValue")
-    public static ConfigReaderResult getIntComplex(FileConfiguration config, CustomLogger customLogger, String key, String title, int min, int max) {
-        if(config.getString(key) == null) {
-            customLogger.error(String.format("Null %s", title));
-            return ConfigReaderResult.errorResult();
-        }
-
-        int value = config.getInt(key);
-        if(min > value) {
-            customLogger.error(String.format("%s should be at least %d", title, min));
-            return ConfigReaderResult.errorResult();
-        }
-        else if(max < value) {
-            customLogger.error(String.format("%s should be at most %d", title, max));
-            return ConfigReaderResult.errorResult();
-        }
-
-        return ConfigReaderResult.intResult(value);
-    }
-
-    public static Material getMaterial(FileConfiguration config, CustomLogger customLogger, String key, String title, Material defaultMaterial) {
-        Material resMaterial = defaultMaterial;
-
-        String strMaterial = config.getString(key);
-        if(strMaterial == null) {
-            customLogger.debug(String.format("Empty %s, use default '%s'", title, defaultMaterial));
-        } else {
-            Material tmpMaterial = Material.getMaterial(strMaterial);
-            //noinspection IfStatementWithTooManyBranches
-            if(tmpMaterial == null) {
-                customLogger.error(String.format("Unknown %s '%s', use default '%s'", title, strMaterial, defaultMaterial));
-            } else if(!tmpMaterial.isBlock()) {
-                customLogger.error(String.format("%s '%s' is not block, use default '%s'", title, tmpMaterial, defaultMaterial));
-            } else if(tmpMaterial.hasGravity()) {
-                customLogger.error(String.format("%s '%s' has gravity, use default '%s'", title, tmpMaterial, defaultMaterial));
-            } else if(!tmpMaterial.isSolid()) {
-                customLogger.error(String.format("%s '%s' is not solid, use default '%s'", title, tmpMaterial, defaultMaterial));
-            } else if(tmpMaterial.isInteractable()) {
-                customLogger.error(String.format("%s '%s' is not interactable, use default '%s'", title, tmpMaterial, defaultMaterial));
-            } else {
-                resMaterial = tmpMaterial;
-            }
-        }
-
-        return resMaterial;
     }
 }

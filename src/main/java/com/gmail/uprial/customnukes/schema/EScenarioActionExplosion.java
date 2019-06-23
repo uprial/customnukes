@@ -1,6 +1,7 @@
 package com.gmail.uprial.customnukes.schema;
 
 import com.gmail.uprial.customnukes.config.ConfigReaderSimple;
+import com.gmail.uprial.customnukes.config.InvalidConfigException;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -18,9 +19,9 @@ public class EScenarioActionExplosion extends AbstractEScenarioActionExplosion {
     protected int maxDelayValue() { return 1000; }
 
     @Override
-    protected float minRadius() { return 0; }
+    protected double minRadius() { return 0; }
     @Override
-    protected float maxRadius() { return 320; }
+    protected double maxRadius() { return 320; }
 
     @SuppressWarnings({"SameReturnValue", "BooleanMethodNameMustStartWithQuestion"})
     private static boolean defaultDestroyBlocks() { return true; }
@@ -33,18 +34,15 @@ public class EScenarioActionExplosion extends AbstractEScenarioActionExplosion {
 
     @Override
     public void explode(CustomNukes plugin, Location location) {
-        location.getWorld().createExplosion(location.getX(), location.getY(), location.getZ(), radius, false, destroyBlocks);
+        location.getWorld().createExplosion(location.getX(), location.getY(), location.getZ(), (float)radius, false, destroyBlocks);
     }
 
     @Override
-    public boolean isLoadedFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String title) {
-        if(!super.isLoadedFromConfig(config, customLogger, key, title)) {
-            return false;
-        }
+    public void loadFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String title) throws InvalidConfigException {
+        super.loadFromConfig(config, customLogger, key, title);
 
-        destroyBlocks = ConfigReaderSimple.getBoolean(config, customLogger, key + ".destroy-blocks", String.format("'destroy-blocks' value of %s", title), defaultDestroyBlocks());
-
-        return true;
+        destroyBlocks = ConfigReaderSimple.getBoolean(config, customLogger, key + ".destroy-blocks",
+                String.format("'destroy-blocks' value of %s", title), defaultDestroyBlocks());
     }
 
 }

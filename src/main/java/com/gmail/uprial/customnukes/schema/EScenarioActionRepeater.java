@@ -1,14 +1,13 @@
 package com.gmail.uprial.customnukes.schema;
 
+import com.gmail.uprial.customnukes.CustomNukes;
+import com.gmail.uprial.customnukes.common.CustomLogger;
 import com.gmail.uprial.customnukes.common.Utils;
+import com.gmail.uprial.customnukes.config.ConfigReaderNumbers;
+import com.gmail.uprial.customnukes.config.InvalidConfigException;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.scheduler.BukkitTask;
-
-import com.gmail.uprial.customnukes.config.ConfigReaderSimple;
-import com.gmail.uprial.customnukes.config.ConfigReaderResult;
-import com.gmail.uprial.customnukes.CustomNukes;
-import com.gmail.uprial.customnukes.common.CustomLogger;
 
 public class EScenarioActionRepeater extends AbstractEScenarioActionDelayed {
 
@@ -62,33 +61,14 @@ public class EScenarioActionRepeater extends AbstractEScenarioActionDelayed {
     }
 
     @Override
-    public boolean isLoadedFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String title) {
-        if(!super.isLoadedFromConfig(config, customLogger, key, title)) {
-            return false;
-        }
+    public void loadFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String title) throws InvalidConfigException {
+        super.loadFromConfig(config, customLogger, key, title);
 
-        if(!isLoadedDurationFromConfig(config, customLogger, key, title)) {
-            return false;
-        }
-
-        interval = ConfigReaderSimple.getInt(config, customLogger, key + ".interval", String.format("interval of %s", title), minInterval(), maxInterval(), defaultInterval());
-
-        EScenario scenario = EScenario.getFromConfig(config, customLogger, key, String.format("scenario of %s", title), false);
-        if(scenario == null) {
-            return false;
-        }
-        this.scenario = scenario;
-
-        return true;
-    }
-
-    private boolean isLoadedDurationFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String title) {
-        ConfigReaderResult result = ConfigReaderSimple.getIntComplex(config, customLogger, key + ".duration", String.format("duration of %s", title), minDuration(), maxDuration());
-        if(result.isError()) {
-            return false;
-        } else {
-            duration = result.getIntValue();
-            return true;
-        }
+        duration = ConfigReaderNumbers.getInt(config, customLogger, key + ".duration",
+                String.format("duration of %s", title), minDuration(), maxDuration());
+        interval = ConfigReaderNumbers.getInt(config, customLogger, key + ".interval",
+                String.format("interval of %s", title), minInterval(), maxInterval(), defaultInterval());
+        scenario = EScenario.getFromConfig(config, customLogger, key,
+                String.format("scenario of %s", title), false);
     }
 }

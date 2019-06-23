@@ -1,10 +1,11 @@
 package com.gmail.uprial.customnukes.schema;
 
+import com.gmail.uprial.customnukes.config.ConfigReaderNumbers;
 import com.gmail.uprial.customnukes.config.ConfigReaderSimple;
-import com.gmail.uprial.customnukes.config.ConfigReaderResult;
 import com.gmail.uprial.customnukes.CustomNukes;
 import com.gmail.uprial.customnukes.common.CustomLogger;
 import com.gmail.uprial.customnukes.common.Utils;
+import com.gmail.uprial.customnukes.config.InvalidConfigException;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.LivingEntity;
@@ -28,25 +29,25 @@ public class EScenarioActionSeismic extends AbstractEScenarioActionDelayed {
     protected int maxDelayValue() { return 1000; }
 
     @SuppressWarnings("SameReturnValue")
-    private static float minMinRadius() { return 0; }
+    private static double minMinRadius() { return 0; }
     @SuppressWarnings("SameReturnValue")
-    private static float maxMinRadius() { return 5000; }
+    private static double maxMinRadius() { return 5000; }
     @SuppressWarnings("SameReturnValue")
-    private static float minMaxRadius() { return 1; }
+    private static double minMaxRadius() { return 1; }
     @SuppressWarnings("SameReturnValue")
-    private static float maxMaxRadius() { return 5000; }
+    private static double maxMaxRadius() { return 5000; }
 
     @SuppressWarnings("SameReturnValue")
-    private static float minEpicenterExplosionPower() { return 1; }
+    private static double minEpicenterExplosionPower() { return 1; }
     @SuppressWarnings("SameReturnValue")
-    private static float maxEpicenterExplosionPower() { return 320; }
+    private static double maxEpicenterExplosionPower() { return 320; }
 
     @SuppressWarnings({"SameReturnValue", "BooleanMethodNameMustStartWithQuestion"})
     private static boolean defaultPlayersOnly() { return true; }
 
-    private float minRadius = 0.0F;
-    private float maxRadius = 0.0F;
-    private float epicenterExplosionPower = 0.0F;
+    private double minRadius = 0.0F;
+    private double maxRadius = 0.0F;
+    private double epicenterExplosionPower = 0.0F;
     private boolean playersOnly = false;
     private int attenuation = 0;
 
@@ -97,86 +98,34 @@ public class EScenarioActionSeismic extends AbstractEScenarioActionDelayed {
     }
 
     @Override
-    public boolean isLoadedFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String title) {
-        if(!super.isLoadedFromConfig(config, customLogger, key, title)) {
-            return false;
-        }
+    public void loadFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String title) throws InvalidConfigException {
+        super.loadFromConfig(config, customLogger, key, title);
 
-        if(!isLoadedMinRadiusFromConfig(config, customLogger, key, title)) {
-            return false;
-        }
-
-        if(!isLoadedMaxRadiusFromConfig(config, customLogger, key, title)) {
-            return false;
-        }
-
-        if(!isLoadedEpicenterExplosionPowerFromConfig(config, customLogger, key, title)) {
-            return false;
-        }
-
-        playersOnly = ConfigReaderSimple.getBoolean(config, customLogger, key + ".players-only", String.format("'players-only' value of %s", title), defaultPlayersOnly());
-
-        return isLoadedAttenuationFromConfig(config, customLogger, key, title);
-
-    }
-
-    private boolean isLoadedMinRadiusFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String title) {
-        ConfigReaderResult result = ConfigReaderSimple.getFloatComplex(config, customLogger, key + ".min-radius", String.format("minimum radius of %s", title), minMinRadius(), maxMinRadius());
-        if(result.isError()) {
-            return false;
-        } else {
-            minRadius = result.getFloatValue();
-            return true;
-        }
-    }
-
-    private boolean isLoadedMaxRadiusFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String title) {
-        ConfigReaderResult result = ConfigReaderSimple.getFloatComplex(config, customLogger, key + ".max-radius", String.format("maximum radius of %s", title), minMaxRadius(), maxMaxRadius());
-        if(result.isError()) {
-            return false;
-        } else {
-            maxRadius = result.getFloatValue();
-            return true;
-        }
-    }
-
-    private boolean isLoadedEpicenterExplosionPowerFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String title) {
-        ConfigReaderResult result = ConfigReaderSimple.getFloatComplex(config, customLogger, key + ".epicenter-explosion-power",
+        minRadius = ConfigReaderNumbers.getDouble(config, customLogger, key + ".min-radius",
+                String.format("minimum radius of %s", title), minMinRadius(), maxMinRadius());
+        maxRadius = ConfigReaderNumbers.getDouble(config, customLogger, key + ".max-radius",
+                String.format("maximum radius of %s", title), minMaxRadius(), maxMaxRadius());
+        epicenterExplosionPower = ConfigReaderNumbers.getDouble(config, customLogger, key + ".epicenter-explosion-power",
                 String.format("Epicenter explosion power of %s", title), minEpicenterExplosionPower(), maxEpicenterExplosionPower());
-        if(result.isError()) {
-            return false;
-        } else {
-            epicenterExplosionPower = result.getFloatValue();
-            return true;
-        }
+        playersOnly = ConfigReaderSimple.getBoolean(config, customLogger, key + ".players-only",
+                String.format("'players-only' value of %s", title), defaultPlayersOnly());
+        attenuation = getAttenuationFromConfig(config, customLogger, key, title);
+
     }
 
-    private boolean isLoadedAttenuationFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String title) {
-        String strAttenuation = config.getString(key + ".attenuation");
-        if(strAttenuation == null) {
-            customLogger.error(String.format("Null attenuation of %s", title));
-            return false;
-        }
-        if(strAttenuation.length() < 1) {
-            customLogger.error(String.format("Empty attenuation of %s", title));
-            return false;
-        }
+    private int getAttenuationFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String title) throws InvalidConfigException {
+        String strAttenuation = ConfigReaderSimple.getString(config,key + ".attenuation", String.format("attenuation of %s", title));
 
-        int resAttenuation;
         //noinspection IfStatementWithTooManyBranches
         if(strAttenuation.equalsIgnoreCase("no") || strAttenuation.equalsIgnoreCase("false")) {
-            resAttenuation = ATTENUATION_NO;
+            return ATTENUATION_NO;
         } else if(strAttenuation.equalsIgnoreCase("line")) {
-            resAttenuation = ATTENUATION_LINE;
+            return ATTENUATION_LINE;
         } else if(strAttenuation.equalsIgnoreCase("exp")) {
-            resAttenuation = ATTENUATION_EXP;
+            return ATTENUATION_EXP;
         } else {
-            customLogger.error(String.format("Invalid attenuation '%s' of %s", strAttenuation, title));
-            return false;
+            throw new InvalidConfigException(String.format("Invalid attenuation '%s' of %s", strAttenuation, title));
         }
-        attenuation = resAttenuation;
-
-        return true;
     }
 
     private static double expBase(double degree, double result) {

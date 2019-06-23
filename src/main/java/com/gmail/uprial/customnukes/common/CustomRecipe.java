@@ -1,6 +1,7 @@
 package com.gmail.uprial.customnukes.common;
 
 import com.gmail.uprial.customnukes.CustomNukes;
+import com.gmail.uprial.customnukes.config.InvalidConfigException;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -68,28 +69,24 @@ public final class CustomRecipe {
     }
 
     @SuppressWarnings("StaticMethodOnlyUsedInOneClass")
-    public static CustomRecipe getFromConfig(CustomNukes plugin, FileConfiguration config, CustomLogger customLogger, String key, String title) {
+    public static CustomRecipe getFromConfig(CustomNukes plugin, FileConfiguration config, String key, String title) throws InvalidConfigException {
         CustomRecipe recipe = new CustomRecipe(plugin);
 
         List<?> rows = config.getList(key + ".recipe");
         if(rows == null) {
-            customLogger.error(String.format("Empty %s", title));
-            return null;
+            throw new InvalidConfigException(String.format("Empty %s", title));
         }
         if(rows.size() != 3) {
-            customLogger.error(String.format("%s should have 3 rows", title));
-            return null;
+            throw new InvalidConfigException(String.format("%s should have 3 rows", title));
         }
         for(int i = 0; i < 3; i++) {
             String[] cols = rows.get(i).toString().split(" ");
             if(cols.length != 3) {
-                customLogger.error(String.format("%s should have 3 cols at row %s", title, i));
-                return null;
+                throw new InvalidConfigException(String.format("%s should have 3 cols at row %s", title, i));
             }
             for(int j = 0; j < 3; j++) {
                 if(Material.getMaterial(cols[j]) == null) {
-                    customLogger.error(String.format("Invalid material '%s' in %s at row %d, col %d", cols[j], title, i ,j));
-                    return null;
+                    throw new InvalidConfigException(String.format("Invalid material '%s' in %s at row %d, col %d", cols[j], title, i ,j));
                 }
                 else {
                     recipe.setItem(i, j, cols[j]);

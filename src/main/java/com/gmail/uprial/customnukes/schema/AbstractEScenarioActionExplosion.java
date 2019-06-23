@@ -1,35 +1,23 @@
 package com.gmail.uprial.customnukes.schema;
 
-import com.gmail.uprial.customnukes.config.ConfigReaderSimple;
+import com.gmail.uprial.customnukes.common.CustomLogger;
+import com.gmail.uprial.customnukes.config.ConfigReaderNumbers;
+import com.gmail.uprial.customnukes.config.InvalidConfigException;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import com.gmail.uprial.customnukes.config.ConfigReaderResult;
-import com.gmail.uprial.customnukes.common.CustomLogger;
-
 public abstract class AbstractEScenarioActionExplosion extends AbstractEScenarioActionDelayed {
-    abstract float minRadius();
-    abstract float maxRadius();
+    abstract double minRadius();
+    abstract double maxRadius();
 
-    float radius = 0.0F;
+    double radius = 0.0F;
 
     AbstractEScenarioActionExplosion(String actionId) {
         super(actionId);
     }
 
     @Override
-    public boolean isLoadedFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String title) {
-        return super.isLoadedFromConfig(config, customLogger, key, title) && isLoadedRadiusFromConfig(config, customLogger, key, title);
-
+    public void loadFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String title) throws InvalidConfigException {
+        super.loadFromConfig(config, customLogger, key, title);
+        radius = ConfigReaderNumbers.getDouble(config, customLogger, key + ".radius", String.format("radius of %s", title), minRadius(), maxRadius());
     }
-
-    private boolean isLoadedRadiusFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String title) {
-        ConfigReaderResult result = ConfigReaderSimple.getFloatComplex(config, customLogger, key + ".radius", String.format("radius of %s", title), minRadius(), maxRadius());
-        if(result.isError()) {
-            return false;
-        } else {
-            radius = result.getFloatValue();
-            return true;
-        }
-    }
-
 }

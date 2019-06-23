@@ -1,5 +1,6 @@
 package com.gmail.uprial.customnukes.schema;
 
+import com.gmail.uprial.customnukes.config.InvalidConfigException;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -10,6 +11,5 @@ interface I_EScenarioActionSubAction {
 
     int execute(CustomNukes plugin, Location location, int delay);
 
-    boolean isLoadedFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String title);
-
+    void loadFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String title) throws InvalidConfigException;
 }

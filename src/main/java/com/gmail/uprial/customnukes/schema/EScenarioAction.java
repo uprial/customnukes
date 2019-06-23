@@ -1,5 +1,7 @@
 package com.gmail.uprial.customnukes.schema;
 
+import com.gmail.uprial.customnukes.config.ConfigReaderSimple;
+import com.gmail.uprial.customnukes.config.InvalidConfigException;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -23,16 +25,12 @@ public final class EScenarioAction {
     }
 
     @SuppressWarnings("BooleanParameter")
-    public static EScenarioAction getFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String title, boolean isRepeaterAllowed) {
-        int type = getTypeFromConfig(config, customLogger, key, title, isRepeaterAllowed);
-        if(type == 0) {
-            return null;
+    public static EScenarioAction getFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String title, boolean isRepeaterAllowed) throws InvalidConfigException {
+        if(config.getConfigurationSection(key + ".parameters") == null) {
+            throw new InvalidConfigException(String.format("Null definition of parameters of %s", title));
         }
 
-        if(config.getConfigurationSection(key + ".parameters") == null) {
-            customLogger.error(String.format("Null definition of parameters of %s", title));
-            return null;
-        }
+        int type = getTypeFromConfig(config, key, title, isRepeaterAllowed);
 
         I_EScenarioActionSubAction subAction;
         //noinspection IfStatementWithTooManyBranches
@@ -45,41 +43,28 @@ public final class EScenarioAction {
         } else if(type == TYPE_SEISMIC) {
             subAction = new EScenarioActionSeismic(key);
         } else {
-            return null;
+            throw new InvalidConfigException(String.format("Impossible type %d of %s", type, title));
         }
 
-        if(!subAction.isLoadedFromConfig(config, customLogger, key + ".parameters", title)) {
-            return null;
-        }
+        subAction.loadFromConfig(config, customLogger, key + ".parameters", title);
 
         return new EScenarioAction(subAction);
     }
 
-    private static int getTypeFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String title, boolean isRepeaterAllowed) {
-        String strType = config.getString(key + ".type");
-        if(strType == null) {
-            customLogger.error(String.format("Null type of %s", title));
-            return 0;
-        }
-        if(strType.length() < 1) {
-            customLogger.error(String.format("Empty type of %s", title));
-            return 0;
-        }
+    private static int getTypeFromConfig(FileConfiguration config, String key, String title, boolean isRepeaterAllowed) throws InvalidConfigException {
+        String strType = ConfigReaderSimple.getString(config,key + ".type", String.format("type of %s", title));
 
-        int resType = 0;
         //noinspection IfStatementWithTooManyBranches
         if(strType.equalsIgnoreCase("explosion")) {
-            resType = TYPE_EXPLOSION;
+            return TYPE_EXPLOSION;
         } else if(strType.equalsIgnoreCase("effect")) {
-            resType = TYPE_EFFECT;
+            return TYPE_EFFECT;
         } else if(strType.equalsIgnoreCase("repeater") && isRepeaterAllowed) {
-            resType = TYPE_REPEATER;
+            return TYPE_REPEATER;
         } else if(strType.equalsIgnoreCase("seismic")) {
-            resType = TYPE_SEISMIC;
+            return TYPE_SEISMIC;
         } else {
-            customLogger.error(String.format("Invalid type '%s' of %s", strType, title));
+            throw new InvalidConfigException(String.format("Invalid type '%s' of %s", strType, title));
         }
-
-        return resType;
     }
 }

@@ -1,10 +1,11 @@
 package com.gmail.uprial.customnukes.schema;
 
+import com.gmail.uprial.customnukes.config.ConfigReaderNumbers;
 import com.gmail.uprial.customnukes.config.ConfigReaderSimple;
-import com.gmail.uprial.customnukes.config.ConfigReaderResult;
 import com.gmail.uprial.customnukes.CustomNukes;
 import com.gmail.uprial.customnukes.common.CustomLogger;
 import com.gmail.uprial.customnukes.common.Utils;
+import com.gmail.uprial.customnukes.config.InvalidConfigException;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.LivingEntity;
@@ -14,6 +15,8 @@ import org.bukkit.potion.PotionEffectType;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import static com.gmail.uprial.customnukes.config.ConfigReaderSimple.getKey;
 
 @SuppressWarnings("ClassWithTooManyMethods")
 public class EScenarioActionEffect extends AbstractEScenarioActionExplosion {
@@ -27,9 +30,9 @@ public class EScenarioActionEffect extends AbstractEScenarioActionExplosion {
     protected int maxDelayValue() { return 2000; }
 
     @Override
-    protected float minRadius() { return 1; }
+    protected double minRadius() { return 1; }
     @Override
-    protected float maxRadius() { return 5000; }
+    protected double maxRadius() { return 5000; }
 
     @SuppressWarnings("SameReturnValue")
     private static int minStrength() { return 1; }
@@ -96,63 +99,36 @@ public class EScenarioActionEffect extends AbstractEScenarioActionExplosion {
     }
 
     @Override
-    public boolean isLoadedFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String title) {
-        if(!super.isLoadedFromConfig(config, customLogger, key, title)) {
-            return false;
-        }
+    public void loadFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String title) throws InvalidConfigException {
+        super.loadFromConfig(config, customLogger, key, title);
 
-        if(!isLoadedTypeConfig(config, customLogger, key, title)) {
-            return false;
-        }
-
-        strength = ConfigReaderSimple.getInt(config, customLogger, key + ".strength", String.format("strength of %s", title), minStrength(), maxStrength(), defaultStrength());
-
-        if(!isLoadedDurationFromConfig(config, customLogger, key, title)) {
-            return false;
-        }
-
-        playersOnly = ConfigReaderSimple.getBoolean(config, customLogger, key + ".players-only", String.format("'players-only' value of %s", title), defaultPlayersOnly());
-
-        return true;
+        effects = getEffectsFromConfig(config, customLogger, key, title);
+        strength = ConfigReaderNumbers.getInt(config, customLogger, key + ".strength",
+                String.format("strength of %s", title), minStrength(), maxStrength(), defaultStrength());
+        duration = ConfigReaderNumbers.getInt(config, customLogger, key + ".duration",
+                String.format("duration of %s", title), minDuration(), maxDuration());
+        playersOnly = ConfigReaderSimple.getBoolean(config, customLogger, key + ".players-only",
+                String.format("'players-only' value of %s", title), defaultPlayersOnly());
     }
 
-    private boolean isLoadedTypeConfig(FileConfiguration config, CustomLogger customLogger, String key, String title) {
+    private List<PotionEffectType> getEffectsFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String title) throws InvalidConfigException {
         List<?> typeConfig = config.getList(key + ".effects");
         if((typeConfig == null) || (typeConfig.size() <= 0)) {
-            customLogger.error(String.format("Empty effects list of %s", title));
-            return false;
+            throw new InvalidConfigException(String.format("Empty effects list of %s", title));
         }
 
         List<PotionEffectType> effects = new ArrayList<>();
         int typeConfigSize = typeConfig.size();
         for(int i = 0; i < typeConfigSize; i++) {
-            Object item = typeConfig.get(i);
-            if(item == null) {
-                customLogger.error(String.format("Null effect in effects list of %s at pos %d", title, i));
-                return false;
-            }
-            String effectName = item.toString();
+            String effectName = getKey(typeConfig.get(i), String.format("effects list of %s", title), i);
             PotionEffectType effect = PotionEffectType.getByName(effectName);
             if(effect == null) {
-                customLogger.error(String.format("Invalid effect '%s' of %s at pos %d", effectName, title, i));
-                return false;
+                throw new InvalidConfigException(String.format("Null definition of effect '%s' of %s at pos %d", effectName, title, i));
             }
 
             effects.add(effect);
         }
 
-        this.effects = effects;
-
-        return true;
-    }
-
-    private boolean isLoadedDurationFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String title) {
-        ConfigReaderResult result = ConfigReaderSimple.getIntComplex(config, customLogger, key + ".duration", String.format("duration of %s", title), minDuration(), maxDuration());
-        if(result.isError()) {
-            return false;
-        } else {
-            duration = result.getIntValue();
-            return true;
-        }
+        return effects;
     }
 }

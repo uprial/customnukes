@@ -84,7 +84,7 @@ enabled-explosives:
 #                        ### (default = 2)
 #   max-delay: <2..1000> ### max delay before the action in server ticks
 #                        ### (default = 8)
-#   radius: <0..320:float>
+#   radius: <0..320:double>
 #   destroy-blocks: true | false (default = true)
 #
 # <effect-parameters> type = effect
@@ -92,7 +92,7 @@ enabled-explosives:
 #                        ### (default = 2)
 #   max-delay: <2..2000> ### max delay before the action in server ticks
 #                        ### (default = 10)
-#   radius: <1..5000:float>
+#   radius: <1..5000:double>
 #   players-only: true | false ### apply to players only or to all
 #                              ### living entities (default = true)
 #   effects:
@@ -119,9 +119,9 @@ enabled-explosives:
 #                        ### created in server ticks (default = 2)
 #   max-delay: <2..1000> ### max delay before the seismic-push will be
 #                        ### created in server ticks (default = 8)
-#   min-radius: <0..5000:float>
-#   max-radius: <1..5000:float>
-#   epicenter-explosion-power: <1..320:float>
+#   min-radius: <0..5000:double>
+#   max-radius: <1..5000:double>
+#   epicenter-explosion-power: <1..320:double>
 #   players-only: true | false (default = true)   
 #   attenuation: no | line | exp ### algorithm of attenuation in
 #                                ### dependency of distance to epicenter
