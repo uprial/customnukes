@@ -1,3 +1,5 @@
+![CustomNukes Logo](images/customnukes-logo.png)
+
 ## Compatibility
 
 Tested on Spigot-1.14.2.
