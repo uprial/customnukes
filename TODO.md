@@ -1,5 +1,3 @@
-Possible bugs
-* What if a sponge is far away from loaded blocks after a server restart?
 New features
 * A new explosion type that replaces a set of blocks in a sphere to another set with a defined probability
 * Integration with WorldGuard
