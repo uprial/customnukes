@@ -53,7 +53,7 @@ or a chain of "Toy Bomb" close to main explosive (like "Nuclear Bomb") .
 
 * All special blocks and repeaters will be saved after server reload.
 
-* Additionally there is a good help in the configuration file (config.yml) and error messages with explanation what exactly is wrong in your config (in console logs).
+* Additionally, there is a good help in the configuration file (config.yml) and error messages with an explanation of what exactly is wrong in your config (in console logs).
 
 ## Commands
 
