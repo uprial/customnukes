@@ -1,11 +1,11 @@
-package com.gmail.uprial.customnukes;
+package com.gmail.uprial.customnukes.listeners;
 
+import com.gmail.uprial.customnukes.CustomNukes;
 import com.gmail.uprial.customnukes.common.CustomLogger;
 import com.gmail.uprial.customnukes.schema.EItem;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -16,13 +16,11 @@ import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import java.util.List;
-
-class ExplosivesActivateListener implements Listener {
+public class ExplosivesActivateListener implements Listener {
     private final CustomNukes plugin;
     private final CustomLogger customLogger;
 
-    ExplosivesActivateListener(CustomNukes plugin, CustomLogger customLogger) {
+    public ExplosivesActivateListener(CustomNukes plugin, CustomLogger customLogger) {
         this.plugin = plugin;
         this.customLogger = customLogger;
     }

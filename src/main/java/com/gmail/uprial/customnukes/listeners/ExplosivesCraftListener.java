@@ -1,5 +1,6 @@
-package com.gmail.uprial.customnukes;
+package com.gmail.uprial.customnukes.listeners;
 
+import com.gmail.uprial.customnukes.CustomNukes;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -11,11 +12,11 @@ import com.gmail.uprial.customnukes.common.CustomLogger;
 import com.gmail.uprial.customnukes.schema.EItem;
 import org.bukkit.inventory.Recipe;
 
-class ExplosivesCraftListener implements Listener {
+public class ExplosivesCraftListener implements Listener {
 
     private final CustomNukes plugin;
 
-    ExplosivesCraftListener(CustomNukes plugin) {
+    public ExplosivesCraftListener(CustomNukes plugin) {
         this.plugin = plugin;
     }
 

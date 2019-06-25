@@ -1,5 +1,6 @@
-package com.gmail.uprial.customnukes;
+package com.gmail.uprial.customnukes.listeners;
 
+import com.gmail.uprial.customnukes.CustomNukes;
 import com.gmail.uprial.customnukes.common.CustomLogger;
 import com.gmail.uprial.customnukes.schema.EItem;
 import org.bukkit.GameMode;
@@ -18,14 +19,14 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import java.util.List;
 import java.util.Random;
 
-class ExplosivesBlocksListener implements Listener {
+public class ExplosivesBlocksListener implements Listener {
     public static final String BLOCK_META_KEY = "explosive";
 
     private final CustomNukes plugin;
     private final Random random;
     private final CustomLogger customLogger;
 
-    ExplosivesBlocksListener(CustomNukes plugin, CustomLogger customLogger) {
+    public ExplosivesBlocksListener(CustomNukes plugin, CustomLogger customLogger) {
         this.plugin = plugin;
         this.customLogger = customLogger;
 
