@@ -90,3 +90,4 @@ I will be happy to add some features or fix bugs. My mail: uprial@gmail.com.
 ## Related projects
 * CustomCreatures: [Bukkit Dev](http://dev.bukkit.org/bukkit-plugins/customcreatures/), [GitHub](https://github.com/uprial/customcreatures)
 * CustomDamage: [Bukkit Dev](http://dev.bukkit.org/bukkit-plugins/customdamage/), [GitHub](https://github.com/uprial/customdamage)
+* TakeAim: [Bukkit Dev](https://github.com/uprial/takeaim), [GitHub](https://dev.bukkit.org/projects/takeaim)
