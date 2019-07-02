@@ -91,4 +91,4 @@ I will be happy to add some features or fix bugs. My mail: uprial@gmail.com.
 ## Related projects
 * CustomCreatures: [Bukkit Dev](http://dev.bukkit.org/bukkit-plugins/customcreatures/), [GitHub](https://github.com/uprial/customcreatures), [Spigot](https://www.spigotmc.org/resources/customcreatures.68711/)
 * CustomDamage: [Bukkit Dev](http://dev.bukkit.org/bukkit-plugins/customdamage/), [GitHub](https://github.com/uprial/customdamage), [Spigot](https://www.spigotmc.org/resources/customdamage.68712/)
-* TakeAim: [Bukkit Dev](https://github.com/uprial/takeaim), [GitHub](https://dev.bukkit.org/projects/takeaim), [Spigot](https://www.spigotmc.org/resources/takeaim.68713/)
+* TakeAim: [Bukkit Dev](https://dev.bukkit.org/projects/takeaim), [GitHub](https://github.com/uprial/takeaim), [Spigot](https://www.spigotmc.org/resources/takeaim.68713/)
