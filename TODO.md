@@ -4,3 +4,4 @@ New features
 * An ability to throw explosives
 * Store persistent data in the "world" directory
 * An ability to destroy specific blocks like obsidian
+* It would be expected for the explosives not to damage areas claimed by other players which have explosions deactivated, and it'd also be expected for them not to apply any potion effects to the people inside those areas.
