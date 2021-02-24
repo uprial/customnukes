@@ -5,7 +5,7 @@ import com.gmail.uprial.customnukes.config.ConfigReaderNumbers;
 import com.gmail.uprial.customnukes.config.ConfigReaderSimple;
 import com.gmail.uprial.customnukes.CustomNukes;
 import com.gmail.uprial.customnukes.common.CustomLogger;
-import com.gmail.uprial.customnukes.common.CustomRecipe;
+import com.gmail.uprial.customnukes.config.ConfigReaderRecipe;
 import com.gmail.uprial.customnukes.config.InvalidConfigException;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Location;
@@ -32,7 +32,7 @@ public final class EItem {
     private Material material = null;
     private String name = null;
     private List<String> description = null;
-    private CustomRecipe recipe = null;
+    private ConfigReaderRecipe recipe = null;
     private int amount = 0;
     private EScenario scenario = null;
 
@@ -94,7 +94,7 @@ public final class EItem {
                 key + ".description", String.format("description of explosive '%s'", explosive.name));;
         explosive.amount = ConfigReaderNumbers.getInt(config, customLogger,
                 key + ".amount", String.format("amount of explosive '%s'", explosive.name), MIN_AMOUNT, MAX_AMOUNT, DEFAULT_AMOUNT);
-        explosive.recipe = CustomRecipe.getFromConfig(plugin, config, key,
+        explosive.recipe = ConfigReaderRecipe.getFromConfig(plugin, config, key,
                 String.format("recipe of explosive '%s'", explosive.name));
         explosive.scenario = EScenario.getFromConfig(config, customLogger, key,
                 String.format("scenario of explosive '%s'", explosive.name), true);

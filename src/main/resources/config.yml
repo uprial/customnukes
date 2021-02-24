@@ -20,7 +20,9 @@
 #
 
 #
-# Show debug info
+# Show debug info. Possible values: true | false (default = false)
+#
+# This option can affect the performance.
 #
 debug: false
 

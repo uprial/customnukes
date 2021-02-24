@@ -1,7 +1,6 @@
-package com.gmail.uprial.customnukes.common;
+package com.gmail.uprial.customnukes.config;
 
 import com.gmail.uprial.customnukes.CustomNukes;
-import com.gmail.uprial.customnukes.config.InvalidConfigException;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -13,11 +12,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public final class CustomRecipe {
+public final class ConfigReaderRecipe {
     private final String[] recipe;
     private final CustomNukes plugin;
 
-    private CustomRecipe(CustomNukes plugin) {
+    private ConfigReaderRecipe(CustomNukes plugin) {
         this.plugin = plugin;
         recipe = new String[9];
         for(int i = 0; i < 9; i++) {
@@ -69,8 +68,8 @@ public final class CustomRecipe {
     }
 
     @SuppressWarnings("StaticMethodOnlyUsedInOneClass")
-    public static CustomRecipe getFromConfig(CustomNukes plugin, FileConfiguration config, String key, String title) throws InvalidConfigException {
-        CustomRecipe recipe = new CustomRecipe(plugin);
+    public static ConfigReaderRecipe getFromConfig(CustomNukes plugin, FileConfiguration config, String key, String title) throws InvalidConfigException {
+        ConfigReaderRecipe recipe = new ConfigReaderRecipe(plugin);
 
         List<?> rows = config.getList(key + ".recipe");
         if(rows == null) {
