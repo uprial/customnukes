@@ -1,4 +1,4 @@
-package com.gmail.uprial.customcreatures.common;
+package com.gmail.uprial.customnukes.common;
 
 /*
     Each float point value contains four parts in its representation:

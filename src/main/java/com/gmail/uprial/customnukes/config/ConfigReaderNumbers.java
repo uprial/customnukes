@@ -3,7 +3,7 @@ package com.gmail.uprial.customnukes.config;
 import com.gmail.uprial.customnukes.common.CustomLogger;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import static com.gmail.uprial.customcreatures.common.DoubleHelper.*;
+import static com.gmail.uprial.customnukes.common.DoubleHelper.*;
 
 public final class ConfigReaderNumbers {
 
