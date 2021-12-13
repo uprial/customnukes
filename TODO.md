@@ -1,4 +1,5 @@
 New features
+* A radiation suit, so a player can roam the areas after you blow them up
 * A new explosion type that replaces a set of blocks in a sphere to another set with a defined probability
 * Integration with WorldGuard
 * An ability to throw explosives
