@@ -196,7 +196,7 @@ Flash:
     - "Flash radius: 32"
   recipe:
     - GLOWSTONE_DUST TNT GLOWSTONE_DUST
-    - TNT EYE_OF_ENDER TNT
+    - TNT ENDER_EYE TNT
     - GLOWSTONE_DUST TNT GLOWSTONE_DUST
   amount: 4
   scenario:

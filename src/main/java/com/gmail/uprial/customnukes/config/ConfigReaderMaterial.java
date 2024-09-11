@@ -14,19 +14,25 @@ public class ConfigReaderMaterial {
             } else {
                 customLogger.debug(String.format("Empty %s, use default '%s'", title, defaultMaterial));
                 return defaultMaterial;
-            }        } else {
+            }
+        } else {
             Material tmpMaterial = Material.getMaterial(strMaterial);
             //noinspection IfStatementWithTooManyBranches
             if(tmpMaterial == null) {
-                throw new InvalidConfigException(String.format("Unknown %s '%s', use default '%s'", title, strMaterial, defaultMaterial));
+                customLogger.error(String.format("Unknown %s '%s', use default '%s'", title, strMaterial, defaultMaterial));
+                return defaultMaterial;
             } else if(!tmpMaterial.isBlock()) {
-                throw new InvalidConfigException(String.format("%s '%s' is not block, use default '%s'", title, tmpMaterial, defaultMaterial));
+                customLogger.error(String.format("%s '%s' is not block, use default '%s'", title, tmpMaterial, defaultMaterial));
+                return defaultMaterial;
             } else if(tmpMaterial.hasGravity()) {
-                throw new InvalidConfigException(String.format("%s '%s' has gravity, use default '%s'", title, tmpMaterial, defaultMaterial));
+                customLogger.error(String.format("%s '%s' has gravity, use default '%s'", title, tmpMaterial, defaultMaterial));
+                return defaultMaterial;
             } else if(!tmpMaterial.isSolid()) {
-                throw new InvalidConfigException(String.format("%s '%s' is not solid, use default '%s'", title, tmpMaterial, defaultMaterial));
+                customLogger.error(String.format("%s '%s' is not solid, use default '%s'", title, tmpMaterial, defaultMaterial));
+                return defaultMaterial;
             } else if(tmpMaterial.isInteractable()) {
-                throw new InvalidConfigException(String.format("%s '%s' is not interactable, use default '%s'", title, tmpMaterial, defaultMaterial));
+                customLogger.error(String.format("%s '%s' is not interactable, use default '%s'", title, tmpMaterial, defaultMaterial));
+                return defaultMaterial;
             } else {
                 return tmpMaterial;
             }
