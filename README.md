@@ -7,8 +7,7 @@ Tested on Spigot-1.14, 1.15, 1.16, 1.19, 1.20, 1.20.6, 1.21.
 
 ## Introduction
 
-This is a fully customizable Minecraft (Bukkit) plugin that allows you to make your own explosives.
-Existing blocks' physics will be not changed.
+Create your own fully customizable explosives. Presets: craft Nuclear, Flash, Normal and Toy bombs.
 
 ## Screencasts
 
