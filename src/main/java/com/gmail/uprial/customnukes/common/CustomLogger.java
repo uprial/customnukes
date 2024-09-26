@@ -25,7 +25,6 @@ public class CustomLogger {
         debugMode = value;
     }
 
-    @SuppressWarnings("unused")
     public boolean isDebugMode() {
         return debugMode;
     }
@@ -69,7 +68,7 @@ public class CustomLogger {
         }
     }
 
-    private void log2console(Level level, String message) {
+    protected void log2console(Level level, String message) {
         logger.log(level, message);
     }
 }
