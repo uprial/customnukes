@@ -21,7 +21,7 @@ public class EScenarioActionExplosion extends AbstractEScenarioActionExplosion {
     @Override
     protected double minRadius() { return 0; }
     @Override
-    protected double maxRadius() { return 320; }
+    protected double maxRadius() { return 16; }
 
     @SuppressWarnings({"SameReturnValue", "BooleanMethodNameMustStartWithQuestion"})
     private static boolean defaultDestroyBlocks() { return true; }

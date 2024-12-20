@@ -13,6 +13,7 @@ public final class EScenarioAction {
     private static final int TYPE_EFFECT = 2;
     private static final int TYPE_REPEATER = 3;
     private static final int TYPE_SEISMIC = 4;
+    private static final int TYPE_NUKE = 5;
 
     private final I_EScenarioActionSubAction subAction;
 
@@ -42,6 +43,8 @@ public final class EScenarioAction {
             subAction = new EScenarioActionRepeater(key);
         } else if(type == TYPE_SEISMIC) {
             subAction = new EScenarioActionSeismic(key);
+        } else if(type == TYPE_NUKE) {
+            subAction = new EScenarioActionNuke(key);
         } else {
             throw new InvalidConfigException(String.format("Impossible type %d of %s", type, title));
         }
@@ -63,6 +66,8 @@ public final class EScenarioAction {
             return TYPE_REPEATER;
         } else if(strType.equalsIgnoreCase("seismic")) {
             return TYPE_SEISMIC;
+        } else if(strType.equalsIgnoreCase("nuke")) {
+            return TYPE_NUKE;
         } else {
             throw new InvalidConfigException(String.format("Invalid type '%s' of %s", strType, title));
         }

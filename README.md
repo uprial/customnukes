@@ -41,6 +41,8 @@ A Minecraft (Bukkit) plugin that allows to create your own fully customizable ex
 
 * Another explosion, if this block will be destroyed
 
+* An arrow with 'fire'
+
 The main idea to activate explosives is: make a schema of red stones
 or a chain of "Toy Bomb" close to main explosive (like "Nuclear Bomb") .
 

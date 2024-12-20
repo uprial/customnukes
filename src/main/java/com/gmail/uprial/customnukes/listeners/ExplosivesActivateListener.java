@@ -14,6 +14,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public class ExplosivesActivateListener implements Listener {
@@ -65,6 +66,16 @@ public class ExplosivesActivateListener implements Listener {
     public void onBlockExplodeEvent(BlockExplodeEvent event) {
         if(!event.isCancelled()) {
             for (Block block : event.blockList()) {
+                try_activate(block);
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onBlockHitByFireEvent(ProjectileHitEvent event) {
+        if(event.getEntity().getFireTicks() > 0) {
+            Block block = event.getHitBlock();
+            if (block != null) {
                 try_activate(block);
             }
         }

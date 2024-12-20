@@ -40,7 +40,7 @@ public class EScenarioActionSeismic extends AbstractEScenarioActionDelayed {
     @SuppressWarnings("SameReturnValue")
     private static double minEpicenterExplosionPower() { return 1; }
     @SuppressWarnings("SameReturnValue")
-    private static double maxEpicenterExplosionPower() { return 320; }
+    private static double maxEpicenterExplosionPower() { return 16; }
 
     @SuppressWarnings({"SameReturnValue", "BooleanMethodNameMustStartWithQuestion"})
     private static boolean defaultPlayersOnly() { return true; }

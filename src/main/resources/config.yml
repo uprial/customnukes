@@ -13,10 +13,9 @@
 #   Delay: 80
 #   Radius: 4,00
 # 
-# * Explosions with radius greater than 16 destroy blocks extremally
-# uneffectively. There are definitely no way to destroy big amount of
-# blocks by single explosion.
-# Afterwards you can use 'effect' or 'seismic' features.
+# * Explosions with radius greater than 16 destroy blocks extremely effectively.
+#   There are definitely no way to destroy big amount of blocks by single explosion.
+#   Afterward, you can use 'effect' or 'seismic' or 'nuke' features.
 #
 
 #
@@ -78,7 +77,7 @@ enabled-explosives:
 #     ...
 #     - <action-keyN>
 #   <action-key>:
-#     type: explosion | effect | seismic | repeater
+#     type: explosion | effect | seismic | repeater | nuke
 #     parameters: <effect-parameters> (* see description below)
 #
 # <effect-parameters> type = explosion
@@ -86,7 +85,7 @@ enabled-explosives:
 #                        ### (default = 2)
 #   max-delay: <2..1000> ### max delay before the action in server ticks
 #                        ### (default = 8)
-#   radius: <0..320:double>
+#   radius: <0..16:double>
 #   destroy-blocks: true | false (default = true)
 #
 # <effect-parameters> type = effect
@@ -123,11 +122,18 @@ enabled-explosives:
 #                        ### created in server ticks (default = 8)
 #   min-radius: <0..5000:double>
 #   max-radius: <1..5000:double>
-#   epicenter-explosion-power: <1..320:double>
+#   epicenter-explosion-power: <1..16:double>
 #   players-only: true | false (default = true)   
 #   attenuation: no | line | exp ### algorithm of attenuation in
 #                                ### dependency of distance to epicenter
 #                                ### (default = exp / exponential)
+#
+# <effect-parameters> type = nuke
+#   min-delay: <2..1000> ### min delay before the action in server ticks
+#                        ### (default = 2)
+#   max-delay: <2..1000> ### max delay before the action in server ticks
+#                        ### (default = 4)
+#   radius: <17..512:double>
 #
 # ==== Help ====
 # * 'avg-second' - is an average 1 second evaluated to 20 server ticks.
@@ -228,14 +234,15 @@ Nuclear:
     - TNT NETHER_STAR TNT
     - GOLD_BLOCK TNT GOLD_BLOCK
   scenario:
-    - explosion1
     - effect1
     - seismic1
+    # on the 3rd position because the scenario takes a lot of time
+    - nuke1
     - repeater1
-  explosion1:
-    type: explosion
+  nuke1:
+    type: nuke
     parameters:
-      radius: 16
+      radius: 120
   effect1:
     type: effect
     parameters:

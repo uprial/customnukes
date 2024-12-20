@@ -33,12 +33,11 @@ public abstract class AbstractEScenarioActionDelayed implements I_EScenarioActio
 
     @Override
     public int execute(CustomNukes plugin, Location location, int delay) {
-        int currentDelay = minDelay + random.nextInt((maxDelay - minDelay) + 1);
-        int globalDelay = delay + currentDelay;
+        delay += generateCurrentDelay();
 
-        plugin.scheduleDelayed(new TaskEScenarioActionDelayedExplode(this, plugin, location), globalDelay);
+        plugin.scheduleDelayed(new TaskEScenarioActionDelayedExplode(this, plugin, location), delay);
 
-        return globalDelay;
+        return delay;
     }
 
 
@@ -53,6 +52,10 @@ public abstract class AbstractEScenarioActionDelayed implements I_EScenarioActio
 
     String getActionId() {
         return actionId;
+    }
+
+    int generateCurrentDelay() {
+        return minDelay + random.nextInt((maxDelay - minDelay) + 1);
     }
 
     private int getDelayFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String title, int defaultValue) throws InvalidConfigException {
