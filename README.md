@@ -46,6 +46,10 @@ A Minecraft (Bukkit) plugin that allows to create your own fully customizable ex
 The main idea to activate explosives is: make a schema of red stones
 or a chain of "Toy Bomb" close to main explosive (like "Nuclear Bomb") .
 
+#### A Nuclear Bomb with 120 explosion radius effect:
+
+![A Nuclear Bomb with 120 explosion radius effect](https://raw.githubusercontent.com/uprial/customnukes/master/images/nuke-120r.png)
+
 ## Features
 * You can assign an infinite number of different actions to one explosive. For example, your "Bomb" can be exploded twice with a small interval between two explosions and glass-blocks will not protect the enemy from this type of explosive.
 
