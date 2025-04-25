@@ -17,22 +17,16 @@ import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 
 import java.util.List;
-import java.util.Random;
+
+import static com.gmail.uprial.customnukes.common.Formatter.format;
 
 public class ExplosivesBlocksListener implements Listener {
-    public static final String BLOCK_META_KEY = "explosive";
-
     private final CustomNukes plugin;
-    private final Random random;
     private final CustomLogger customLogger;
 
     public ExplosivesBlocksListener(CustomNukes plugin, CustomLogger customLogger) {
         this.plugin = plugin;
         this.customLogger = customLogger;
-
-        random = new Random();
-
-        scheduleCleaning();
     }
 
     @SuppressWarnings("unused")
@@ -44,16 +38,15 @@ public class ExplosivesBlocksListener implements Listener {
                 Player player = event.getPlayer();
                 if (explosive.hasPermission(player)) {
                     Block block = event.getBlock();
-                    customLogger.debug(String.format("Place '%s' at %s:%d:%d:%d",
-                            explosive.getName(), block.getWorld().getName(), block.getX(), block.getY(), block.getZ()));
-                    setExplosive(block, explosive);
+                    customLogger.debug(String.format("Place '%s' at %s", explosive.getName(), format(block)));
+                    plugin.getExplosiveBlockStorage().setExplosive(block, explosive);
                 } else {
                     event.setCancelled(true);
                     CustomLogger userLogger = new CustomLogger(plugin.getLogger(), player);
                     userLogger.error("You don't have permissions to place this type of block.");
                 }
             } else {
-                deleteExplosive(event.getBlock());
+                plugin.getExplosiveBlockStorage().deleteExplosive(event.getBlock());
             }
         }
     }
@@ -63,13 +56,12 @@ public class ExplosivesBlocksListener implements Listener {
     public void onBlockBreak(BlockBreakEvent event) {
         if(!event.isCancelled()) {
             Block block = event.getBlock();
-            EItem explosive = searchExplosiveByBlock(block);
+            EItem explosive = plugin.getExplosiveBlockStorage().searchExplosiveByBlock(block);
             if(explosive != null) {
                 Player player = event.getPlayer();
                 if (explosive.hasPermission(player)) {
-                    customLogger.debug(String.format("Break '%s' at %s:%d:%d:%d",
-                            explosive.getName(), block.getWorld().getName(), block.getX(), block.getY(), block.getZ()));
-                    deleteExplosive(block);
+                    customLogger.debug(String.format("Break '%s' at %s", explosive.getName(), format(block)));
+                    plugin.getExplosiveBlockStorage().deleteExplosive(block);
 
                     event.setCancelled(true);
                     block.setType(Material.AIR);
@@ -106,50 +98,18 @@ public class ExplosivesBlocksListener implements Listener {
         }
     }
 
-    private void onTaskMetaClean() {
-        List<Block> blocks = plugin.getBlockMetaStorage().getAllBlocks();
-        for(Block block : blocks) {
-            if(!plugin.getExplosivesConfig().isRegisteredMaterial(block.getType())) {
-                customLogger.info(String.format("Block '%s' at x=%d y=%d z=%d is not from the registered material. Meta will be deleted.",
-                                                block.getType().toString(), block.getX(), block.getY(), block.getZ()));
-                deleteExplosive(block);
-            }
-        }
-    }
-
-    private void setExplosive(Block block, EItem explosive) {
-        plugin.getBlockMetaStorage().set(block, BLOCK_META_KEY, explosive.getName());
-        maybeScheduleCleaning();
-    }
-
-    private void deleteExplosive(Block block) {
-        plugin.getBlockMetaStorage().delete(block, BLOCK_META_KEY);
-    }
-
-    private EItem searchExplosiveByBlock(Block block) {
-        if(plugin.getExplosivesConfig().isRegisteredMaterial(block.getType())) {
-            String name = plugin.getBlockMetaStorage().get(block, BLOCK_META_KEY);
-            return (name != null) ? plugin.getExplosivesConfig().searchExplosiveByName(name) : null;
-        }
-        else {
-            return null;
-        }
-    }
-
     private void maybeMoveBlock(Block block, BlockFace direction) {
-        EItem explosive = searchExplosiveByBlock(block);
+        EItem explosive = plugin.getExplosiveBlockStorage().searchExplosiveByBlock(block);
         if(explosive != null) {
             Block blockInDirection = getBlockInDirection(block, direction);
-            customLogger.debug(String.format("Move '%s' from %s:%d:%d:%d to %s:%d:%d:%d",
-                    explosive.getName(),
-                    block.getWorld().getName(), block.getX(), block.getY(), block.getZ(),
-                    blockInDirection.getWorld().getName(), blockInDirection.getX(), blockInDirection.getY(), blockInDirection.getZ()));
+            customLogger.debug(String.format("Move '%s' from %s to %s",
+                    explosive.getName(), format(block), format(blockInDirection)));
 
-            deleteExplosive(block);
-            setExplosive(blockInDirection, explosive);
+            plugin.getExplosiveBlockStorage().deleteExplosive(block);
+            plugin.getExplosiveBlockStorage().setExplosive(blockInDirection, explosive);
         }
         else {
-            deleteExplosive(getBlockInDirection(block, direction));
+            plugin.getExplosiveBlockStorage().deleteExplosive(getBlockInDirection(block, direction));
         }
     }
 
@@ -157,20 +117,5 @@ public class ExplosivesBlocksListener implements Listener {
         return block.getWorld().getBlockAt(block.getX() + direction.getModX(),
                                             block.getY() + direction.getModY(),
                                             block.getZ() + direction.getModZ());
-    }
-
-    private void maybeScheduleCleaning() {
-        if(random.nextInt(10) == 0) {
-            scheduleCleaning();
-        }
-    }
-
-    private void scheduleCleaning() {
-        plugin.scheduleDelayed(new Runnable() {
-            @Override
-            public void run() {
-                onTaskMetaClean();
-            }
-        }, 100);
     }
 }

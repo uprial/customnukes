@@ -5,9 +5,10 @@ import com.gmail.uprial.customnukes.config.InvalidConfigException;
 import com.gmail.uprial.customnukes.listeners.ExplosivesActivateListener;
 import com.gmail.uprial.customnukes.listeners.ExplosivesBlocksListener;
 import com.gmail.uprial.customnukes.listeners.ExplosivesCraftListener;
+import com.gmail.uprial.customnukes.listeners.SpongeOverrideListener;
 import com.gmail.uprial.customnukes.schema.EItem;
 import com.gmail.uprial.customnukes.schema.RepeaterTaskStorage;
-import com.gmail.uprial.customnukes.storage.BlockMetaStorage;
+import com.gmail.uprial.customnukes.storage.ExplosiveBlockStorage;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -30,16 +31,16 @@ public final class CustomNukes extends JavaPlugin {
 
     private ExplosivesConfig explosivesConfig = null;
     private CustomLogger consoleLogger = null;
-    private BlockMetaStorage blockMetaStorage = null;
     private RepeaterTaskStorage repeaterTaskStorage = null;
     private BukkitTask saveTask = null;
+    private ExplosiveBlockStorage explosiveBlockStorage = null;
 
     @Override
     public void onEnable() {
         saveDefaultConfig();
         consoleLogger = new CustomLogger(getLogger());
 
-        blockMetaStorage = new BlockMetaStorage(this, getDataFolder(), consoleLogger);
+        explosiveBlockStorage = new ExplosiveBlockStorage(this, getDataFolder(), consoleLogger);
         repeaterTaskStorage = new RepeaterTaskStorage(this, getDataFolder(), consoleLogger);
         explosivesConfig = loadConfig(this, getConfig(), consoleLogger);
         repeaterTaskStorage.restore();
@@ -50,6 +51,7 @@ public final class CustomNukes extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ExplosivesBlocksListener(this, consoleLogger), this);
         getServer().getPluginManager().registerEvents(new ExplosivesActivateListener(this, consoleLogger), this);
         getServer().getPluginManager().registerEvents(new ExplosivesCraftListener(this), this);
+        getServer().getPluginManager().registerEvents(new SpongeOverrideListener(this, consoleLogger), this);
         getCommand(COMMAND_NS).setExecutor(new CustomNukesCommandExecutor(this));
 
         consoleLogger.info("Plugin enabled");
@@ -82,8 +84,8 @@ public final class CustomNukes extends JavaPlugin {
         return explosivesConfig;
     }
 
-    public BlockMetaStorage getBlockMetaStorage() {
-        return blockMetaStorage;
+    public ExplosiveBlockStorage getExplosiveBlockStorage() {
+        return explosiveBlockStorage;
     }
 
     public RepeaterTaskStorage getRepeaterTaskStorage() {
@@ -96,7 +98,7 @@ public final class CustomNukes extends JavaPlugin {
 
     public void saveData() {
         repeaterTaskStorage.save();
-        blockMetaStorage.save();
+        explosiveBlockStorage.save();
     }
 
     public void reloadExplosivesConfig(CustomLogger userLogger) {
@@ -121,7 +123,7 @@ public final class CustomNukes extends JavaPlugin {
     }
 
     public void clear() {
-        blockMetaStorage.clear();
+        explosiveBlockStorage.clear();
         repeaterTaskStorage.clear();
     }
 
@@ -135,6 +137,11 @@ public final class CustomNukes extends JavaPlugin {
     }
 
     private void unloadExplosives() {
+        /*
+            We need to search by name
+            because the method getServer().removeRecipe()
+            is implemented in later versions.
+         */
         Iterator<Recipe> iterator = getServer().recipeIterator();
         while (iterator.hasNext()) {
             Recipe recipe = iterator.next();

@@ -86,21 +86,13 @@ public class ExplosivesActivateListener implements Listener {
         if(block == null) {
             return false;
         }
-        if(!plugin.getExplosivesConfig().isRegisteredMaterial(block.getType())) {
-            return false;
-        }
-
-        String name = plugin.getBlockMetaStorage().get(block, ExplosivesBlocksListener.BLOCK_META_KEY);
-        if(name == null) {
-            return false;
-        }
-        EItem explosive = plugin.getExplosivesConfig().searchExplosiveByName(name);
+        EItem explosive = plugin.getExplosiveBlockStorage().searchExplosiveByBlock(block);
         if(explosive == null) {
             return false;
         }
 
         block.setType(Material.AIR);
-        plugin.getBlockMetaStorage().delete(block, ExplosivesBlocksListener.BLOCK_META_KEY);
+        plugin.getExplosiveBlockStorage().deleteExplosive(block);
         Location location = new Location(block.getWorld(), block.getX() + 0.5, block.getY() + 0.5, block.getZ() + 0.5);
         customLogger.debug(String.format("Explode '%s' at %s:%d:%d:%d",
                                          explosive.getName(), block.getWorld().getName(), block.getX(), block.getY(), block.getZ()));

@@ -14,14 +14,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
-public class BlockMetaStorage {
+import static com.gmail.uprial.customnukes.common.Formatter.format;
+
+class BlockMetaStorage {
     private static final Character KEY_DELIMITER = ':';
 
     private final JavaPlugin plugin;
     private final CustomStorage storage;
     private final CustomLogger customLogger;
 
-    public BlockMetaStorage(JavaPlugin plugin, File dataFolder, CustomLogger customLogger) {
+    BlockMetaStorage(JavaPlugin plugin, File dataFolder, CustomLogger customLogger) {
         this.plugin = plugin;
         storage = new CustomStorage(dataFolder, "block-meta.txt", customLogger);
         this.customLogger = customLogger;
@@ -29,17 +31,16 @@ public class BlockMetaStorage {
         storage.load();
     }
 
-    public void save() {
+    void save() {
         storage.save();
     }
 
-    public void clear() {
+    void clear() {
         for (Entry<String,String> entry : storage.entrySet()) {
             String key = entry.getKey();
             Block block = getBlockByKey(key);
             if(block != null) {
-                customLogger.debug(String.format("Removed block at %s:%d:%d:%d",
-                                                 block.getWorld().getName(), block.getX(), block.getY(), block.getZ()));
+                customLogger.debug(String.format("Removed %s", format(block)));
                 deleteFromBlock(block, getMetadataKeyByKey(key));
                 block.setType(Material.AIR);
             }
@@ -49,19 +50,19 @@ public class BlockMetaStorage {
     }
 
     @SuppressWarnings("SameParameterValue")
-    public void set(Block block, String metadataKey, String value) {
+    void set(Block block, String metadataKey, String value) {
         setToBlock(block, metadataKey, value);
         storage.set(getMapKey(block.getLocation(), metadataKey), value);
     }
 
     @SuppressWarnings("SameParameterValue")
-    public void delete(Block block, String metadataKey) {
+    void delete(Block block, String metadataKey) {
         deleteFromBlock(block, metadataKey);
         storage.delete(getMapKey(block.getLocation(), metadataKey));
     }
 
     @SuppressWarnings("SameParameterValue")
-    public String get(Block block, String metadataKey) {
+    String get(Block block, String metadataKey) {
         String value = getFromBlock(block, metadataKey);
         if(value == null) {
             value = storage.get(getMapKey(block.getLocation(), metadataKey));
@@ -73,7 +74,7 @@ public class BlockMetaStorage {
         return value;
     }
 
-    public List<Block> getAllBlocks() {
+    List<Block> getAllBlocks() {
         List<Block> blocks = new ArrayList<>();
         List<String> errorKeys = new ArrayList<>();
 
@@ -96,7 +97,7 @@ public class BlockMetaStorage {
         return blocks;
     }
 
-       private Block getBlockByKey(String key) {
+    private Block getBlockByKey(String key) {
         String[] items = StorageUtils.split(key, KEY_DELIMITER);
         if(items.length != 5) {
             return null;
