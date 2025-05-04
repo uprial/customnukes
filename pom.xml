@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.gmail.uprial</groupId>
     <artifactId>CustomNukes</artifactId>
-    <version>0.3.1</version>
+    <version>0.3.2</version>
     <build>
         <plugins>
             <plugin>
@@ -36,6 +36,12 @@
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
             <version>2.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito2</artifactId>
+            <version>2.0.9</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

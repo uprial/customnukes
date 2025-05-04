@@ -29,7 +29,7 @@ public class EScenarioActionNuke extends AbstractEScenarioActionExplosion {
 
     @Override
     public int execute(CustomNukes plugin, Location fromLocation, int delay) {
-        return Nuke.explode(plugin, fromLocation, (float)radius, delay, this::generateCurrentDelay);
+        return new Nuke(plugin).explode(fromLocation, (float)radius, delay, this::generateCurrentDelay);
     }
 
     @Override
