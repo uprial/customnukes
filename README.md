@@ -9,6 +9,8 @@ Tested on Spigot-1.14, 1.15, 1.16, 1.19, 1.20, 1.20.6, 1.21.
 
 A Minecraft (Bukkit) plugin that allows to create your own fully customizable explosives; presets: craft Nuclear, Flash, Normal and Toy bombs.
 
+Synergies perfectly with [CustomBazookas](https://github.com/uprial/custombazookas/) plugin.
+
 ## Screencasts
 
 [![CustomNukes ✩ Bomben mit Einstellungsmöglichkeiten](http://img.youtube.com/vi/6CafoRSWlzA/0.jpg)](http://www.youtube.com/watch?v=6CafoRSWlzA)
@@ -95,6 +97,7 @@ I will be happy to add some features or fix bugs. My mail: uprial@gmail.com.
 * [TODO list](TODO.md)
 
 ## Related projects
+* CustomBazookas: [Bukkit Dev](https://legacy.curseforge.com/minecraft/bukkit-plugins/custombazookas/) [GitHub](https://github.com/uprial/custombazookas), [Spigot](https://www.spigotmc.org/resources/custombazookas.124997/)
 * CustomCreatures: [Bukkit Dev](http://dev.bukkit.org/bukkit-plugins/customcreatures/), [GitHub](https://github.com/uprial/customcreatures), [Spigot](https://www.spigotmc.org/resources/customcreatures.68711/)
 * CustomRecipes: [Bukkit Dev](https://dev.bukkit.org/projects/custom-recipes), [GitHub](https://github.com/uprial/customrecipes/), [Spigot](https://www.spigotmc.org/resources/customrecipes.89435/)
 * CustomVillage: [Bukkit Dev](http://dev.bukkit.org/bukkit-plugins/customvillage/), [GitHub](https://github.com/uprial/customvillage/), [Spigot](https://www.spigotmc.org/resources/customvillage.69170/)
