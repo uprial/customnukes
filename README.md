@@ -4,10 +4,11 @@
 
 Tested on Spigot-1.14, 1.15, 1.16, 1.19, 1.20, 1.20.6, 1.21.
 
-
 ## Introduction
 
-A Minecraft (Bukkit) plugin that allows to create your own fully customizable explosives; presets: craft Nuclear, Flash, Normal and Toy bombs.
+Create your own fully customizable explosives; presets: craft Nuclear, Flash, Normal and Toy bombs.
+
+Hint: increased view-distance and simulation-distance in server.properties improve experience of massive explosions.
 
 Synergies perfectly with [CustomBazookas](https://github.com/uprial/custombazookas/) plugin.
 
