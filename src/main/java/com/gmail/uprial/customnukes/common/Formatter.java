@@ -1,5 +1,6 @@
 package com.gmail.uprial.customnukes.common;
 
+import org.bukkit.Location;
 import org.bukkit.block.Block;
 
 public class Formatter {
@@ -8,5 +9,11 @@ public class Formatter {
                 block.getType(),
                 block.getWorld().getName(),
                 block.getX(), block.getY(), block.getZ());
+    }
+
+    public static String format(final Location location) {
+        return String.format("%s:%.0f:%.0f:%.0f",
+                (location.getWorld() != null) ? location.getWorld().getName() : "empty",
+                location.getX(), location.getY(), location.getZ());
     }
 }

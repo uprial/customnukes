@@ -4,10 +4,15 @@ import com.gmail.uprial.customnukes.CustomNukes;
 import com.gmail.uprial.customnukes.common.CustomLogger;
 import com.gmail.uprial.customnukes.common.Utils;
 import com.gmail.uprial.customnukes.config.ConfigReaderNumbers;
+import com.gmail.uprial.customnukes.config.ConfigReaderSimple;
 import com.gmail.uprial.customnukes.config.InvalidConfigException;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
+
+import static com.gmail.uprial.customnukes.common.Formatter.format;
 
 public class EScenarioActionRepeater extends AbstractEScenarioActionDelayed {
 
@@ -32,6 +37,7 @@ public class EScenarioActionRepeater extends AbstractEScenarioActionDelayed {
     @SuppressWarnings("SameReturnValue")
     private static int defaultInterval() { return 40; }
 
+    private String message = null;
     private int duration = 0;
     private int interval = 0;
     private EScenario scenario = null;
@@ -43,6 +49,14 @@ public class EScenarioActionRepeater extends AbstractEScenarioActionDelayed {
 
     @Override
     public void explode(CustomNukes plugin, Location location) {
+        final String lMessage = message.replace("%l", format(location));
+        for(final Player p : plugin.getServer().getOnlinePlayers()) {
+            if(p.isValid()) {
+                p.sendMessage(ChatColor.YELLOW + lMessage);
+            }
+        }
+        plugin.getLogger().info(lMessage);
+
         explodeEx(plugin, location, Utils.seconds2ticks(duration) / interval);
     }
 
@@ -64,6 +78,8 @@ public class EScenarioActionRepeater extends AbstractEScenarioActionDelayed {
     public void loadFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String title) throws InvalidConfigException {
         super.loadFromConfig(config, customLogger, key, title);
 
+        message = ConfigReaderSimple.getString(config, key + ".message",
+                String.format("message of %s", title));
         duration = ConfigReaderNumbers.getInt(config, customLogger, key + ".duration",
                 String.format("duration of %s", title), minDuration(), maxDuration());
         interval = ConfigReaderNumbers.getInt(config, customLogger, key + ".interval",

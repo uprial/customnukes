@@ -54,6 +54,7 @@ enabled-explosives:
   - Normal
   - Flash
   - Nuclear
+  - Genetic
 
 #
 # ==== Explosives definition ====
@@ -105,6 +106,9 @@ enabled-explosives:
 #   duration: <1..6000> ### in avg-seconds
 #
 # <effect-parameters> type = repeater
+#   message: <String>     ### show a message for all players
+#                         ### and log it into the servers logs,
+#                         ### using '%l' as a location template
 #   min-delay: <2..10000> ### min delay before the repeater will be
 #                         ### created in server ticks (default = 2)
 #   max-delay: <2..10000> ### max delay before the repeater will be
@@ -264,7 +268,8 @@ Nuclear:
   repeater1:
     type: repeater
     parameters:
-      duration: 86400
+      message: "Radiation area was deployed at %l"
+      duration: 86_400
       scenario:
         - effect1
         - effect2
@@ -283,4 +288,36 @@ Nuclear:
           players-only: false
           effects:
            - POISON
-          duration: 10          
+          duration: 10
+
+Genetic:
+  name: "Genetic Bomb"
+  description:
+    - "Poisons players"
+    - "in 512 blocks"
+    - "during 1 week"
+  recipe:
+    - NETHER_STAR NETHER_STAR NETHER_STAR
+    - NETHER_STAR TNT NETHER_STAR
+    - NETHER_STAR NETHER_STAR NETHER_STAR
+  scenario:
+    - repeater1
+  repeater1:
+    type: repeater
+    parameters:
+      message: "Genetic bomb was deployed at %l"
+      # 1 week: 3600*24*7
+      duration: 604_800
+      # 30 seconds: 20*30
+      interval: 600
+      scenario:
+        - effect1
+      effect1:
+        type: effect
+        parameters:
+          radius: 512
+          players-only: true
+          effects:
+            - POISON
+          # Should be longer than <repeater.interval>
+          duration: 60

@@ -35,6 +35,8 @@ Synergies perfectly with [CustomBazookas](https://github.com/uprial/custombazook
 
 ![Nuclear Bomb](https://raw.githubusercontent.com/uprial/customnukes/master/images/Nuclear_Bomb.png)
 
+![Genetic Bomb](https://raw.githubusercontent.com/uprial/customnukes/master/images/Genetic_Bomb.png)
+
 #### A custom nuke may be activated by:
 
 * Red stone right above this block:
