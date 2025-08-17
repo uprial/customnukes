@@ -15,6 +15,7 @@ import org.bukkit.scheduler.BukkitTask;
 import static com.gmail.uprial.customnukes.common.Formatter.format;
 
 public class EScenarioActionRepeater extends AbstractEScenarioActionDelayed {
+    private static final String LOCATION_PLACEHOLDER = "%l";
 
     @Override
     protected int defaultMinDelay() { return 2; }
@@ -49,13 +50,20 @@ public class EScenarioActionRepeater extends AbstractEScenarioActionDelayed {
 
     @Override
     public void explode(CustomNukes plugin, Location location) {
-        final String lMessage = message.replace("%l", format(location));
         for(final Player p : plugin.getServer().getOnlinePlayers()) {
             if(p.isValid()) {
+                final String lMessage;
+                if (p.getWorld().getUID().equals(location.getWorld().getUID())) {
+                    lMessage = message.replace(LOCATION_PLACEHOLDER,
+                            String.format("%.0f block distance", location.distance(p.getLocation())));
+                } else {
+                    lMessage = message.replace(LOCATION_PLACEHOLDER,
+                            "another world");
+                }
                 p.sendMessage(ChatColor.YELLOW + lMessage);
             }
         }
-        plugin.getLogger().info(lMessage);
+        plugin.getLogger().info(message.replace(LOCATION_PLACEHOLDER, format(location)));
 
         explodeEx(plugin, location, Utils.seconds2ticks(duration) / interval);
     }

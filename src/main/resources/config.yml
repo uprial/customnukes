@@ -108,7 +108,7 @@ enabled-explosives:
 # <effect-parameters> type = repeater
 #   message: <String>     ### show a message for all players
 #                         ### and log it into the servers logs,
-#                         ### using '%l' as a location template
+#                         ### using '%l' as a location placeholder
 #   min-delay: <2..10000> ### min delay before the repeater will be
 #                         ### created in server ticks (default = 2)
 #   max-delay: <2..10000> ### max delay before the repeater will be
@@ -268,7 +268,7 @@ Nuclear:
   repeater1:
     type: repeater
     parameters:
-      message: "Radiation area was deployed at %l"
+      message: "Radiation area was deployed in %l"
       duration: 86_400
       scenario:
         - effect1
@@ -305,7 +305,7 @@ Genetic:
   repeater1:
     type: repeater
     parameters:
-      message: "Genetic bomb was deployed at %l"
+      message: "Genetic bomb was deployed in %l"
       # 1 week: 3600*24*7
       duration: 604_800
       # 30 seconds: 20*30
