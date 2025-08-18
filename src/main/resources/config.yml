@@ -252,10 +252,7 @@ Nuclear:
     parameters:
       radius: 120
       effects:
-       - CONFUSION
-       - SLOW
        - BLINDNESS
-       - POISON
       duration: 60
   seismic1:
     type: seismic
@@ -276,26 +273,30 @@ Nuclear:
       effect1:
         type: effect
         parameters:
-          radius: 90
+          radius: 120
           players-only: false
           effects:
+           # 0.25(♥) per second
            - WITHER
+           - SLOW
           duration: 10
       effect2:
         type: effect
         parameters:
-          radius: 120
+          radius: 90
           players-only: false
           effects:
+           # 0.4(♥) per second
            - POISON
+           - CONFUSION
           duration: 10
 
 Genetic:
   name: "Genetic Bomb"
   description:
-    - "Poisons players"
-    - "in 512 blocks"
-    - "during 1 week"
+    - "Player poison radius: 512"
+    - "This can change the world."
+    - "Be careful!"
   recipe:
     - NETHER_STAR NETHER_STAR NETHER_STAR
     - NETHER_STAR TNT NETHER_STAR
@@ -312,12 +313,26 @@ Genetic:
       interval: 600
       scenario:
         - effect1
+        - effect2
       effect1:
         type: effect
         parameters:
           radius: 512
           players-only: true
           effects:
+            # 0.25(♥) per second
+            - WITHER
+            - SLOW
+          # Should be longer than <repeater.interval>
+          duration: 60
+      effect2:
+        type: effect
+        parameters:
+          radius: 256
+          players-only: true
+          effects:
+            # 0.4(♥) per second
             - POISON
+            - CONFUSION
           # Should be longer than <repeater.interval>
           duration: 60
