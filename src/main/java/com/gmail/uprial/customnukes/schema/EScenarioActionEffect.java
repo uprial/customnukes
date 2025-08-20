@@ -79,18 +79,16 @@ public class EScenarioActionEffect extends AbstractEScenarioActionExplosion {
     }
 
     private static void addEffect(LivingEntity entity, PotionEffect effect) {
-        //noinspection LocalVariableNamingConvention
         boolean notAffectedOrAffectedMoreWeakly = true;
-        Iterator<PotionEffect> effectsIterator = entity.getActivePotionEffects().iterator();
-        //noinspection WhileLoopReplaceableByForEach
-        while (effectsIterator.hasNext()) {
-            PotionEffect currentEffect = effectsIterator.next();
+        for(final PotionEffect currentEffect : entity.getActivePotionEffects()) {
             if(currentEffect.getType() == effect.getType()) {
                 if(currentEffect.getAmplifier() > effect.getAmplifier()) {
                     notAffectedOrAffectedMoreWeakly = false;
                 } else {
-                    entity.removePotionEffect(currentEffect.getType());
+                    //Don't reset the effect cycle inside repeaters
+                    //entity.removePotionEffect(currentEffect.getType());
                 }
+
             }
         }
         if(notAffectedOrAffectedMoreWeakly) {
