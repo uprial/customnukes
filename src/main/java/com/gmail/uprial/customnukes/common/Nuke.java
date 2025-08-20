@@ -1,11 +1,18 @@
 package com.gmail.uprial.customnukes.common;
 
+import com.google.common.collect.ImmutableSet;
 import org.bukkit.FluidCollisionMode;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.data.Waterlogged;
+import org.bukkit.entity.Entity;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
 
+import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class Nuke {
@@ -15,6 +22,16 @@ public class Nuke {
         there is definitely no way to destroy big amount of blocks by single explosion.
      */
     public static final float MAX_ENGINE_POWER = 16.0f;
+
+    /*
+        According to https://minecraft.wiki/w/Explosion,
+        fluids have high blast resistance, causing it to absorb any normal blasts.
+
+        That prevents making huge nukes,
+        so I wither fluid blocks in the explosion radius
+        when the blocks are visible from the explosion epicenter.
+     */
+    private static final int FLUID_WITHERING_POWER = 12;
 
     /*
         A ball of explosions is made of many spheres,
@@ -43,12 +60,17 @@ public class Nuke {
      */
     public int explode(
             final Location fromLocation,
+            final Entity source,
             final float explosionRadius,
+            final boolean witherFluids,
             final int initialDelay,
-            final Supplier<Integer> nextDelayGenerator) {
+            final Supplier<Integer> nextDelayGenerator,
+            final Consumer<Long> callback) {
+
+        final long start = System.currentTimeMillis();
 
         int delay = initialDelay;
-        schedule(() -> explode(fromLocation), delay);
+        schedule(() -> explode(fromLocation, source, witherFluids), delay);
 
         final int spheres = Math.round(explosionRadius / STEP);
         /*
@@ -61,8 +83,14 @@ public class Nuke {
         for(int i = 1; i < spheres; i++) {
             delay += nextDelayGenerator.get();
             final float sphereRadius = i * STEP;
-            schedule(() -> explode(fromLocation, explosionRadius, sphereRadius), delay);
+            schedule(() -> explode(fromLocation, source, explosionRadius, sphereRadius, witherFluids), delay);
         }
+
+        delay += nextDelayGenerator.get();
+        schedule(() -> {
+            final long end = System.currentTimeMillis();
+            callback.accept(end - start);
+        }, delay);
 
         return delay;
     }
@@ -71,7 +99,7 @@ public class Nuke {
         The main generation method idea:
         https://stackoverflow.com/questions/63726093/how-to-easily-make-a-mesh-of-sphere-3d-points-over-a-vector
      */
-    void explode(final Location fromLocation, final float explosionRadius, final float sphereRadius) {
+    void explode(final Location fromLocation, final Entity source, final float explosionRadius, final float sphereRadius, final boolean witherFluids) {
         /*
             To distribute angles evenly,
             must be a number not equal to 1.0D nor 0.0D, closer to 1.0D.
@@ -101,7 +129,7 @@ public class Nuke {
                 toLocation.subtract(direction);
             }
 
-            explode(toLocation);
+            explode(toLocation, source, witherFluids);
         }
     }
 
@@ -148,8 +176,75 @@ public class Nuke {
         return getDensity(sphereRadius, getExplosionDistance(explosionRadius, sphereRadius));
     }
 
-    void explode(final Location fromLocation) {
+    void explode(final Location fromLocation, final Entity source, final boolean witherFluids) {
+        if(witherFluids) {
+            witherFluids(fromLocation);
+        }
+        /*
+        Based on explosion radius 400 test:
+
+        setFire sample time
+          false 143,438
+          false 137,296
+           true 163,705
+           true 158,700
+
+        setFire=true brings 15% performance drawback.
+
+        I decided to set the beautiful fire. :-)
+         */
         fromLocation.getWorld().createExplosion(fromLocation, MAX_ENGINE_POWER, true);
+        // NEW: fromLocation.getWorld().createExplosion(fromLocation, MAX_ENGINE_POWER, true, true, source);
+    }
+
+    private static final double EPSILON = 0.01d;
+    private static final Set<Material> FLUIDS = ImmutableSet.<Material>builder()
+            .add(Material.WATER)
+            .add(Material.LAVA)
+            .add(Material.BUBBLE_COLUMN)
+            .build();
+    void witherFluids(final Location fromLocation) {
+        /*
+            Since we're withering fluid,
+            it's better to start from top layers that may affect lower levels.
+         */
+        for(int dy = FLUID_WITHERING_POWER; dy >= -FLUID_WITHERING_POWER; dy--) {
+            for(int dx = -FLUID_WITHERING_POWER; dx <= FLUID_WITHERING_POWER; dx++) {
+                for(int dz = -FLUID_WITHERING_POWER; dz <= FLUID_WITHERING_POWER; dz++) {
+                    final Location toLocation = fromLocation.clone().add(dx, dy, dz);
+                    final double distance = toLocation.distance(fromLocation);
+                    if(distance <= FLUID_WITHERING_POWER + EPSILON) {
+                        // If not the epicenter block
+                        if(distance > EPSILON) {
+                            // Wither only fluids visible from the epicenter
+                            final RayTraceResult rayTraceResult = fromLocation.getWorld().rayTraceBlocks(
+                                    fromLocation,
+                                    getDirection(fromLocation, toLocation),
+                                    distance,
+                                    FluidCollisionMode.NEVER);
+                            if (rayTraceResult != null) {
+                                continue;
+                            }
+                        }
+
+                        final Block block = fromLocation.getWorld().getBlockAt(toLocation);
+                        if (FLUIDS.contains(block.getType())) {
+                            block.setType(Material.AIR);
+                        } else if (block.getBlockData() instanceof Waterlogged) {
+                            /*
+                                According to https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html#WATER,
+                                Material.WATER BlockData is Levelled but not Waterlogged
+                             */
+                            final Waterlogged waterlogged = (Waterlogged) block.getBlockData();
+                            if (waterlogged.isWaterlogged()) {
+                                waterlogged.setWaterlogged(false);
+                                block.setBlockData(waterlogged);
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private Vector getDirection(final Location fromLocation, final Location toLocation) {

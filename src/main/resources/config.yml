@@ -139,6 +139,7 @@ enabled-explosives:
 #   max-delay: <2..1000> ### max delay before the action in server ticks
 #                        ### (default = 4)
 #   radius: <17..512:double>
+#   wither-fluids: true | false (default = false)
 #
 # ==== Help ====
 # * 'avg-second' - is an average 1 second evaluated to 20 server ticks.
@@ -248,6 +249,7 @@ Nuclear:
     type: nuke
     parameters:
       radius: 120
+      wither-fluids: true
   effect1:
     type: effect
     parameters:

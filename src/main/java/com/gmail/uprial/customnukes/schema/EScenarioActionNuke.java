@@ -1,11 +1,12 @@
 package com.gmail.uprial.customnukes.schema;
 
 import com.gmail.uprial.customnukes.CustomNukes;
+import com.gmail.uprial.customnukes.common.CustomLogger;
 import com.gmail.uprial.customnukes.common.Nuke;
+import com.gmail.uprial.customnukes.config.ConfigReaderSimple;
+import com.gmail.uprial.customnukes.config.InvalidConfigException;
 import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.util.RayTraceResult;
-import org.bukkit.util.Vector;
+import org.bukkit.configuration.file.FileConfiguration;
 
 @SuppressWarnings("ClassWithTooManyMethods")
 public class EScenarioActionNuke extends AbstractEScenarioActionExplosion {
@@ -27,13 +28,27 @@ public class EScenarioActionNuke extends AbstractEScenarioActionExplosion {
         super(actionId);
     }
 
+    private static boolean defaultWitherFluids() { return false; }
+
+    private boolean witherFluids = defaultWitherFluids();
+
     @Override
     public int execute(CustomNukes plugin, Location fromLocation, int delay) {
-        return new Nuke(plugin).explode(fromLocation, (float)radius, delay, this::generateCurrentDelay);
+        return new Nuke(plugin).explode(fromLocation, null,
+                (float)radius, witherFluids,
+                delay, this::generateCurrentDelay, (final Long time) -> {});
     }
 
     @Override
     public void explode(CustomNukes plugin, Location location) {
         //
+    }
+
+    @Override
+    public void loadFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String title) throws InvalidConfigException {
+        super.loadFromConfig(config, customLogger, key, title);
+
+        witherFluids = ConfigReaderSimple.getBoolean(config, customLogger, key + ".wither-fluids",
+                String.format("'wither-fluids' value of %s", title), defaultWitherFluids());
     }
 }

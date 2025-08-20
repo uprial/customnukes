@@ -3,6 +3,7 @@ package com.gmail.uprial.customnukes.common;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.Test;
 
@@ -25,8 +26,11 @@ public class NukeTest {
             zeroLocation = new Location(world, 0, 0, 0);
         }
 
+        void callback() {
+        }
+
         void explode(final float radius) {
-            super.explode(zeroLocation, radius, 0, () -> 0);
+            super.explode(zeroLocation, null, radius, true, 0, () -> 0, (t) -> this.callback());
         }
     }
 
@@ -46,12 +50,12 @@ public class NukeTest {
         }
 
         @Override
-        void explode(final Location fromLocation, final float explosionRadius, final float sphereRadius) {
+        void explode(final Location fromLocation, final Entity source, final float explosionRadius, final float sphereRadius, final boolean witherFluids) {
             layers++;
         }
 
         @Override
-        void explode(final Location fromLocation) {
+        void explode(final Location fromLocation, final Entity source, final boolean witherFluids) {
             // nop
         }
     }
@@ -72,8 +76,29 @@ public class NukeTest {
         }
 
         @Override
-        void explode(final Location fromLocation) {
+        void explode(final Location fromLocation, final Entity source, final boolean witherFluids) {
             explosions++;
+        }
+    }
+
+    private static class NukeCallbacksCounter extends NukeMock {
+        private int callbacks;
+
+        NukeCallbacksCounter() {
+            super();
+        }
+
+        int test(final float radius) {
+            callbacks = 0;
+
+            explode(radius);
+
+            return callbacks;
+        }
+
+        @Override
+        void callback() {
+            callbacks++;
         }
     }
 
@@ -154,5 +179,12 @@ public class NukeTest {
         assertEquals(16, nuke.test(30));
         assertEquals(17, nuke.test(31));
         assertEquals(18, nuke.test(32));
+    }
+
+    @Test
+    public void testCallback() {
+        final NukeCallbacksCounter nuke = new NukeCallbacksCounter();
+
+        assertEquals(1, nuke.test(10));
     }
 }

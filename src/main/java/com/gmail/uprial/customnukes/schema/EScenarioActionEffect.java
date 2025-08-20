@@ -52,7 +52,7 @@ public class EScenarioActionEffect extends AbstractEScenarioActionExplosion {
     private List<PotionEffectType> effects = null;
     private int strength = 0;
     private int duration = 0;
-    private boolean playersOnly = false;
+    private boolean playersOnly = defaultPlayersOnly();
 
     public EScenarioActionEffect(String actionId) {
         super(actionId);
