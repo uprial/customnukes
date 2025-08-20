@@ -50,20 +50,22 @@ public class EScenarioActionRepeater extends AbstractEScenarioActionDelayed {
 
     @Override
     public void explode(CustomNukes plugin, Location location) {
-        for(final Player p : plugin.getServer().getOnlinePlayers()) {
-            if(p.isValid()) {
-                final String lMessage;
-                if (p.getWorld().getUID().equals(location.getWorld().getUID())) {
-                    lMessage = message.replace(LOCATION_PLACEHOLDER,
-                            String.format("%.0f block distance", location.distance(p.getLocation())));
-                } else {
-                    lMessage = message.replace(LOCATION_PLACEHOLDER,
-                            "another world");
+        if(message != null) {
+            for (final Player p : plugin.getServer().getOnlinePlayers()) {
+                if (p.isValid()) {
+                    final String lMessage;
+                    if (p.getWorld().getUID().equals(location.getWorld().getUID())) {
+                        lMessage = message.replace(LOCATION_PLACEHOLDER,
+                                String.format("%.0f block distance", location.distance(p.getLocation())));
+                    } else {
+                        lMessage = message.replace(LOCATION_PLACEHOLDER,
+                                "another world");
+                    }
+                    p.sendMessage(ChatColor.YELLOW + lMessage);
                 }
-                p.sendMessage(ChatColor.YELLOW + lMessage);
             }
+            plugin.getLogger().info(message.replace(LOCATION_PLACEHOLDER, format(location)));
         }
-        plugin.getLogger().info(message.replace(LOCATION_PLACEHOLDER, format(location)));
 
         explodeEx(plugin, location, Utils.seconds2ticks(duration) / interval);
     }
@@ -86,8 +88,12 @@ public class EScenarioActionRepeater extends AbstractEScenarioActionDelayed {
     public void loadFromConfig(FileConfiguration config, CustomLogger customLogger, String key, String title) throws InvalidConfigException {
         super.loadFromConfig(config, customLogger, key, title);
 
-        message = ConfigReaderSimple.getString(config, key + ".message",
-                String.format("message of %s", title));
+        if (config.get(key + ".message") == null) {
+            message = null;
+        } else {
+            message = ConfigReaderSimple.getString(config, key + ".message",
+                    String.format("message of %s", title));
+        }
         duration = ConfigReaderNumbers.getInt(config, customLogger, key + ".duration",
                 String.format("duration of %s", title), minDuration(), maxDuration());
         interval = ConfigReaderNumbers.getInt(config, customLogger, key + ".interval",

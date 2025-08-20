@@ -109,6 +109,7 @@ enabled-explosives:
 #   message: <String>     ### show a message for all players
 #                         ### and log it into the servers logs,
 #                         ### using '%l' as a location placeholder
+#                         ## (default = empty)
 #   min-delay: <2..10000> ### min delay before the repeater will be
 #                         ### created in server ticks (default = 2)
 #   max-delay: <2..10000> ### max delay before the repeater will be
