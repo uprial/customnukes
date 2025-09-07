@@ -100,6 +100,7 @@ I will be happy to add some features or fix bugs. My mail: uprial@gmail.com.
 * [TODO list](TODO.md)
 
 ## Related projects
+* AutoMinecart: [Bukkit Dev](https://legacy.curseforge.com/minecraft/bukkit-plugins/auto-minecart/) [GitHub](https://github.com/uprial/autominecart), [Spigot](https://www.spigotmc.org/resources/autominecart.128389/)
 * CustomBazookas: [Bukkit Dev](https://legacy.curseforge.com/minecraft/bukkit-plugins/custombazookas/) [GitHub](https://github.com/uprial/custombazookas), [Spigot](https://www.spigotmc.org/resources/custombazookas.124997/)
 * CustomCreatures: [Bukkit Dev](http://dev.bukkit.org/bukkit-plugins/customcreatures/), [GitHub](https://github.com/uprial/customcreatures), [Spigot](https://www.spigotmc.org/resources/customcreatures.68711/)
 * CustomRecipes: [Bukkit Dev](https://dev.bukkit.org/projects/custom-recipes), [GitHub](https://github.com/uprial/customrecipes/), [Spigot](https://www.spigotmc.org/resources/customrecipes.89435/)
